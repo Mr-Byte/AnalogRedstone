@@ -22,9 +22,9 @@ import cpw.mods.fml.common.event.FMLInitializationEvent
 @Mod(name = "Analog Redstone", modid = "analog_redstone", version = "1.0", modLanguage = "scala")
 object AnalogRedstoneMod
 {
-  @EventHandler
-  def init(event: FMLInitializationEvent)
-  {
-    FMLLog.info("Analog Redstone has been loaded.")
-  }
+    @EventHandler
+    def init(event: FMLInitializationEvent)
+    {
+        FMLLog info "Analog Redstone has been loaded."
+    }
 }
