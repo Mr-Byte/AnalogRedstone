@@ -34,8 +34,10 @@ object AnalogRedstoneMod
     @EventHandler
     def preInit(event: FMLPreInitializationEvent)
     {
-        FMLLog info s"Loaded the proxy $proxy."
         FMLLog info s"Preparing to load $MOD_NAME."
+        FMLLog info s"Loaded the proxy $proxy."
+
+        block.registerBlocks
     }
 
     @EventHandler
