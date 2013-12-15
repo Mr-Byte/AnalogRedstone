@@ -126,6 +126,22 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
 //
 //    override def getRenderType = 12
 
+    override def setBlockBoundsBasedOnState(blockAccess: IBlockAccess, x: Int, y: Int, z: Int) =
+    {
+        val direction = ForgeDirection.getOrientation(blockAccess.getBlockMetadata(x, y, z))
+
+        direction match
+        {
+            case DOWN => setBlockBounds(0.0f, 0.875f, 0.0f, 1.0f, 1.0f, 1.0f)
+            case UP => setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f, 0.125f, 1.0f)
+            case EAST => setBlockBounds(0.0f, 0.0f, 0.0f, 0.125f, 1.0f, 1.0f)
+            case WEST => setBlockBounds(0.875f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f)
+            case SOUTH => setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.125f)
+            case NORTH => setBlockBounds(0.0f, 0.0f, 0.875f, 1.0f, 1.0f, 1.0f)
+            case UNKNOWN => setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f)
+        }
+    }
+
     /*
      * Always provide weak power, regardless of orientation if that switch is in the on position.
      */
