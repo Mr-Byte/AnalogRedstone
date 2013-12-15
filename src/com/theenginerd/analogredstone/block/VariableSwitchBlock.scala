@@ -103,8 +103,12 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
         var metadata = world.getBlockMetadata(x, y, z)
         val groundOrientation = (MathHelper.floor_double((entity.rotationYaw * 4.0F / 360.0F).asInstanceOf[Double] + 0.5F) & 0x01) << 3
 
-        if(metadata == 0 || metadata == 5)
+        FMLLog info s"Metadata: $metadata, Orientation: $groundOrientation."
+
+        if(metadata == 0 || metadata == 1)
             metadata = metadata | groundOrientation
+
+        FMLLog info s"Metadata: $metadata"
 
         world.setBlockMetadataWithNotify(x, y, z, metadata, 2)
     }
@@ -124,6 +128,8 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
 
             for(part <- getActivatedPart(hitX, hitY, hitZ, metadata))
             {
+                FMLLog info s"$part"
+
                 part match
                 {
                     case Switch =>
@@ -147,12 +153,24 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
         val direction = getDirection(metadata)
         val orientation = getOrientation(metadata)
 
+        FMLLog info s"Direction: $direction, Orientation: $orientation."
+
         val hitBoxes = direction match
         {
             case WEST => (HitBox(0.875f, 0.0f, 0.0f, 1.0f, 1.0f, 0.5f), HitBox(0.875f, 0.0f, 0.5f, 1.0f, 1.0f, 1.0f))
             case EAST => (HitBox(0.0f, 0.0f, 0.5f, 0.125f, 1.0f, 1.0f), HitBox(0.0f, 0.0f, 0.0f, 0.125f, 1.0f, 0.5f))
             case NORTH => (HitBox(0.5f, 0.0f, 0.875f, 1.0f, 1.0f, 1.0f), HitBox(0.0f, 0.0f, 0.875f, 0.5f, 1.0f, 1.0f))
             case SOUTH => (HitBox(0.0f, 0.0f, 0.0f, 0.5f, 1.0f, 0.125f), HitBox(0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 0.125f))
+            case UP => orientation match
+            {
+                case 0 => (HitBox(0.0f, 0.0f, 0.0f, 0.5f, 0.125f, 1.0f), HitBox(0.5f, 0.0f, 0.0f, 1.0f, 0.125f, 1.0f))
+                case 1 => (HitBox(0.0f, 0.0f, 0.0f, 1.0f, 0.125f, 0.5f), HitBox(0.0f, 0.0f, 0.5f, 1.0f, 0.125f, 1.0f))
+            }
+            case DOWN => orientation match
+            {
+                case 0 => (HitBox(0.0f, 0.875f, 0.0f, 0.5f, 1.0f, 1.0f), HitBox(0.5f, 0.875f, 0.0f, 1.0f, 1.0f, 1.0f))
+                case 1 => (HitBox(0.0f, 0.875f, 0.0f, 1.0f, 1.0f, 0.5f), HitBox(0.0f, 0.875f, 0.5f, 1.0f, 1.0f, 1.0f))
+            }
             case UNKNOWN => (HitBox(0,0,0,0,0,0), HitBox(0,0,0,0,0,0))
         }
 
@@ -200,7 +218,11 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
      * Always provide weak power, regardless of orientation if that switch is in the on position.
      */
     override def isProvidingWeakPower(blockAccess: IBlockAccess, x: Int, y: Int, z: Int, side: Int): Int =
-        blockAccess.getBlockTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity].powerOutput
+    {
+        val tileEntity = blockAccess.getBlockTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity]
+
+        if (tileEntity.isActive) tileEntity.powerOutput else 0
+    }
 
     /*
      * Only provide strong to the block that the switch is directly attached to.
