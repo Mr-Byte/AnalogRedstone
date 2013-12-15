@@ -22,16 +22,23 @@ import net.minecraft.nbt.NBTTagCompound
 
 class VariableSwitchTileEntity extends TileEntity
 {
-    var powerOutput: Int = 0
-
     final val IS_ACTIVE_FIELD: String = "isActive"
     final val POWER_OUTPUT_FIELD: String = "powerOutput"
+
+    var powerOutput: Int = 0
+    var isActive: Boolean = false
+
+    def toggleActive() =
+    {
+        isActive = !isActive
+    }
 
     override def writeToNBT(tag: NBTTagCompound)
     {
         super.writeToNBT(tag)
 
         tag.setByte(POWER_OUTPUT_FIELD, powerOutput.toByte)
+        tag.setBoolean(IS_ACTIVE_FIELD, isActive)
     }
     
     override def readFromNBT(tag: NBTTagCompound)
@@ -39,5 +46,6 @@ class VariableSwitchTileEntity extends TileEntity
         super.readFromNBT(tag)
 
         powerOutput = tag.getByte(POWER_OUTPUT_FIELD)
+        isActive = tag.getBoolean(IS_ACTIVE_FIELD)
     }
 }
