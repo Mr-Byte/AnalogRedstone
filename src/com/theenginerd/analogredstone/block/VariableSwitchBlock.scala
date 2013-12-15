@@ -29,11 +29,14 @@ import com.theenginerd.analogredstone.tileentity.VariableSwitchTileEntity
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.entity.player.EntityPlayer
 import cpw.mods.fml.common.FMLLog
-import net.minecraft.util.{Vec3, AxisAlignedBB}
+import net.minecraft.util.{MathHelper, Vec3, AxisAlignedBB}
 
 object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.circuits)
 {
     setCreativeTab(CreativeTabs.tabRedstone)
+
+    private final val DIRECTION_MASK = 0x07
+    private final val ORIENTATION_MASK = 0x08
 
     override def createNewTileEntity(world: World): TileEntity = new VariableSwitchTileEntity
 
@@ -71,11 +74,21 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
         ForgeDirection.getOrientation(side).ordinal
 
     override def onBlockPlacedBy(world: World, x: Int, y: Int, z: Int, entity: EntityLivingBase, itemStack: ItemStack) =
-        world.setBlockMetadataWithNotify(x, y, z, world.getBlockMetadata(x, y, z), 2)
+    {
+        var metadata = world.getBlockMetadata(x, y, z)
+        val groundOrientation = (MathHelper.floor_double((entity.rotationYaw * 4.0F / 360.0F).asInstanceOf[Double] + 0.5F) & 0x01) << 3
+
+        FMLLog info s"Ground Orientation: $groundOrientation."
+
+        if(metadata == 0 || metadata == 5)
+            metadata = metadata | groundOrientation
+
+        world.setBlockMetadataWithNotify(x, y, z, metadata, 2)
+    }
 
     override def breakBlock(world: World, x: Int, y: Int, z: Int, blockID: Int, metadata: Int) =
     {
-        notifyNeighbors(world, x, y, z, ForgeDirection.getOrientation(metadata))
+        notifyNeighbors(world, x, y, z, ForgeDirection.getOrientation(metadata & DIRECTION_MASK))
         super.breakBlock(world, x, y, z, blockID, metadata)
     }
 
@@ -99,7 +112,7 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
                                   0.3F,
                                   0.5F)
 
-            notifyNeighbors(world, x, y, z, ForgeDirection.getOrientation(metadata))
+            notifyNeighbors(world, x, y, z, ForgeDirection.getOrientation(metadata & DIRECTION_MASK))
         }
 
         true
@@ -128,7 +141,7 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
 
     override def setBlockBoundsBasedOnState(blockAccess: IBlockAccess, x: Int, y: Int, z: Int) =
     {
-        val direction = ForgeDirection.getOrientation(blockAccess.getBlockMetadata(x, y, z))
+        val direction = ForgeDirection.getOrientation(blockAccess.getBlockMetadata(x, y, z) & DIRECTION_MASK)
 
         direction match
         {
@@ -152,7 +165,7 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
      * Only provide strong to the block that the switch is directly attached to.
      */
     override def isProvidingStrongPower(blockAccess: IBlockAccess, x: Int, y: Int, z: Int, side: Int): Int =
-        ForgeDirection.getOrientation(blockAccess.getBlockMetadata(x, y, z)) match
+        ForgeDirection.getOrientation(blockAccess.getBlockMetadata(x, y, z) & DIRECTION_MASK) match
         {
             case direction @ (UP | DOWN) if direction != ForgeDirection.getOrientation(side) => 0
             case _ => blockAccess.getBlockTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity].powerOutput
