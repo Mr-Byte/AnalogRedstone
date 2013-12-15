@@ -17,20 +17,29 @@
 
 package com.theenginerd.analogredstone.block
 
-import net.minecraft.block.Block
+import net.minecraft.block.BlockContainer
 import net.minecraft.block.material.Material
 import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.common.ForgeDirection
-import net.minecraftforge.common.ForgeDirection.{DOWN, UP, NORTH, SOUTH, WEST, EAST}
+import net.minecraftforge.common.ForgeDirection.{DOWN, UP, NORTH, SOUTH, WEST, EAST, UNKNOWN}
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.item.ItemStack
+import com.theenginerd.analogredstone.tileentity.VariableSwitchTileEntity
+import net.minecraft.tileentity.TileEntity
+import net.minecraft.entity.player.EntityPlayer
+import cpw.mods.fml.common.FMLLog
+import net.minecraft.util.{Vec3, AxisAlignedBB}
 
-object VariableSwitchBlock extends Block(VARIABLE_SWITCH_ID, Material.circuits)
+object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.circuits)
 {
     setCreativeTab(CreativeTabs.tabRedstone)
 
+    override def createNewTileEntity(world: World): TileEntity = new VariableSwitchTileEntity
+
     override def isOpaqueCube = false
+
+    override def getCollisionBoundingBoxFromPool(world: World, x: Int, y: Int, z: Int): AxisAlignedBB = null
 
     /*
      * Checks to see if this block can be placed on the side of a block.
@@ -44,6 +53,7 @@ object VariableSwitchBlock extends Block(VARIABLE_SWITCH_ID, Material.circuits)
             case SOUTH => world.isBlockSolidOnSide(x, y, z-1, SOUTH)
             case WEST => world.isBlockSolidOnSide(x+1, y, z, WEST)
             case EAST => world.isBlockSolidOnSide(x-1, y, z, EAST)
+            case UNKNOWN => false
         }
 
     /*
@@ -65,29 +75,62 @@ object VariableSwitchBlock extends Block(VARIABLE_SWITCH_ID, Material.circuits)
 
     override def breakBlock(world: World, x: Int, y: Int, z: Int, blockID: Int, metadata: Int) =
     {
-        world.notifyBlockOfNeighborChange(x, y, z, this.blockID)
-
-        ForgeDirection.getOrientation(metadata) match
-        {
-            case DOWN => world.notifyBlockOfNeighborChange(x, y-1, z, this.blockID)
-            case UP => world.notifyBlockOfNeighborChange(x, y+1, z, this.blockID)
-            case WEST => world.notifyBlockOfNeighborChange(x+1, y, z, this.blockID)
-            case EAST => world.notifyBlockOfNeighborChange(x-1, y, z, this.blockID)
-            case SOUTH => world.notifyBlockOfNeighborChange(x, y, z-1, this.blockID)
-            case NORTH => world.notifyBlockOfNeighborChange(x, y, z+1, this.blockID)
-        }
-
+        notifyNeighbors(world, x, y, z, ForgeDirection.getOrientation(metadata))
         super.breakBlock(world, x, y, z, blockID, metadata)
     }
 
-    override def renderAsNormalBlock = false
+    override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, side: Int, hitX: Float, hitY: Float, hitZ: Float): Boolean =
+    {
+        if(!world.isRemote)
+        {
+            val hitTest = AxisAlignedBB.getBoundingBox(0.0, 0.0, 0.0, 0.5, 0.5 , 0.5).expand(0.0125, 0.0125, 0.0125).isVecInside(Vec3.createVectorHelper(hitX, hitY, hitZ))
 
-    override def getRenderType = 12
+            FMLLog info s"HitTest: $hitTest"
+
+            val tileEntity = world.getBlockTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity]
+            tileEntity.powerOutput = (tileEntity.powerOutput + 1) % 16
+
+            val metadata = world.getBlockMetadata(x, y, z)
+            world.setBlockMetadataWithNotify(x, y, z, metadata, 3)
+            world.playSoundEffect(x.asInstanceOf[Double] + 0.5D,
+                                  y.asInstanceOf[Double] + 0.5D,
+                                  z.asInstanceOf[Double] + 0.5D,
+                                  "random.click",
+                                  0.3F,
+                                  0.5F)
+
+            notifyNeighbors(world, x, y, z, ForgeDirection.getOrientation(metadata))
+        }
+
+        true
+    }
+
+    private def notifyNeighbors(world: World, x: Int, y: Int, z: Int, direction: ForgeDirection)
+    {
+        world.notifyBlocksOfNeighborChange(x, y, z, this.blockID)
+
+        direction match
+        {
+            case DOWN => world.notifyBlocksOfNeighborChange(x, y - 1, z, this.blockID)
+            case UP => world.notifyBlocksOfNeighborChange(x, y + 1, z, this.blockID)
+            case WEST => world.notifyBlocksOfNeighborChange(x + 1, y, z, this.blockID)
+            case EAST => world.notifyBlocksOfNeighborChange(x - 1, y, z, this.blockID)
+            case SOUTH => world.notifyBlocksOfNeighborChange(x, y, z - 1, this.blockID)
+            case NORTH => world.notifyBlocksOfNeighborChange(x, y, z + 1, this.blockID)
+            case UNKNOWN => ()
+        }
+    }
+
+
+//    override def renderAsNormalBlock = false
+//
+//    override def getRenderType = 12
 
     /*
-     * Always provide weak power, regardless of orientation if that swicth is in the on position.
+     * Always provide weak power, regardless of orientation if that switch is in the on position.
      */
-    override def isProvidingWeakPower(blockAccess: IBlockAccess, x: Int, y: Int, z: Int, side: Int): Int = 15
+    override def isProvidingWeakPower(blockAccess: IBlockAccess, x: Int, y: Int, z: Int, side: Int): Int =
+        blockAccess.getBlockTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity].powerOutput
 
     /*
      * Only provide strong to the block that the switch is directly attached to.
@@ -96,7 +139,7 @@ object VariableSwitchBlock extends Block(VARIABLE_SWITCH_ID, Material.circuits)
         ForgeDirection.getOrientation(blockAccess.getBlockMetadata(x, y, z)) match
         {
             case direction @ (UP | DOWN) if direction != ForgeDirection.getOrientation(side) => 0
-            case _ => 15
+            case _ => blockAccess.getBlockTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity].powerOutput
         }
 
     override def canProvidePower = true

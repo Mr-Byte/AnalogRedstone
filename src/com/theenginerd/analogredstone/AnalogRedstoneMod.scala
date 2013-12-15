@@ -38,6 +38,7 @@ object AnalogRedstoneMod
         FMLLog info s"Loaded the proxy $proxy."
 
         block.registerBlocks
+        tileentity.registerTileEntities
     }
 
     @EventHandler
