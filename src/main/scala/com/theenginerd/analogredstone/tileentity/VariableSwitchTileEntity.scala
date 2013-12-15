@@ -33,6 +33,18 @@ class VariableSwitchTileEntity extends TileEntity
         isActive = !isActive
     }
 
+    private def clamp(value: Int, min: Int, max: Int) =
+        if (value > max)
+            max
+        else if(value < min)
+            min
+        else
+            value
+
+    def lowerPower = powerOutput = clamp(powerOutput-1, 0, 16)
+
+    def raisePower = powerOutput = clamp(powerOutput+1, 0, 16)
+
     override def writeToNBT(tag: NBTTagCompound)
     {
         super.writeToNBT(tag)

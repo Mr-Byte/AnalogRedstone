@@ -15,7 +15,7 @@
  * ========================================================================
  */
 
-package analogredstone.utility
+package com.theenginerd.analogredstone.utility
 
 class HitBox(minX: Double, minY: Double, minZ: Double, maxX: Double, maxY: Double, maxZ: Double)
 {

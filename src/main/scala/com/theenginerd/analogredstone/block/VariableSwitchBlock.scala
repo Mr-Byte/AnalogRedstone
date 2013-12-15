@@ -29,8 +29,9 @@ import com.theenginerd.analogredstone.tileentity.VariableSwitchTileEntity
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.{MathHelper, AxisAlignedBB}
-import analogredstone.utility.HitBox
-import analogredstone.client.renderer.RenderIds
+import com.theenginerd.analogredstone.utility.HitBox
+import com.theenginerd.analogredstone.client.renderer.RenderIds
+import cpw.mods.fml.common.FMLLog
 
 object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.circuits)
 {
@@ -43,10 +44,10 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
     private final val DIRECTION_MASK = 0x07
     private final val ORIENTATION_MASK = 0x08
 
-    private def getDirection(metadata: Int): ForgeDirection =
+    def getDirection(metadata: Int): ForgeDirection =
         ForgeDirection.getOrientation(metadata & DIRECTION_MASK)
 
-    private def getOrientation(metadata: Int): Int =
+     def getOrientation(metadata: Int): Int =
         (metadata & ORIENTATION_MASK) >> 3
 
     override def createNewTileEntity(world: World): TileEntity = new VariableSwitchTileEntity
@@ -107,6 +108,7 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
         {
             val metadata = world.getBlockMetadata(x, y, z)
             val tileEntity = world.getBlockTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity]
+            val sneaking = player.isSneaking()
 
             for(part <- getActivatedPart(hitX, hitY, hitZ, metadata))
             {
@@ -116,8 +118,7 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
                         tileEntity.toggleActive()
                         world.playSoundEffect(x.asInstanceOf[Double] + 0.5D, y.asInstanceOf[Double] + 0.5D, z.asInstanceOf[Double] + 0.5D, "random.click", 0.3F, 0.5F)
 
-                    case PowerAdjuster =>
-                        tileEntity.powerOutput = (tileEntity.powerOutput + 1) % 16
+                    case PowerAdjuster => if(sneaking) tileEntity.lowerPower else tileEntity.raisePower
                 }
             }
 
@@ -166,8 +167,8 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
 
         direction match
         {
-            case DOWN => world.notifyBlocksOfNeighborChange(x, y - 1, z, this.blockID)
-            case UP => world.notifyBlocksOfNeighborChange(x, y + 1, z, this.blockID)
+            case DOWN => world.notifyBlocksOfNeighborChange(x, y + 1, z, this.blockID)
+            case UP => world.notifyBlocksOfNeighborChange(x, y - 1, z, this.blockID)
             case WEST => world.notifyBlocksOfNeighborChange(x + 1, y, z, this.blockID)
             case EAST => world.notifyBlocksOfNeighborChange(x - 1, y, z, this.blockID)
             case SOUTH => world.notifyBlocksOfNeighborChange(x, y, z - 1, this.blockID)

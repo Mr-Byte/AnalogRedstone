@@ -17,10 +17,10 @@
 
 package com.theenginerd.analogredstone.proxy
 
-import analogredstone.client.renderer.RenderIds
+import com.theenginerd.analogredstone.client.renderer.RenderIds
 import cpw.mods.fml.client.registry.{ClientRegistry, RenderingRegistry}
 import com.theenginerd.analogredstone.tileentity.VariableSwitchTileEntity
-import analogredstone.client.renderer.tileentity.VariableSwitchTileEntityRenderer
+import com.theenginerd.analogredstone.client.renderer.tileentity.VariableSwitchTileEntityRenderer
 
 class ClientModProxy extends ModProxy
 {

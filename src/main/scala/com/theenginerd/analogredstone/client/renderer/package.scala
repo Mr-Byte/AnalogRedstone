@@ -15,10 +15,12 @@
  * ========================================================================
  */
 
-package com.theenginerd
+package com.theenginerd.analogredstone.client
 
-package object analogredstone
+package object renderer
 {
-    final val MOD_NAME = "Analog Redstone"
-    final val MOD_ID = "analog_redstone"
+    object RenderIds
+    {
+        var variableSwitch = 0
+    }
 }
