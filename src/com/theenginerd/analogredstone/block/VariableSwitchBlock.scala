@@ -31,6 +31,21 @@ import net.minecraft.entity.player.EntityPlayer
 import cpw.mods.fml.common.FMLLog
 import net.minecraft.util.{MathHelper, Vec3, AxisAlignedBB}
 
+class HitBox(minX: Double, minY: Double, minZ: Double, maxX: Double, maxY: Double, maxZ: Double)
+{
+    def isPointInside(x: Double, y: Double, z: Double): Boolean =
+    {
+        (x >= minX && x <= maxX) &&
+        (y >= minY && y <= maxY) &&
+        (z >= minZ && z <= maxZ)
+    }
+}
+
+object HitBox
+{
+    def apply(minX: Double, minY: Double, minZ: Double, maxX: Double, maxY: Double, maxZ: Double) = new HitBox(minX, minY, minZ, maxX, maxY, maxZ)
+}
+
 object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.circuits)
 {
     setCreativeTab(CreativeTabs.tabRedstone)
@@ -100,11 +115,6 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
         super.breakBlock(world, x, y, z, blockID, metadata)
     }
 
-    def getActivatedPart(hitX: Float, hitY: Float, hitZ: Float, metadata: Int) =
-    {
-        PowerAdjuster
-    }
-
     override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, side: Int, hitX: Float, hitY: Float, hitZ: Float): Boolean =
     {
         if(!world.isRemote)
@@ -112,14 +122,17 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
             val metadata = world.getBlockMetadata(x, y, z)
             val tileEntity = world.getBlockTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity]
 
-            getActivatedPart(hitX, hitY, hitZ, metadata) match
+            for(part <- getActivatedPart(hitX, hitY, hitZ, metadata))
             {
-                case Switch =>
-                    tileEntity.toggleActive()
-                    world.playSoundEffect(x.asInstanceOf[Double] + 0.5D, y.asInstanceOf[Double] + 0.5D, z.asInstanceOf[Double] + 0.5D, "random.click", 0.3F, 0.5F)
+                part match
+                {
+                    case Switch =>
+                        tileEntity.toggleActive()
+                        world.playSoundEffect(x.asInstanceOf[Double] + 0.5D, y.asInstanceOf[Double] + 0.5D, z.asInstanceOf[Double] + 0.5D, "random.click", 0.3F, 0.5F)
 
-                case PowerAdjuster =>
-                    tileEntity.powerOutput = (tileEntity.powerOutput + 1) % 16
+                    case PowerAdjuster =>
+                        tileEntity.powerOutput = (tileEntity.powerOutput + 1) % 16
+                }
             }
 
             world.setBlockMetadataWithNotify(x, y, z, metadata, 3)
@@ -127,6 +140,28 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
         }
 
         true
+    }
+
+    private def getActivatedPart(hitX: Float, hitY: Float, hitZ: Float, metadata: Int) =
+    {
+        val direction = getDirection(metadata)
+        val orientation = getOrientation(metadata)
+
+        val hitBoxes = direction match
+        {
+            case WEST => (HitBox(0.875f, 0.0f, 0.0f, 1.0f, 1.0f, 0.5f), HitBox(0.875f, 0.0f, 0.5f, 1.0f, 1.0f, 1.0f))
+            case EAST => (HitBox(0.0f, 0.0f, 0.5f, 0.125f, 1.0f, 1.0f), HitBox(0.0f, 0.0f, 0.0f, 0.125f, 1.0f, 0.5f))
+            case NORTH => (HitBox(0.5f, 0.0f, 0.875f, 1.0f, 1.0f, 1.0f), HitBox(0.0f, 0.0f, 0.875f, 0.5f, 1.0f, 1.0f))
+            case SOUTH => (HitBox(0.0f, 0.0f, 0.0f, 0.5f, 1.0f, 0.125f), HitBox(0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 0.125f))
+            case UNKNOWN => (HitBox(0,0,0,0,0,0), HitBox(0,0,0,0,0,0))
+        }
+
+        hitBoxes match
+        {
+            case (box, _) if box.isPointInside(hitX, hitY, hitZ) => Some(Switch)
+            case (_, box) if box.isPointInside(hitX, hitY, hitZ) => Some(PowerAdjuster)
+            case _ => None
+        }
     }
 
     private def notifyNeighbors(world: World, x: Int, y: Int, z: Int, direction: ForgeDirection)
