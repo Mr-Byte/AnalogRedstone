@@ -15,16 +15,12 @@
  * ========================================================================
  */
 
-package com.theenginerd.analogredstone.proxy
+package analogredstone.client
 
-import com.theenginerd.analogredstone.tileentity
-
-trait ModProxy
+package object renderer
 {
-    def registerTileEntities() =
+    object RenderIds
     {
-        tileentity.registerTileEntities()
+        var variableSwitch = 0
     }
-
-    def setupRendering() = {}
 }

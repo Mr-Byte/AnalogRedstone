@@ -28,23 +28,9 @@ import net.minecraft.item.ItemStack
 import com.theenginerd.analogredstone.tileentity.VariableSwitchTileEntity
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.entity.player.EntityPlayer
-import cpw.mods.fml.common.FMLLog
-import net.minecraft.util.{MathHelper, Vec3, AxisAlignedBB}
-
-class HitBox(minX: Double, minY: Double, minZ: Double, maxX: Double, maxY: Double, maxZ: Double)
-{
-    def isPointInside(x: Double, y: Double, z: Double): Boolean =
-    {
-        (x >= minX && x <= maxX) &&
-        (y >= minY && y <= maxY) &&
-        (z >= minZ && z <= maxZ)
-    }
-}
-
-object HitBox
-{
-    def apply(minX: Double, minY: Double, minZ: Double, maxX: Double, maxY: Double, maxZ: Double) = new HitBox(minX, minY, minZ, maxX, maxY, maxZ)
-}
+import net.minecraft.util.{MathHelper, AxisAlignedBB}
+import analogredstone.utility.HitBox
+import analogredstone.client.renderer.RenderIds
 
 object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.circuits)
 {
@@ -103,12 +89,8 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
         var metadata = world.getBlockMetadata(x, y, z)
         val groundOrientation = (MathHelper.floor_double((entity.rotationYaw * 4.0F / 360.0F).asInstanceOf[Double] + 0.5F) & 0x01) << 3
 
-        FMLLog info s"Metadata: $metadata, Orientation: $groundOrientation."
-
-        if(metadata == 0 || metadata == 1)
+        if(metadata <= 1)
             metadata = metadata | groundOrientation
-
-        FMLLog info s"Metadata: $metadata"
 
         world.setBlockMetadataWithNotify(x, y, z, metadata, 2)
     }
@@ -128,8 +110,6 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
 
             for(part <- getActivatedPart(hitX, hitY, hitZ, metadata))
             {
-                FMLLog info s"$part"
-
                 part match
                 {
                     case Switch =>
@@ -152,8 +132,6 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
     {
         val direction = getDirection(metadata)
         val orientation = getOrientation(metadata)
-
-        FMLLog info s"Direction: $direction, Orientation: $orientation."
 
         val hitBoxes = direction match
         {
@@ -240,4 +218,8 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
     }
 
     override def canProvidePower = true
+
+    override def renderAsNormalBlock = false
+
+    override def getRenderType = RenderIds.variableSwitch
 }

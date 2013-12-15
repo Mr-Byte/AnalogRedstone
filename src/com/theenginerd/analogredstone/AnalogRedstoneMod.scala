@@ -38,13 +38,15 @@ object AnalogRedstoneMod
         FMLLog info s"Loaded the proxy $proxy."
 
         block.registerBlocks
-        tileentity.registerTileEntities
     }
 
     @EventHandler
     def init(event: FMLInitializationEvent)
     {
         FMLLog info s"Loading $MOD_NAME"
+
+        proxy.registerTileEntities
+        proxy.setupRendering()
     }
 
     @EventHandler
