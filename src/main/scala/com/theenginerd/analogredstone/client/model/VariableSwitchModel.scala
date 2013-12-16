@@ -42,9 +42,9 @@ object VariableSwitchModel
         GL11.glPushMatrix()
 
         if (isActive)
-            GL11.glRotated(-30, 1, 0, 0)
-        else
             GL11.glRotated(30, 1, 0, 0)
+        else
+            GL11.glRotated(-30, 1, 0, 0)
 
         model.renderPart("Switch")
 
