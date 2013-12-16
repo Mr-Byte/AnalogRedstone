@@ -19,14 +19,12 @@ package com.theenginerd.analogredstone.client.renderer.tileentity
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.client.renderer.Tessellator
 import com.theenginerd.analogredstone.tileentity.VariableSwitchTileEntity
 import org.lwjgl.opengl.GL11
 import com.theenginerd.analogredstone.block.VariableSwitchBlock
-import net.minecraftforge.common.ForgeDirection.{DOWN, UP, NORTH, SOUTH, WEST, EAST, UNKNOWN}
+import net.minecraftforge.common.ForgeDirection.{DOWN, UP, NORTH, SOUTH, WEST, EAST}
 import net.minecraftforge.common.ForgeDirection
 import main.scala.com.theenginerd.analogredstone.client.model.VariableSwitchModel
-import cpw.mods.fml.common.FMLLog
 
 object VariableSwitchTileEntityRenderer extends TileEntitySpecialRenderer
 {
@@ -36,9 +34,6 @@ object VariableSwitchTileEntityRenderer extends TileEntitySpecialRenderer
         val metadata = variableSwitch.getBlockMetadata
         val direction = VariableSwitchBlock.getDirection(metadata)
         val orientation = VariableSwitchBlock.getOrientation(metadata)
-
-        val isActive = variableSwitch.isActive
-        val powerOutput = variableSwitch.powerOutput
 
         GL11.glPushMatrix()
 
