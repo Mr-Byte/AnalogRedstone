@@ -148,7 +148,7 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
             case DOWN => orientation match
             {
                 case 0 => (HitBox(0.0f, 0.875f, 0.0f, 0.5f, 1.0f, 1.0f), HitBox(0.5f, 0.875f, 0.0f, 1.0f, 1.0f, 1.0f))
-                case 1 => (HitBox(0.0f, 0.875f, 0.0f, 1.0f, 1.0f, 0.5f), HitBox(0.0f, 0.875f, 0.5f, 1.0f, 1.0f, 1.0f))
+                case 1 => (HitBox(0.0f, 0.875f, 0.5f, 1.0f, 1.0f, 1.0f), HitBox(0.0f, 0.875f, 0.0f, 1.0f, 1.0f, 0.5f))
             }
             case UNKNOWN => (HitBox(0,0,0,0,0,0), HitBox(0,0,0,0,0,0))
         }

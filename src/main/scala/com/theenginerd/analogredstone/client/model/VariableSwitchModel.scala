@@ -32,12 +32,10 @@ object VariableSwitchModel
 
     def render(isActive: Boolean, powerOutput: Int)
     {
-        FMLLog info s"$isActive, $powerOutput"
-
         model.renderPart("Base")
 
         GL11.glPushMatrix()
-        GL11.glTranslatef(0, 0, 0.5f * (powerOutput.toFloat / 15))
+        GL11.glTranslatef(0, 0, -0.625f * (powerOutput.toFloat / 15))
         model.renderPart("PowerAdjuster")
         GL11.glPopMatrix()
 

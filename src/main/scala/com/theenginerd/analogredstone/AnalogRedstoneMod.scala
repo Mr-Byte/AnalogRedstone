@@ -23,9 +23,10 @@ import cpw.mods.fml.common.event.{FMLPostInitializationEvent, FMLPreInitializati
 import cpw.mods.fml.common.network.NetworkMod
 
 import com.theenginerd.analogredstone.proxy.{ModProxy, ClientModProxy, ServerModProxy}
+import com.theenginerd.analogredstone.network.PacketHandler
 
 @Mod(name = MOD_NAME, modid = MOD_ID, version = "1.0", modLanguage = "scala")
-@NetworkMod(clientSideRequired = true, serverSideRequired = false)
+@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = Array(MOD_ID), packetHandler = classOf[PacketHandler])
 object AnalogRedstoneMod
 {
     @SidedProxy(clientSide = ClientModProxy.NAME, serverSide = ServerModProxy.NAME)

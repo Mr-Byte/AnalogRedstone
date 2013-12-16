@@ -19,6 +19,9 @@ package com.theenginerd.analogredstone.tileentity
 
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.nbt.NBTTagCompound
+import com.theenginerd.analogredstone.network.packet.VariableSwitchUpdatePacket
+import net.minecraft.network.packet.Packet
+import cpw.mods.fml.common.network.PacketDispatcher
 
 class VariableSwitchTileEntity extends TileEntity
 {
@@ -28,12 +31,22 @@ class VariableSwitchTileEntity extends TileEntity
     var powerOutput: Int = 0
     var isActive: Boolean = false
 
+    private def getPacket(): Packet =
+    {
+        VariableSwitchUpdatePacket(isActive, powerOutput)(xCoord, yCoord, zCoord).toPacket
+    }
+
+    def sendTileUpdate = PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 64, worldObj.provider.dimensionId, getDescriptionPacket())
+
+    override def getDescriptionPacket() = getPacket()
+
     def toggleActive() =
     {
         isActive = !isActive
+        sendTileUpdate
     }
 
-    private def clamp(value: Int, min: Int, max: Int) =
+    @inline private def clamp(value: Int, min: Int, max: Int): Int =
         if (value > max)
             max
         else if(value < min)
@@ -41,9 +54,17 @@ class VariableSwitchTileEntity extends TileEntity
         else
             value
 
-    def lowerPower = powerOutput = clamp(powerOutput-1, 0, 16)
+    def lowerPower =
+    {
+        powerOutput = clamp(powerOutput-1, 0, 15)
+        sendTileUpdate
+    }
 
-    def raisePower = powerOutput = clamp(powerOutput+1, 0, 16)
+    def raisePower =
+    {
+        powerOutput = clamp(powerOutput+1, 0, 15)
+        sendTileUpdate
+    }
 
     override def writeToNBT(tag: NBTTagCompound)
     {

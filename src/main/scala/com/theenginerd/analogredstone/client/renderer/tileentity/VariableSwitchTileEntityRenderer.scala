@@ -40,8 +40,6 @@ object VariableSwitchTileEntityRenderer extends TileEntitySpecialRenderer
         val isActive = variableSwitch.isActive
         val powerOutput = variableSwitch.powerOutput
 
-        FMLLog info s"$isActive, $powerOutput"
-
         GL11.glPushMatrix()
 
         transformOrientation(x, y, z, direction, orientation)
@@ -56,17 +54,38 @@ object VariableSwitchTileEntityRenderer extends TileEntitySpecialRenderer
         {
             case DOWN if orientation == 0 =>
                 GL11.glTranslatef(x.toFloat + 0.5f, y.toFloat + 1.0f, z.toFloat + 0.5f)
-                GL11.glRotated(180, 0, 0, 1)
+                GL11.glRotated(180, 1, 0, 0)
 
             case DOWN if orientation == 1 =>
                 GL11.glTranslatef(x.toFloat + 0.5f, y.toFloat + 1.0f, z.toFloat + 0.5f)
-                GL11.glRotated(180, 0, 0, 1)
+                GL11.glRotated(90, 0, 1, 0)
+                GL11.glRotated(180, 1, 0, 0)
 
             case UP if orientation == 0 =>
                 GL11.glTranslatef(x.toFloat + 0.5f, y.toFloat, z.toFloat + 0.5f)
 
             case UP if orientation == 1 =>
                 GL11.glTranslatef(x.toFloat + 0.5f, y.toFloat, z.toFloat + 0.5f)
+                GL11.glRotated(90, 0, 1, 0)
+
+            case NORTH =>
+                GL11.glTranslatef(x.toFloat + 0.5f, y.toFloat + 0.5f, z.toFloat + 1.0f)
+                GL11.glRotated(-90, 1, 0, 0)
+                GL11.glScalef(-1, 1, -1)
+
+            case SOUTH =>
+                GL11.glTranslatef(x.toFloat + 0.5f, y.toFloat + 0.5f, z.toFloat)
+                GL11.glRotated(90, 1, 0, 0)
+
+            case WEST =>
+                GL11.glTranslatef(x.toFloat + 1.0f, y.toFloat + 0.5f, z.toFloat + 0.5f)
+                GL11.glRotated(90, 0, 0, 1)
+                GL11.glRotated(90, 0, 1, 0)
+                GL11.glScalef(-1, 1, -1)
+
+            case EAST =>
+                GL11.glTranslatef(x.toFloat, y.toFloat + 0.5f, z.toFloat + 0.5f)
+                GL11.glRotated(-90, 0, 0, 1)
                 GL11.glRotated(90, 0, 1, 0)
 
             case _ =>
