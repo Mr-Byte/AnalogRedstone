@@ -35,6 +35,7 @@ import cpw.mods.fml.common.FMLLog
 
 object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.circuits)
 {
+    setUnlocalizedName("analogredstone.variableSwitch")
     setCreativeTab(CreativeTabs.tabRedstone)
 
     protected abstract class Part

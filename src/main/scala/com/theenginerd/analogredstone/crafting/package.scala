@@ -17,15 +17,21 @@
 
 package com.theenginerd.analogredstone
 
-import cpw.mods.fml.common.registry.{LanguageRegistry, GameRegistry}
+import cpw.mods.fml.common.registry.GameRegistry
+import net.minecraft.item.{Item, ItemStack}
+import com.theenginerd.analogredstone.block.VariableSwitchBlock
+import net.minecraft.block.Block
 
-package object block
+package object crafting
 {
-    val VARIABLE_SWITCH_ID = 3400
-
-    def registerBlocks()
+    def registerRecipes()
     {
-        GameRegistry.registerBlock(VariableSwitchBlock, "variable.switch")
-        LanguageRegistry.addName(VariableSwitchBlock, "Variable Switch")
+        GameRegistry.addRecipe(new ItemStack(VariableSwitchBlock, 1),
+                              "SRB",
+                              "CCC",
+                              'S'.asInstanceOf[AnyRef], new ItemStack(Item.stick),
+                              'R'.asInstanceOf[AnyRef], new ItemStack(Item.redstone),
+                              'B'.asInstanceOf[AnyRef], new ItemStack(Block.woodenButton),
+                              'C'.asInstanceOf[AnyRef], new ItemStack(Block.cobblestone))
     }
 }

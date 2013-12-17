@@ -38,7 +38,8 @@ object AnalogRedstoneMod
         FMLLog info s"Preparing to load $MOD_NAME."
         FMLLog info s"Loaded the proxy $proxy."
 
-        block.registerBlocks
+        block.registerBlocks()
+        crafting.registerRecipes()
     }
 
     @EventHandler
@@ -46,7 +47,7 @@ object AnalogRedstoneMod
     {
         FMLLog info s"Loading $MOD_NAME"
 
-        proxy.registerTileEntities
+        proxy.registerTileEntities()
         proxy.setupRendering()
     }
 

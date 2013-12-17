@@ -23,17 +23,28 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11
 import cpw.mods.fml.common.FMLLog
+import cpw.mods.fml.client.FMLClientHandler
+import com.theenginerd.analogredstone.MOD_ID
 
 @SideOnly(Side.CLIENT)
 object VariableSwitchModel
 {
-    private lazy val resource = new ResourceLocation("/models/VariableSwitch.obj")
+    private lazy val resource = new ResourceLocation("/assets/analogredstone/models/VariableSwitch.obj")
     private lazy val model = AdvancedModelLoader.loadModel(resource.getResourcePath)
+
+    private final val SWITCH_TEXTURE = new ResourceLocation(MOD_ID, "textures/variableswitch.png")
+    private final val WOOD_TEXTURE = new ResourceLocation("minecraft:textures/blocks/planks_oak.png")
+    private final val COBBLE_TEXTURE = new ResourceLocation("minecraft:textures/blocks/cobblestone.png")
 
     def render(isActive: Boolean, powerOutput: Int)
     {
+        FMLClientHandler.instance.getClient.renderEngine.bindTexture(COBBLE_TEXTURE)
         model.renderPart("Base")
 
+        FMLClientHandler.instance().getClient.renderEngine.bindTexture(SWITCH_TEXTURE)
+        model.renderPart("BaseSlider")
+
+        FMLClientHandler.instance.getClient.renderEngine.bindTexture(WOOD_TEXTURE)
         GL11.glPushMatrix()
         GL11.glTranslatef(0, 0, -0.625f * (powerOutput.toFloat / 15))
         model.renderPart("PowerAdjuster")
