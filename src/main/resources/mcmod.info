@@ -1,9 +1,9 @@
 [
 {
-  "modid": "analog_redstone",
+  "modid": "analogredstone",
   "name": "Analog Redstone",
   "description": "Adds gates for working with analog redstone signals.",
-  "version": "${version}",
+  "version": "1.0",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",

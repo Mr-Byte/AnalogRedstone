@@ -31,7 +31,7 @@ object VariableSwitchModel
     private lazy val resource = new ResourceLocation("/assets/analogredstone/models/VariableSwitch.obj")
     private lazy val model = AdvancedModelLoader.loadModel(resource.getResourcePath)
 
-    private final val SWITCH_TEXTURE = new ResourceLocation(MOD_ID, "textures/variableswitch.png")
+    private final val SWITCH_TEXTURE = new ResourceLocation(MOD_ID, "textures/blocks/variableswitch.png")
     private final val WOOD_TEXTURE = new ResourceLocation("minecraft:textures/blocks/planks_oak.png")
     private final val COBBLE_TEXTURE = new ResourceLocation("minecraft:textures/blocks/cobblestone.png")
 

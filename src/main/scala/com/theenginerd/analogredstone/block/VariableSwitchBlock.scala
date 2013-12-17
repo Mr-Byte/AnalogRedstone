@@ -31,11 +31,12 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.{MathHelper, AxisAlignedBB}
 import com.theenginerd.analogredstone.utility.HitBox
 import com.theenginerd.analogredstone.client.renderer.RenderIds
-import cpw.mods.fml.common.FMLLog
+import net.minecraft.client.renderer.texture.IconRegister
+import com.theenginerd.analogredstone.MOD_ID
 
 object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.circuits)
 {
-    setUnlocalizedName("analogredstone.variableSwitch")
+    setUnlocalizedName(s"$MOD_ID.variableSwitch")
     setCreativeTab(CreativeTabs.tabRedstone)
 
     protected abstract class Part
@@ -50,6 +51,12 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
 
      def getOrientation(metadata: Int): Int =
         (metadata & ORIENTATION_MASK) >> 3
+
+
+    override def registerIcons(register: IconRegister)
+    {
+        blockIcon = register.registerIcon(s"$MOD_ID:variableswitch")
+    }
 
     override def createNewTileEntity(world: World): TileEntity = new VariableSwitchTileEntity
 
