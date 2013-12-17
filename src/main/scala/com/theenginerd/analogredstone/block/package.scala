@@ -21,11 +21,27 @@ import cpw.mods.fml.common.registry.{LanguageRegistry, GameRegistry}
 
 package object block
 {
-    val VARIABLE_SWITCH_ID = 3400
+    private object blockIds
+    {
+        var variableSwitchId = 3400
+    }
+
+    final lazy val VARIABLE_SWITCH_ID = blockIds.variableSwitchId
+
+    def configureBlockIds(configuration: AnalogRedstoneConfiguration)
+    {
+        def loadBlockId(propertyName: String, defaultValue: Int) =
+        {
+            val property = configuration.getBlock(propertyName, defaultValue)
+            property.getInt
+        }
+
+        blockIds.variableSwitchId = loadBlockId("variableSwitch.id", blockIds.variableSwitchId)
+    }
 
     def registerBlocks()
     {
-        GameRegistry.registerBlock(VariableSwitchBlock, "variable.switch")
+        GameRegistry.registerBlock(VariableSwitchBlock, "variableSwitch")
         LanguageRegistry.addName(VariableSwitchBlock, "Variable Switch")
     }
 }

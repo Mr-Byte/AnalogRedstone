@@ -21,6 +21,7 @@ import cpw.mods.fml.common.{SidedProxy, FMLLog, Mod}
 import cpw.mods.fml.common.Mod.EventHandler
 import cpw.mods.fml.common.event.{FMLPostInitializationEvent, FMLPreInitializationEvent, FMLInitializationEvent}
 import cpw.mods.fml.common.network.NetworkMod
+import java.io.File
 
 import com.theenginerd.analogredstone.proxy.{ModProxy, ClientModProxy, ServerModProxy}
 import com.theenginerd.analogredstone.network.PacketHandler
@@ -38,8 +39,30 @@ object AnalogRedstoneMod
         FMLLog info s"Preparing to load $MOD_NAME."
         FMLLog info s"Loaded the proxy $proxy."
 
+        loadConfiguration(event)
+
         block.registerBlocks()
         crafting.registerRecipes()
+    }
+
+    def loadConfiguration(event: FMLPreInitializationEvent)
+    {
+        val configuration = new AnalogRedstoneConfiguration(new File(event.getModConfigurationDirectory(), "analogredstone/main.conf"))
+
+        try
+        {
+            configuration.load()
+            block.configureBlockIds(configuration)
+        }
+        catch
+        {
+            case exception: Exception =>
+                FMLLog warning s"$MOD_NAME failed to load its configuration."
+        }
+        finally
+        {
+            configuration.save()
+        }
     }
 
     @EventHandler
