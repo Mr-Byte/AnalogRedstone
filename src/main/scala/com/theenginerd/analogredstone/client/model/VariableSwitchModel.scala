@@ -22,7 +22,6 @@ import cpw.mods.fml.relauncher.Side
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11
-import cpw.mods.fml.common.FMLLog
 import cpw.mods.fml.client.FMLClientHandler
 import com.theenginerd.analogredstone.MOD_ID
 
