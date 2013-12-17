@@ -1,6 +1,13 @@
 # Analog Redstone
 A set of gates that enable working with analog redstone signals.
 
+## Information
+Requires at least Forge 9.11.953 in order to work.
+
+Currently only implements the Variable Switch, which is a switch with variable output (right-click the slider to turn up, shift+right-click to turn down).
+
+Can be crafted by placing three cobblestone on the bottom row, then on the next row left to right: stick, redstone, wooden button.
+
 ## Copyright and license
 
 Copyright 2013 Joshua R. Rodgers
