@@ -15,13 +15,12 @@
  * ========================================================================
  */
 
-package com.theenginerd.analogredstone
+package com.theenginerd.analogredstone.network
 
-import net.minecraft.world.World
-import com.theenginerd.analogredstone.network.synchronization.SynchronizedTile
-
-package object utility
+package object synchronization
 {
-    def getSynchronizedTiled(world : World, position : (Int, Int, Int)) : Option[SynchronizedTile] =
-        Option(world.getBlockTileEntity(position._1, position._2, position._3).asInstanceOf[SynchronizedTile])
+    object actionIds
+    {
+        final val VARIABLE_SWITCH_SYNCHRONIZATION_ACTION: Short = 0
+    }
 }

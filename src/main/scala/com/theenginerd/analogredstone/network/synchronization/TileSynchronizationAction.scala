@@ -15,13 +15,18 @@
  * ========================================================================
  */
 
-package com.theenginerd.analogredstone
+package com.theenginerd.analogredstone.network.synchronization
 
-import net.minecraft.world.World
-import com.theenginerd.analogredstone.network.synchronization.SynchronizedTile
+import java.io.DataOutputStream
 
-package object utility
+abstract class TileSynchronizationAction(val position: (Int, Int, Int))
+    extends SynchronizationAction(true)
 {
-    def getSynchronizedTiled(world : World, position : (Int, Int, Int)) : Option[SynchronizedTile] =
-        Option(world.getBlockTileEntity(position._1, position._2, position._3).asInstanceOf[SynchronizedTile])
+    def writePosition(dataStream: DataOutputStream)
+    {
+        val (x, y, z) = position
+        dataStream.writeInt(x)
+        dataStream.writeInt(y)
+        dataStream.writeInt(z)
+    }
 }

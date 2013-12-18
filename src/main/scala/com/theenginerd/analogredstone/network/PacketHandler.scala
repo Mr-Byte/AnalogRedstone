@@ -20,21 +20,27 @@ package com.theenginerd.analogredstone.network
 import cpw.mods.fml.common.network.{Player, IPacketHandler}
 import net.minecraft.network.INetworkManager
 import net.minecraft.network.packet.Packet250CustomPayload
-import com.theenginerd.analogredstone.network.packet.{TileUpdatePacket, AnalogRedstonePacket}
+import net.minecraft.entity.player.EntityPlayer
+import com.theenginerd.analogredstone.utility.getSynchronizedTiled
+import com.theenginerd.analogredstone.network.synchronization.{SynchronizationAction, TileSynchronizationAction}
 
-/**
- * Created by Byte on 12/15/13.
- */
 class PacketHandler extends IPacketHandler
 {
     def onPacketData(manager: INetworkManager, packet: Packet250CustomPayload, player: Player): Unit =
     {
-        AnalogRedstonePacket(packet.data) match
+        SynchronizationAction(packet.data) match
         {
-            case Some(packet) =>
-                if(packet.isInstanceOf[TileUpdatePacket])
+            case Some(update) =>
+                update match
                 {
-                    packet.asInstanceOf[TileUpdatePacket].handleTileUpdate(manager, player)
+                    case tileUpdate: TileSynchronizationAction =>
+                        val playerEntity = player.asInstanceOf[EntityPlayer]
+                        for (synchronizedTile <- getSynchronizedTiled(playerEntity.worldObj, tileUpdate.position))
+                        {
+                            synchronizedTile.processUpdate(tileUpdate, playerEntity)
+                        }
+
+                    case _ =>
                 }
             case None => ()
         }

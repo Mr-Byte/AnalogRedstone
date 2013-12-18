@@ -19,11 +19,11 @@ package com.theenginerd.analogredstone.tileentity
 
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.nbt.NBTTagCompound
-import com.theenginerd.analogredstone.network.packet.VariableSwitchUpdatePacket
 import net.minecraft.network.packet.Packet
-import cpw.mods.fml.common.network.PacketDispatcher
+import net.minecraft.entity.player.EntityPlayer
+import com.theenginerd.analogredstone.network.synchronization.{SynchronizedTile, VariableSwitchSynchronizationAction, TileSynchronizationAction}
 
-class VariableSwitchTileEntity extends TileEntity
+class VariableSwitchTileEntity extends TileEntity with SynchronizedTile
 {
     final val IS_ACTIVE_FIELD: String = "isActive"
     final val POWER_OUTPUT_FIELD: String = "powerOutput"
@@ -31,20 +31,20 @@ class VariableSwitchTileEntity extends TileEntity
     var powerOutput: Int = 0
     var isActive: Boolean = false
 
+    private def buildUpdatePacket() = VariableSwitchSynchronizationAction(isActive, powerOutput)(xCoord, yCoord, zCoord)
+
     private def getPacket(): Packet =
     {
-        VariableSwitchUpdatePacket(isActive, powerOutput)(xCoord, yCoord, zCoord).toPacket
+        buildUpdatePacket().toPacket
     }
-
-    def sendTileUpdate = PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 64, worldObj.provider.dimensionId, getDescriptionPacket())
 
     override def getDescriptionPacket() = getPacket()
 
     def toggleActive() =
-    {
-        isActive = !isActive
-        sendTileUpdate
-    }
+        synchronized(buildUpdatePacket)
+        {
+            isActive = !isActive
+        }
 
     @inline private def clamp(value: Int, min: Int, max: Int): Int =
         if (value > max)
@@ -55,16 +55,16 @@ class VariableSwitchTileEntity extends TileEntity
             value
 
     def lowerPower =
-    {
-        powerOutput = clamp(powerOutput-1, 0, 15)
-        sendTileUpdate
-    }
+        synchronized(buildUpdatePacket)
+        {
+            powerOutput = clamp(powerOutput-1, 0, 15)
+        }
 
     def raisePower =
-    {
-        powerOutput = clamp(powerOutput+1, 0, 15)
-        sendTileUpdate
-    }
+        synchronized(buildUpdatePacket)
+        {
+            powerOutput = clamp(powerOutput+1, 0, 15)
+        }
 
     override def writeToNBT(tag: NBTTagCompound)
     {
@@ -80,5 +80,16 @@ class VariableSwitchTileEntity extends TileEntity
 
         powerOutput = tag.getByte(POWER_OUTPUT_FIELD)
         isActive = tag.getBoolean(IS_ACTIVE_FIELD)
+    }
+
+    def processUpdate(updateAction: TileSynchronizationAction, player: EntityPlayer): Unit =
+    {
+        updateAction match
+        {
+            case VariableSwitchSynchronizationAction(newIsActive, newPowerOutput) =>
+                isActive = newIsActive
+                powerOutput = newPowerOutput
+            case _ =>
+        }
     }
 }
