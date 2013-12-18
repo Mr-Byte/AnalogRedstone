@@ -26,13 +26,13 @@ trait SynchronizedTile
     self: TileEntity =>
     implicit def position = (xCoord, yCoord, zCoord)
 
-    def synchronized(packetBuilder: => TileSynchronizationAction)(handler: => Unit): Unit =
+    def synchronized(updateBuilder: => TileSynchronizationAction)(handler: => Unit): Unit =
     {
         handler
 
         if(!worldObj.isRemote)
         {
-            val tileUpdate = packetBuilder
+            val tileUpdate = updateBuilder
             PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 64, worldObj.provider.dimensionId, tileUpdate.toPacket)
         }
     }

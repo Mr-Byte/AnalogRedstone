@@ -19,7 +19,6 @@ package com.theenginerd.analogredstone.tileentity
 
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.network.packet.Packet
 import net.minecraft.entity.player.EntityPlayer
 import com.theenginerd.analogredstone.network.synchronization.{SynchronizedTile, VariableSwitchSynchronizationAction, TileSynchronizationAction}
 
@@ -31,17 +30,12 @@ class VariableSwitchTileEntity extends TileEntity with SynchronizedTile
     var powerOutput: Int = 0
     var isActive: Boolean = false
 
-    private def buildUpdatePacket() = VariableSwitchSynchronizationAction(isActive, powerOutput)(xCoord, yCoord, zCoord)
+    private def getUpdateAction = VariableSwitchSynchronizationAction(isActive, powerOutput)(xCoord, yCoord, zCoord)
 
-    private def getPacket(): Packet =
-    {
-        buildUpdatePacket().toPacket
-    }
-
-    override def getDescriptionPacket() = getPacket()
+    override def getDescriptionPacket() = getUpdateAction.toPacket
 
     def toggleActive() =
-        synchronized(buildUpdatePacket)
+        synchronized(getUpdateAction)
         {
             isActive = !isActive
         }
@@ -54,14 +48,14 @@ class VariableSwitchTileEntity extends TileEntity with SynchronizedTile
         else
             value
 
-    def lowerPower =
-        synchronized(buildUpdatePacket)
+    def lowerPower() =
+        synchronized(getUpdateAction)
         {
             powerOutput = clamp(powerOutput-1, 0, 15)
         }
 
-    def raisePower =
-        synchronized(buildUpdatePacket)
+    def raisePower() =
+        synchronized(getUpdateAction)
         {
             powerOutput = clamp(powerOutput+1, 0, 15)
         }
