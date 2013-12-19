@@ -18,7 +18,7 @@
 package com.theenginerd.analogredstone.network.synchronization
 
 import java.io.{ByteArrayInputStream, DataInputStream, DataOutputStream}
-import com.theenginerd.analogredstone.MOD_ID
+import com.theenginerd.analogredstone
 import net.minecraft.network.packet.{Packet250CustomPayload, Packet}
 
 abstract class SynchronizationAction(private val isChunkDataPacket: Boolean)
@@ -36,7 +36,7 @@ abstract class SynchronizationAction(private val isChunkDataPacket: Boolean)
         val data = toByteArray
         val packet250 = new Packet250CustomPayload()
 
-        packet250.channel = MOD_ID
+        packet250.channel = analogredstone.MOD_ID
         packet250.data = data
         packet250.length = data.length
         packet250.isChunkDataPacket = isChunkDataPacket

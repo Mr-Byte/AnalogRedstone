@@ -21,8 +21,7 @@ import cpw.mods.fml.common.network.{Player, IPacketHandler}
 import net.minecraft.network.INetworkManager
 import net.minecraft.network.packet.Packet250CustomPayload
 import net.minecraft.entity.player.EntityPlayer
-import com.theenginerd.analogredstone.utility.getSynchronizedTiled
-import com.theenginerd.analogredstone.network.synchronization.{SynchronizationAction, TileSynchronizationAction}
+import com.theenginerd.analogredstone.network.synchronization.{SynchronizationAction, TileSynchronizationAction, getSynchronizedTile}
 
 class PacketHandler extends IPacketHandler
 {
@@ -35,9 +34,9 @@ class PacketHandler extends IPacketHandler
                 {
                     case tileUpdate: TileSynchronizationAction =>
                         val playerEntity = player.asInstanceOf[EntityPlayer]
-                        for (synchronizedTile <- getSynchronizedTiled(playerEntity.worldObj, tileUpdate.position))
+                        for (synchronizedTile <- getSynchronizedTile(playerEntity.worldObj, tileUpdate.position))
                         {
-                            synchronizedTile.processUpdate(tileUpdate, playerEntity)
+                            synchronizedTile.processSynchronizationAction(tileUpdate, playerEntity)
                         }
 
                     case _ =>

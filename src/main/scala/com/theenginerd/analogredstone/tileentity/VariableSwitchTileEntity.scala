@@ -30,12 +30,10 @@ class VariableSwitchTileEntity extends TileEntity with SynchronizedTile
     var powerOutput: Int = 0
     var isActive: Boolean = false
 
-    private def getUpdateAction = VariableSwitchSynchronizationAction(isActive, powerOutput)(xCoord, yCoord, zCoord)
-
-    override def getDescriptionPacket() = getUpdateAction.toPacket
+    override def getDescriptionPacket = getSynchronizationAction.toPacket
 
     def toggleActive() =
-        synchronized(getUpdateAction)
+        synchronized
         {
             isActive = !isActive
         }
@@ -49,13 +47,13 @@ class VariableSwitchTileEntity extends TileEntity with SynchronizedTile
             value
 
     def lowerPower() =
-        synchronized(getUpdateAction)
+        synchronized
         {
             powerOutput = clamp(powerOutput-1, 0, 15)
         }
 
     def raisePower() =
-        synchronized(getUpdateAction)
+        synchronized
         {
             powerOutput = clamp(powerOutput+1, 0, 15)
         }
@@ -76,7 +74,9 @@ class VariableSwitchTileEntity extends TileEntity with SynchronizedTile
         isActive = tag.getBoolean(IS_ACTIVE_FIELD)
     }
 
-    def processUpdate(updateAction: TileSynchronizationAction, player: EntityPlayer): Unit =
+    def getSynchronizationAction: TileSynchronizationAction = VariableSwitchSynchronizationAction(isActive, powerOutput)(xCoord, yCoord, zCoord)
+
+    def processSynchronizationAction(updateAction: TileSynchronizationAction, player: EntityPlayer): Unit =
     {
         updateAction match
         {

@@ -23,7 +23,7 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11
 import cpw.mods.fml.client.FMLClientHandler
-import com.theenginerd.analogredstone.MOD_ID
+import com.theenginerd.analogredstone
 
 @SideOnly(Side.CLIENT)
 object VariableSwitchModel
@@ -31,7 +31,7 @@ object VariableSwitchModel
     private lazy val resource = new ResourceLocation("/assets/analogredstone/models/VariableSwitch.obj")
     private lazy val model = AdvancedModelLoader.loadModel(resource.getResourcePath)
 
-    private final val SWITCH_TEXTURE = new ResourceLocation(MOD_ID, "textures/blocks/variableswitch.png")
+    private final val SWITCH_TEXTURE = new ResourceLocation(analogredstone.MOD_ID, "textures/blocks/variableswitch.png")
     private final val WOOD_TEXTURE = new ResourceLocation("minecraft:textures/blocks/planks_oak.png")
     private final val COBBLE_TEXTURE = new ResourceLocation("minecraft:textures/blocks/cobblestone.png")
 
