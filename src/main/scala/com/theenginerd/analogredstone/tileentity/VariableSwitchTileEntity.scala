@@ -19,23 +19,22 @@ package com.theenginerd.analogredstone.tileentity
 
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.entity.player.EntityPlayer
-import com.theenginerd.analogredstone.network.synchronization.{SynchronizedTile, VariableSwitchSynchronizationAction, TileSynchronizationAction}
+import com.theenginerd.analogredstone.network.synchronization._
 
 class VariableSwitchTileEntity extends TileEntity with SynchronizedTile
 {
     final val IS_ACTIVE_FIELD: String = "isActive"
     final val POWER_OUTPUT_FIELD: String = "powerOutput"
 
-    var powerOutput: Int = 0
-    var isActive: Boolean = false
+    val powerOutput: SynchronizedProperty[Byte] = SynchronizedProperty.asByte(0: Byte)
+    var isActive: SynchronizedProperty[Boolean] = SynchronizedProperty.asBoolean(value = false)
 
-    override def getDescriptionPacket = getSynchronizationAction.toPacket
+    override def getDescriptionPacket = buildUpdatePacket(Array(powerOutput, isActive))
 
     def toggleActive() =
-        synchronized
+        synchronized(isActive)
         {
-            isActive = !isActive
+            isActive @= !isActive
         }
 
     @inline private def clamp(value: Int, min: Int, max: Int): Int =
@@ -47,22 +46,22 @@ class VariableSwitchTileEntity extends TileEntity with SynchronizedTile
             value
 
     def lowerPower() =
-        synchronized
+        synchronized(powerOutput)
         {
-            powerOutput = clamp(powerOutput-1, 0, 15)
+            powerOutput @= clamp(powerOutput-1, 0, 15).toByte
         }
 
     def raisePower() =
-        synchronized
+        synchronized(powerOutput)
         {
-            powerOutput = clamp(powerOutput+1, 0, 15)
+            powerOutput @= clamp(powerOutput.toByte + 1, 0, 15).toByte
         }
 
     override def writeToNBT(tag: NBTTagCompound)
     {
         super.writeToNBT(tag)
 
-        tag.setByte(POWER_OUTPUT_FIELD, powerOutput.toByte)
+        tag.setByte(POWER_OUTPUT_FIELD, powerOutput)
         tag.setBoolean(IS_ACTIVE_FIELD, isActive)
     }
     
@@ -70,20 +69,7 @@ class VariableSwitchTileEntity extends TileEntity with SynchronizedTile
     {
         super.readFromNBT(tag)
 
-        powerOutput = tag.getByte(POWER_OUTPUT_FIELD)
-        isActive = tag.getBoolean(IS_ACTIVE_FIELD)
-    }
-
-    def getSynchronizationAction: TileSynchronizationAction = VariableSwitchSynchronizationAction(isActive, powerOutput)(xCoord, yCoord, zCoord)
-
-    def processSynchronizationAction(updateAction: TileSynchronizationAction, player: EntityPlayer): Unit =
-    {
-        updateAction match
-        {
-            case VariableSwitchSynchronizationAction(newIsActive, newPowerOutput) =>
-                isActive = newIsActive
-                powerOutput = newPowerOutput
-            case _ =>
-        }
+        powerOutput @= tag.getByte(POWER_OUTPUT_FIELD)
+        isActive @= tag.getBoolean(IS_ACTIVE_FIELD)
     }
 }

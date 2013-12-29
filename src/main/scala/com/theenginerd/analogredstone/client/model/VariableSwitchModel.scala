@@ -35,7 +35,7 @@ object VariableSwitchModel
     private final val WOOD_TEXTURE = new ResourceLocation("minecraft:textures/blocks/planks_oak.png")
     private final val COBBLE_TEXTURE = new ResourceLocation("minecraft:textures/blocks/cobblestone.png")
 
-    def render(isActive: Boolean, powerOutput: Int)
+    def render(isActive: Boolean, powerOutput: Byte)
     {
         FMLClientHandler.instance.getClient.renderEngine.bindTexture(COBBLE_TEXTURE)
         model.renderPart("Base")

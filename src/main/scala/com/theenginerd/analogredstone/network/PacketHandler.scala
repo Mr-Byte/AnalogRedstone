@@ -20,28 +20,43 @@ package com.theenginerd.analogredstone.network
 import cpw.mods.fml.common.network.{Player, IPacketHandler}
 import net.minecraft.network.INetworkManager
 import net.minecraft.network.packet.Packet250CustomPayload
+import java.io.{DataInputStream, ByteArrayInputStream}
+import com.theenginerd.analogredstone.network.synchronization._
 import net.minecraft.entity.player.EntityPlayer
-import com.theenginerd.analogredstone.network.synchronization.{SynchronizationAction, TileSynchronizationAction, getSynchronizedTile}
 
 class PacketHandler extends IPacketHandler
 {
     def onPacketData(manager: INetworkManager, packet: Packet250CustomPayload, player: Player): Unit =
     {
-        SynchronizationAction(packet.data) match
-        {
-            case Some(update) =>
-                update match
-                {
-                    case tileUpdate: TileSynchronizationAction =>
-                        val playerEntity = player.asInstanceOf[EntityPlayer]
-                        for (synchronizedTile <- getSynchronizedTile(playerEntity.worldObj, tileUpdate.position))
-                        {
-                            synchronizedTile.processSynchronizationAction(tileUpdate, playerEntity)
-                        }
+        val byteStream = new ByteArrayInputStream(packet.data)
+        val dataStream = new DataInputStream(byteStream)
+        val playerEntity = player.asInstanceOf[EntityPlayer]
 
-                    case _ =>
+        dataStream.readShort() match
+        {
+            case actionIds.TILE_SYNCHRONIZATION_ACTION =>
+                val position = (dataStream.readInt(), dataStream.readInt(), dataStream.readInt())
+                for(synchronizedTile <- getSynchronizedTile(playerEntity.worldObj, position))
+                {
+                    synchronizedTile.handleUpdate(dataStream)
                 }
-            case None => ()
         }
+
+//        SynchronizationAction(packet.data) match
+//        {
+//            case Some(update) =>
+//                update match
+//                {
+//                    case tileUpdate: TileSynchronizationAction =>
+//                        val playerEntity = player.asInstanceOf[EntityPlayer]
+//                        for (synchronizedTile <- getSynchronizedTile(playerEntity.worldObj, tileUpdate.position))
+//                        {
+//                            synchronizedTile.processSynchronizationAction(tileUpdate, playerEntity)
+//                        }
+//
+//                    case _ =>
+//                }
+//            case None => ()
+//        }
     }
 }

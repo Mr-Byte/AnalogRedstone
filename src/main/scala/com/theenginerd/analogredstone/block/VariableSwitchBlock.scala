@@ -116,7 +116,7 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
         {
             val metadata = world.getBlockMetadata(x, y, z)
             val tileEntity = world.getBlockTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity]
-            val sneaking = player.isSneaking()
+            val sneaking = player.isSneaking
 
             for(part <- getActivatedPart(hitX, hitY, hitZ, metadata))
             {
@@ -126,7 +126,7 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
                         tileEntity.toggleActive()
                         world.playSoundEffect(x.asInstanceOf[Double] + 0.5D, y.asInstanceOf[Double] + 0.5D, z.asInstanceOf[Double] + 0.5D, "random.click", 0.3F, 0.5F)
 
-                    case PowerAdjuster => if(sneaking) tileEntity.lowerPower else tileEntity.raisePower
+                    case PowerAdjuster => if(sneaking) tileEntity.lowerPower() else tileEntity.raisePower()
                 }
             }
 
@@ -208,7 +208,7 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
     {
         val tileEntity = blockAccess.getBlockTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity]
 
-        if (tileEntity.isActive) tileEntity.powerOutput else 0
+        if (tileEntity.isActive) tileEntity.powerOutput.toInt else 0
     }
 
     /*
@@ -221,7 +221,7 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
         getDirection(blockAccess.getBlockMetadata(x, y, z)) match
         {
             case direction @ (UP | DOWN) if direction != getDirection(side) => 0
-            case _ if tileEntity.isActive => tileEntity.powerOutput
+            case _ if tileEntity.isActive => tileEntity.powerOutput.toInt
             case _ => 0
         }
     }

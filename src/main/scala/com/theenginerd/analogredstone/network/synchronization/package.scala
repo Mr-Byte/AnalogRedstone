@@ -23,7 +23,7 @@ package object synchronization
 {
     object actionIds
     {
-        final val VARIABLE_SWITCH_SYNCHRONIZATION_ACTION: Short = 0
+        final val TILE_SYNCHRONIZATION_ACTION: Short = 0
     }
 
     def getSynchronizedTile(world : World, position : (Int, Int, Int)) : Option[SynchronizedTile] =
