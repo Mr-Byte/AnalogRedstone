@@ -26,15 +26,15 @@ class VariableSwitchTileEntity extends TileEntity with SynchronizedTile
     final val IS_ACTIVE_FIELD: String = "isActive"
     final val POWER_OUTPUT_FIELD: String = "powerOutput"
 
-    val powerOutput: SynchronizedProperty[Byte] = SynchronizedProperty.asByte(0: Byte)
-    var isActive: SynchronizedProperty[Boolean] = SynchronizedProperty.asBoolean(value = false)
+    val powerOutput: ByteRefCell = ByteRefCell(value = 0)
+    var isActive: BooleanRefCell = BooleanRefCell(value = false)
 
     override def getDescriptionPacket = buildUpdatePacket(Array(powerOutput, isActive))
 
     def toggleActive() =
         synchronized(isActive)
         {
-            isActive @= !isActive
+            isActive := !(~isActive)
         }
 
     @inline private def clamp(value: Int, min: Int, max: Int): Int =
@@ -48,28 +48,28 @@ class VariableSwitchTileEntity extends TileEntity with SynchronizedTile
     def lowerPower() =
         synchronized(powerOutput)
         {
-            powerOutput @= clamp(powerOutput-1, 0, 15).toByte
+            powerOutput := clamp(~powerOutput-1, 0, 15).toByte
         }
 
     def raisePower() =
         synchronized(powerOutput)
         {
-            powerOutput @= clamp(powerOutput.toByte + 1, 0, 15).toByte
+            powerOutput := clamp(~powerOutput + 1, 0, 15).toByte
         }
 
     override def writeToNBT(tag: NBTTagCompound)
     {
         super.writeToNBT(tag)
 
-        tag.setByte(POWER_OUTPUT_FIELD, powerOutput)
-        tag.setBoolean(IS_ACTIVE_FIELD, isActive)
+        tag.setByte(POWER_OUTPUT_FIELD, ~powerOutput)
+        tag.setBoolean(IS_ACTIVE_FIELD, ~isActive)
     }
     
     override def readFromNBT(tag: NBTTagCompound)
     {
         super.readFromNBT(tag)
 
-        powerOutput @= tag.getByte(POWER_OUTPUT_FIELD)
-        isActive @= tag.getBoolean(IS_ACTIVE_FIELD)
+        powerOutput := tag.getByte(POWER_OUTPUT_FIELD)
+        isActive := tag.getBoolean(IS_ACTIVE_FIELD)
     }
 }

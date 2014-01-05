@@ -208,7 +208,7 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
     {
         val tileEntity = blockAccess.getBlockTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity]
 
-        if (tileEntity.isActive) tileEntity.powerOutput.toInt else 0
+        if (~tileEntity.isActive) ~tileEntity.powerOutput else 0
     }
 
     /*
@@ -221,7 +221,7 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
         getDirection(blockAccess.getBlockMetadata(x, y, z)) match
         {
             case direction @ (UP | DOWN) if direction != getDirection(side) => 0
-            case _ if tileEntity.isActive => tileEntity.powerOutput.toInt
+            case _ if ~tileEntity.isActive => ~tileEntity.powerOutput
             case _ => 0
         }
     }

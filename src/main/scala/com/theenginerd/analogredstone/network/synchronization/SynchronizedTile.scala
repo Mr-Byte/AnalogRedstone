@@ -20,40 +20,14 @@ package com.theenginerd.analogredstone.network.synchronization
 import net.minecraft.tileentity.TileEntity
 import cpw.mods.fml.common.network.PacketDispatcher
 import net.minecraft.network.packet.Packet250CustomPayload
-import scala.reflect.runtime.universe._
 import java.io.{DataInputStream, DataOutputStream, ByteArrayOutputStream}
 import com.theenginerd.analogredstone
 import scala.language.implicitConversions
 
-trait SynchronizedTile
+trait SynchronizedTile extends MappedRefCells
 {
     self: TileEntity =>
-    implicit def position = (xCoord, yCoord, zCoord)
-
-    private var lastId: Short = 0
-    private var propertyMap: Map[Short, SynchronizedProperty[Any]] = Map()
-
-    class SynchronizedProperty[T](private var value: T)(implicit val tag: TypeTag[T])
-    {
-        val propertyId = lastId
-        def unary_~ = value
-        def @=(other: T) = value = other
-
-        propertyMap = propertyMap + (lastId -> this.asInstanceOf[SynchronizedProperty[Any]])
-        lastId = (lastId + 1).toShort
-    }
-
-    object SynchronizedProperty
-    {
-        def asBoolean(value: Boolean) = new SynchronizedProperty[Boolean](value)
-        def asByte(value: Byte) = new SynchronizedProperty[Byte](value)
-        def asShort(value: Short) = new SynchronizedProperty[Short](value)
-        def asInt(value: Int) = new SynchronizedProperty[Int](value)
-
-        implicit def toValue[T](value: SynchronizedProperty[T]): T = ~value
-    }
-
-    def synchronized(properties: SynchronizedProperty[_]*)(handler: => Unit = {}): Unit =
+    def synchronized(properties: RefCell*)(handler: => Unit = {}): Unit =
     {
         handler
 
@@ -67,45 +41,42 @@ trait SynchronizedTile
     {
         while(dataStream.available() > 0)
         {
-            val propertyId = dataStream.readShort()
-            val typeId = dataStream.readShort()
+            val propertyId = dataStream.readByte()
+            val typeId = dataStream.readByte()
 
-            propertyMap(propertyId) @= readPropertyByType(typeId, dataStream).get
+            for(property <- readPropertyByType(typeId, dataStream))
+            {
+                val refProperty = refCellMap(propertyId)
+
+                refProperty := (~property).asInstanceOf[refProperty.Value]
+            }
         }
     }
 
-    def readPropertyByType(typeId: Short, dataStream: DataInputStream): Option[Any] =
+    def readPropertyByType(typeId: Byte, dataStream: DataInputStream): Option[RefCell] =
     {
         typeId match
         {
-            case 0 => Some(dataStream.readBoolean())
-            case 1 => Some(dataStream.readByte())
-            case 2 => Some(dataStream.readShort())
-            case 3 => Some(dataStream.readInt())
+            case 0 => Some(BooleanRefCell(dataStream.readBoolean()))
+            case 1 => Some(ByteRefCell(dataStream.readByte()))
+            case 2 => Some(ShortRefCell(dataStream.readShort()))
+            case 3 => Some(IntRefCell(dataStream.readInt()))
+            case 4 => Some(FloatRefCell(dataStream.readFloat()))
             case _ => None
         }
     }
 
-    protected def buildUpdatePacket(properties: Seq[SynchronizedProperty[_]]): Packet250CustomPayload =
+    protected def buildUpdatePacket(properties: Seq[RefCell]): Packet250CustomPayload =
     {
         val byteStream = new ByteArrayOutputStream()
         val dataStream = new DataOutputStream(byteStream)
-        val (x, y, z) = position
 
         dataStream.writeShort(actionIds.TILE_SYNCHRONIZATION_ACTION)
-        dataStream.writeInt(x)
-        dataStream.writeInt(y)
-        dataStream.writeInt(z)
+        dataStream.writeInt(xCoord)
+        dataStream.writeInt(yCoord)
+        dataStream.writeInt(zCoord)
 
-        for(property <- properties)
-        {
-            for(typeId <- getTypeId(property.tag))
-            {
-                dataStream.writeShort(property.propertyId)
-                dataStream.writeShort(typeId)
-                writePropertyByType(dataStream, typeId, ~property)
-            }
-        }
+        properties.foreach(writeProperty(dataStream, _))
 
         val data = byteStream.toByteArray
         dataStream.close()
@@ -120,24 +91,34 @@ trait SynchronizedTile
         packet250
     }
 
-    protected def writePropertyByType(dataStream: DataOutputStream, typeId: Short, value: Any) =
+    protected def writeProperty(dataStream: DataOutputStream, property: RefCell) =
     {
-        typeId match
+        property match
         {
-            case 0 => dataStream.writeBoolean(value.asInstanceOf[Boolean])
-            case 1 => dataStream.writeByte(value.asInstanceOf[Byte])
-            case 2 => dataStream.writeShort(value.asInstanceOf[Short])
-            case 3 => dataStream.writeInt(value.asInstanceOf[Int])
+            case BooleanRefCell(value) =>
+                dataStream.writeByte(property.id)
+                dataStream.writeByte(0: Byte)
+                dataStream.writeBoolean(value)
+
+            case ByteRefCell(value) =>
+                dataStream.writeByte(property.id)
+                dataStream.writeByte(1: Byte)
+                dataStream.writeByte(value)
+
+            case ShortRefCell(value) =>
+                dataStream.writeByte(property.id)
+                dataStream.writeByte(2: Byte)
+                dataStream.writeShort(value)
+
+            case IntRefCell(value) =>
+                dataStream.writeByte(property.id)
+                dataStream.writeByte(3: Byte)
+                dataStream.writeInt(value)
+
+            case FloatRefCell(value) =>
+                dataStream.writeByte(property.id)
+                dataStream.writeByte(4: Byte)
+                dataStream.writeFloat(value)
         }
     }
-
-    protected def getTypeId(typeTag: TypeTag[_]): Option[Short] =
-        typeTag.tpe match
-        {
-            case tpe if tpe =:= typeOf[Boolean] => Some(0: Short)
-            case tpe if tpe =:= typeOf[Byte] => Some(1: Short)
-            case tpe if tpe =:= typeOf[Short] => Some(2: Short)
-            case tpe if tpe =:= typeOf[Int] => Some(3: Short)
-            case _ => None
-        }
 }

@@ -41,22 +41,5 @@ class PacketHandler extends IPacketHandler
                     synchronizedTile.handleUpdate(dataStream)
                 }
         }
-
-//        SynchronizationAction(packet.data) match
-//        {
-//            case Some(update) =>
-//                update match
-//                {
-//                    case tileUpdate: TileSynchronizationAction =>
-//                        val playerEntity = player.asInstanceOf[EntityPlayer]
-//                        for (synchronizedTile <- getSynchronizedTile(playerEntity.worldObj, tileUpdate.position))
-//                        {
-//                            synchronizedTile.processSynchronizationAction(tileUpdate, playerEntity)
-//                        }
-//
-//                    case _ =>
-//                }
-//            case None => ()
-//        }
     }
 }

@@ -38,7 +38,7 @@ object VariableSwitchTileEntityRenderer extends TileEntitySpecialRenderer
         GL11.glPushMatrix()
 
         transformOrientation(x, y, z, direction, orientation)
-        VariableSwitchModel.render(variableSwitch.isActive: Boolean, variableSwitch.powerOutput: Byte)
+        VariableSwitchModel.render(~variableSwitch.isActive: Boolean, ~variableSwitch.powerOutput: Byte)
 
         GL11.glPopMatrix()
     }
