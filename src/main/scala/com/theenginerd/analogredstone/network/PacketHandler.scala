@@ -32,9 +32,9 @@ class PacketHandler extends IPacketHandler
         val dataStream = new DataInputStream(byteStream)
         val playerEntity = player.asInstanceOf[EntityPlayer]
 
-        dataStream.readShort() match
+        dataStream.readByte() match
         {
-            case actionIds.TILE_SYNCHRONIZATION_ACTION =>
+            case packetIds.TILE_SYNCHRONIZATION_PACKET =>
                 val position = (dataStream.readInt(), dataStream.readInt(), dataStream.readInt())
                 for(synchronizedTile <- getSynchronizedTile(playerEntity.worldObj, position))
                 {

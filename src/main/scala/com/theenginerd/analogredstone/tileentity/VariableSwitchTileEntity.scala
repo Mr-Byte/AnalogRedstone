@@ -26,8 +26,8 @@ class VariableSwitchTileEntity extends TileEntity with SynchronizedTile
     final val IS_ACTIVE_FIELD: String = "isActive"
     final val POWER_OUTPUT_FIELD: String = "powerOutput"
 
-    val powerOutput: ByteRefCell = ByteRefCell(value = 0)
-    var isActive: BooleanRefCell = BooleanRefCell(value = false)
+    val powerOutput: BytePropertyCell = BytePropertyCell(value = 0)
+    var isActive: BooleanPropertyCell = BooleanPropertyCell(value = false)
 
     override def getDescriptionPacket = buildUpdatePacket(Array(powerOutput, isActive))
 

@@ -23,11 +23,16 @@ import net.minecraft.network.packet.Packet250CustomPayload
 import java.io.{DataInputStream, DataOutputStream, ByteArrayOutputStream}
 import com.theenginerd.analogredstone
 import scala.language.implicitConversions
+import com.theenginerd.analogredstone.network.data.MappedProperties
+import com.theenginerd.analogredstone.network.data.serialization.{SynchronizedTileSerializer, DataStreamSynchronizedTileSerializer}
 
-trait SynchronizedTile extends MappedRefCells
+trait SynchronizedTile extends MappedProperties
 {
     self: TileEntity =>
-    def synchronized(properties: RefCell*)(handler: => Unit = {}): Unit =
+
+    final private val serializer: SynchronizedTileSerializer = new DataStreamSynchronizedTileSerializer
+
+    def synchronized(properties: MappedPropertyCell*)(handler: => Unit = {}): Unit =
     {
         handler
 
@@ -46,79 +51,27 @@ trait SynchronizedTile extends MappedRefCells
 
             for(property <- readPropertyByType(typeId, dataStream))
             {
-                val refProperty = refCellMap(propertyId)
-
-                refProperty := (~property).asInstanceOf[refProperty.Value]
+                for(refProperty <- getPropertyById(propertyId))
+                {
+                    refProperty := (~property).asInstanceOf[refProperty.Value]
+                }
             }
         }
     }
 
-    def readPropertyByType(typeId: Byte, dataStream: DataInputStream): Option[RefCell] =
+    def readPropertyByType(typeId: Byte, dataStream: DataInputStream): Option[MappedPropertyCell] =
     {
         typeId match
         {
-            case 0 => Some(BooleanRefCell(dataStream.readBoolean()))
-            case 1 => Some(ByteRefCell(dataStream.readByte()))
-            case 2 => Some(ShortRefCell(dataStream.readShort()))
-            case 3 => Some(IntRefCell(dataStream.readInt()))
-            case 4 => Some(FloatRefCell(dataStream.readFloat()))
+            case 0 => Some(BooleanPropertyCell(dataStream.readBoolean()))
+            case 1 => Some(BytePropertyCell(dataStream.readByte()))
+            case 2 => Some(ShortPropertyCell(dataStream.readShort()))
+            case 3 => Some(IntPropertyCell(dataStream.readInt()))
+            case 4 => Some(FloatPropertyCell(dataStream.readFloat()))
             case _ => None
         }
     }
 
-    protected def buildUpdatePacket(properties: Seq[RefCell]): Packet250CustomPayload =
-    {
-        val byteStream = new ByteArrayOutputStream()
-        val dataStream = new DataOutputStream(byteStream)
-
-        dataStream.writeShort(actionIds.TILE_SYNCHRONIZATION_ACTION)
-        dataStream.writeInt(xCoord)
-        dataStream.writeInt(yCoord)
-        dataStream.writeInt(zCoord)
-
-        properties.foreach(writeProperty(dataStream, _))
-
-        val data = byteStream.toByteArray
-        dataStream.close()
-        byteStream.close()
-
-        val packet250 = new Packet250CustomPayload()
-        packet250.channel = analogredstone.MOD_ID
-        packet250.data = data
-        packet250.length = data.length
-        packet250.isChunkDataPacket = true
-
-        packet250
-    }
-
-    protected def writeProperty(dataStream: DataOutputStream, property: RefCell) =
-    {
-        property match
-        {
-            case BooleanRefCell(value) =>
-                dataStream.writeByte(property.id)
-                dataStream.writeByte(0: Byte)
-                dataStream.writeBoolean(value)
-
-            case ByteRefCell(value) =>
-                dataStream.writeByte(property.id)
-                dataStream.writeByte(1: Byte)
-                dataStream.writeByte(value)
-
-            case ShortRefCell(value) =>
-                dataStream.writeByte(property.id)
-                dataStream.writeByte(2: Byte)
-                dataStream.writeShort(value)
-
-            case IntRefCell(value) =>
-                dataStream.writeByte(property.id)
-                dataStream.writeByte(3: Byte)
-                dataStream.writeInt(value)
-
-            case FloatRefCell(value) =>
-                dataStream.writeByte(property.id)
-                dataStream.writeByte(4: Byte)
-                dataStream.writeFloat(value)
-        }
-    }
+    protected def buildUpdatePacket(properties: Seq[MappedPropertyCell]): Packet250CustomPayload =
+        serializer.serializeToPacket(xCoord, yCoord, zCoord, properties)
 }

@@ -21,9 +21,9 @@ import net.minecraft.world.World
 
 package object synchronization
 {
-    object actionIds
+    object packetIds
     {
-        final val TILE_SYNCHRONIZATION_ACTION: Short = 0
+        final val TILE_SYNCHRONIZATION_PACKET: Short = 0
     }
 
     def getSynchronizedTile(world : World, position : (Int, Int, Int)) : Option[SynchronizedTile] =
