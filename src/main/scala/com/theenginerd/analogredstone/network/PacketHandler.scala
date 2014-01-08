@@ -20,26 +20,28 @@ package com.theenginerd.analogredstone.network
 import cpw.mods.fml.common.network.{Player, IPacketHandler}
 import net.minecraft.network.INetworkManager
 import net.minecraft.network.packet.Packet250CustomPayload
-import java.io.{DataInputStream, ByteArrayInputStream}
-import com.theenginerd.analogredstone.network.synchronization._
 import net.minecraft.entity.player.EntityPlayer
+import com.theenginerd.analogredstone.MOD_ID
+import cpw.mods.fml.common.FMLLog
+import com.theenginerd.analogredstone.network.synchronization.SynchronizationHandler
+
 
 class PacketHandler extends IPacketHandler
 {
     def onPacketData(manager: INetworkManager, packet: Packet250CustomPayload, player: Player): Unit =
     {
-        val byteStream = new ByteArrayInputStream(packet.data)
-        val dataStream = new DataInputStream(byteStream)
-        val playerEntity = player.asInstanceOf[EntityPlayer]
-
-        dataStream.readByte() match
+        packet.channel match
         {
-            case packetIds.TILE_SYNCHRONIZATION_PACKET =>
-                val position = (dataStream.readInt(), dataStream.readInt(), dataStream.readInt())
-                for(synchronizedTile <- getSynchronizedTile(playerEntity.worldObj, position))
-                {
-                    synchronizedTile.handleUpdate(dataStream)
-                }
+            case PacketHandler.CHANNEL_SYNCHRONIZATION =>
+                SynchronizationHandler.handlePacket(packet, player.asInstanceOf[EntityPlayer])
+
+            case channel =>
+                FMLLog warning s"Unexpectedly received a packet on channel $channel."
         }
     }
+}
+
+object PacketHandler
+{
+    final val CHANNEL_SYNCHRONIZATION = MOD_ID + "|s"
 }

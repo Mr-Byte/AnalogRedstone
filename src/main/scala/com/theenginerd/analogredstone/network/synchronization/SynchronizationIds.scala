@@ -1,10 +1,10 @@
 /*
- * Copyright 2013 Joshua R. Rodgers
- *
+ * Copyright 2014 Joshua R. Rodgers
+ *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ *  
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
@@ -15,12 +15,9 @@
  * ========================================================================
  */
 
-package com.theenginerd.analogredstone.network
+package com.theenginerd.analogredstone.network.synchronization
 
-import net.minecraft.world.World
-
-package object synchronization
+object SynchronizationIds
 {
-    def getSynchronizedTile(world : World, position : (Int, Int, Int)) : Option[SynchronizedTile] =
-        Option(world.getBlockTileEntity(position._1, position._2, position._3).asInstanceOf[SynchronizedTile])
+    final val TILE_SYNCHRONIZATION_ID: Byte = 0
 }

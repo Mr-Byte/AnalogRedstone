@@ -29,9 +29,9 @@ package object crafting
         GameRegistry.addRecipe(new ItemStack(VariableSwitchBlock, 1),
                               "SRB",
                               "CCC",
-                              'S'.asInstanceOf[AnyRef], new ItemStack(Item.stick),
-                              'R'.asInstanceOf[AnyRef], new ItemStack(Item.redstone),
-                              'B'.asInstanceOf[AnyRef], new ItemStack(Block.woodenButton),
-                              'C'.asInstanceOf[AnyRef], new ItemStack(Block.cobblestone))
+                              'S': Character, new ItemStack(Item.stick),
+                              'R': Character, new ItemStack(Item.redstone),
+                              'B': Character, new ItemStack(Block.woodenButton),
+                              'C': Character, new ItemStack(Block.cobblestone))
     }
 }

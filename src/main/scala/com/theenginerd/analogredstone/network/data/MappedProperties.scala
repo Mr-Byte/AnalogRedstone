@@ -28,6 +28,15 @@ abstract class PropertyCell
     def :=(other: Value): Unit = value = other
 }
 
+object PropertyTypeIds
+{
+    final val BOOLEAN_ID = 0
+    final val BYTE_ID = 1
+    final val SHORT_ID = 2
+    final val INT_ID = 3
+    final val FLOAT_ID = 4
+}
+
 trait MappedProperties
 {
     private var lastPropertyId: Byte = 0

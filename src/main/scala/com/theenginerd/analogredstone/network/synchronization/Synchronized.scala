@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Joshua R. Rodgers
+ * Copyright 2014 Joshua R. Rodgers
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,19 @@
  * ========================================================================
  */
 
-package com.theenginerd.analogredstone.network
+package com.theenginerd.analogredstone.network.synchronization
 
-import net.minecraft.world.World
+import com.theenginerd.analogredstone.network.data.MappedProperties
+import net.minecraft.network.packet.Packet250CustomPayload
 
-package object synchronization
+trait Synchronized extends MappedProperties
 {
-    def getSynchronizedTile(world : World, position : (Int, Int, Int)) : Option[SynchronizedTile] =
-        Option(world.getBlockTileEntity(position._1, position._2, position._3).asInstanceOf[SynchronizedTile])
+    protected def buildSynchronizationPacket(properties: Seq[MappedPropertyCell]): Packet250CustomPayload
+    protected def sendSynchronizationPacket(packet: => Packet250CustomPayload)
+
+    def synchronized(properties: MappedPropertyCell*)(handler: => Unit = {}): Unit =
+    {
+        handler
+        sendSynchronizationPacket(buildSynchronizationPacket(properties))
+    }
 }

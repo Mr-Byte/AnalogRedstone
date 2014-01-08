@@ -19,10 +19,10 @@ package com.theenginerd.analogredstone.network.data.serialization
 
 import net.minecraft.network.packet.Packet250CustomPayload
 import com.theenginerd.analogredstone.network.data.PropertyCell
-import java.io.{DataOutputStream, ByteArrayOutputStream}
-import com.theenginerd.analogredstone
-import com.theenginerd.analogredstone.network.synchronization.packetIds
 import cpw.mods.fml.common.FMLLog
+import com.google.common.io.{ByteArrayDataOutput, ByteStreams}
+import com.theenginerd.analogredstone.network.synchronization.SynchronizationIds
+import com.theenginerd.analogredstone.network.PacketHandler
 
 trait SynchronizedTileSerializer
 {
@@ -31,11 +31,6 @@ trait SynchronizedTileSerializer
 
 class DataStreamSynchronizedTileSerializer extends SynchronizedTileSerializer
 {
-    final val BOOLEAN_ID = 0
-    final val BYTE_ID = 1
-    final val SHORT_ID = 2
-    final val INT_ID = 3
-    final val FLOAT_ID = 4
 
     def serializeToPacket(xCoord: Int, yCoord: Int, zCoord: Int, properties: Seq[PropertyCell]): Packet250CustomPayload =
     {
@@ -46,7 +41,7 @@ class DataStreamSynchronizedTileSerializer extends SynchronizedTileSerializer
     def buildPacket(data: Array[Byte]): Packet250CustomPayload =
     {
         val packet250 = new Packet250CustomPayload()
-        packet250.channel = analogredstone.MOD_ID
+        packet250.channel = PacketHandler.CHANNEL_SYNCHRONIZATION
         packet250.data = data
         packet250.length = data.length
         packet250.isChunkDataPacket = true
@@ -55,59 +50,51 @@ class DataStreamSynchronizedTileSerializer extends SynchronizedTileSerializer
 
     private def serializeToByteArray(xCoord: Int, yCoord: Int, zCoord: Int, properties: Seq[PropertyCell]): Array[Byte] =
     {
-        val byteStream = new ByteArrayOutputStream()
-        val dataStream = new DataOutputStream(byteStream)
+        val output: ByteArrayDataOutput = ByteStreams.newDataOutput()
 
-        try
-        {
-            serializeHeader(dataStream, xCoord, yCoord, zCoord)
-            serializeBody(properties, dataStream)
+        serializeHeader(output, xCoord, yCoord, zCoord)
+        serializeBody(properties, output)
 
-            byteStream.toByteArray
-        }
-        finally
-        {
-            dataStream.close()
-            byteStream.close()
-        }
-
+        output.toByteArray
     }
 
-    private def serializeHeader(dataStream: DataOutputStream, xCoord: Int, yCoord: Int, zCoord: Int)
+    private def serializeHeader(output: ByteArrayDataOutput, xCoord: Int, yCoord: Int, zCoord: Int)
     {
-        dataStream.writeByte(packetIds.TILE_SYNCHRONIZATION_PACKET)
-        dataStream.writeInt(xCoord)
-        dataStream.writeInt(yCoord)
-        dataStream.writeInt(zCoord)
+        output.writeByte(SynchronizationIds.TILE_SYNCHRONIZATION_ID)
+        output.writeInt(xCoord)
+        output.writeInt(yCoord)
+        output.writeInt(zCoord)
     }
 
-    private def serializeBody(properties: Seq[PropertyCell], dataStream: DataOutputStream)
+    private def serializeBody(properties: Seq[PropertyCell], output: ByteArrayDataOutput)
     {
+        import com.theenginerd.analogredstone.network.data.PropertyTypeIds._
+        
         for (property <- properties)
         {
-            dataStream.write(property.id)
+            output.write(property.id)
 
             ~property match
             {
                 case value: Boolean =>
-                    dataStream.writeByte(BOOLEAN_ID)
-                    dataStream.writeBoolean(value)
+                    output.writeByte(BOOLEAN_ID)
+                    output.writeBoolean(value)
 
                 case value: Byte =>
-                    dataStream.writeByte(BYTE_ID)
-                    dataStream.writeByte(value)
+                    output.writeByte(BYTE_ID)
+                    output.writeByte(value)
 
                 case value: Short =>
-                    dataStream.writeByte(SHORT_ID)
-                    dataStream.writeShort(value)
+                    output.writeByte(SHORT_ID)
+                    output.writeShort(value)
 
                 case value: Int =>
-                    dataStream.writeByte(INT_ID)
-                    dataStream.writeInt(value)
+                    output.writeByte(INT_ID)
+                    output.writeInt(value)
 
                 case value: Float =>
-                    dataStream.writeByte(FLOAT_ID)
-                    dataStream.writeFloat(value)
+                    output.writeByte(FLOAT_ID)
+                    output.writeFloat(value)
 
                 case unexpected =>
                     val typ = unexpected.getClass

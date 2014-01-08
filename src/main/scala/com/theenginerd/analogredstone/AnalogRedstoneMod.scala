@@ -27,7 +27,7 @@ import com.theenginerd.analogredstone.proxy.{ModProxy, ClientModProxy, ServerMod
 import com.theenginerd.analogredstone.network.PacketHandler
 
 @Mod(name = MOD_NAME, modid = MOD_ID, version = "1.0", modLanguage = "scala")
-@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = Array(MOD_ID), packetHandler = classOf[PacketHandler])
+@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = Array(PacketHandler.CHANNEL_SYNCHRONIZATION), packetHandler = classOf[PacketHandler])
 object AnalogRedstoneMod
 {
     @SidedProxy(clientSide = ClientModProxy.NAME, serverSide = ServerModProxy.NAME)
@@ -47,7 +47,7 @@ object AnalogRedstoneMod
 
     def loadConfiguration(event: FMLPreInitializationEvent)
     {
-        val configuration = new AnalogRedstoneConfiguration(new File(event.getModConfigurationDirectory(), "analogredstone/main.conf"))
+        val configuration = new AnalogRedstoneConfiguration(new File(event.getModConfigurationDirectory, "analogredstone/main.conf"))
 
         try
         {
