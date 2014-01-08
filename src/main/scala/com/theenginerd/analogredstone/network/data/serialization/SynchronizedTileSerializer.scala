@@ -69,7 +69,7 @@ class DataStreamSynchronizedTileSerializer extends SynchronizedTileSerializer
     private def serializeBody(properties: Seq[PropertyCell], output: ByteArrayDataOutput)
     {
         import com.theenginerd.analogredstone.network.data.PropertyTypeIds._
-        
+
         for (property <- properties)
         {
             output.write(property.id)

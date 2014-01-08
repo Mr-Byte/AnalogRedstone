@@ -21,7 +21,7 @@ import net.minecraft.network.packet.Packet250CustomPayload
 import net.minecraft.entity.player.EntityPlayer
 import cpw.mods.fml.common.FMLLog
 import java.io.{DataInputStream, ByteArrayInputStream}
-import com.theenginerd.analogredstone.network.data.PropertyTypeIds
+import com.theenginerd.analogredstone.network.data.{MappedProperties, PropertyTypeIds}
 
 object SynchronizationHandler
 {
@@ -48,21 +48,25 @@ object SynchronizationHandler
         try
         {
             val position = (input.readInt(), input.readInt(), input.readInt())
-            for(tile <- getSynchronizedTile(player.worldObj, position))
-            {
-                while(input.available() > 0)
-                {
-                    for(property <- tile.getPropertyById(input.readByte()))
-                    {
-                        property := readValue(input).asInstanceOf[property.Value]
-                    }
-                }
-            }
+            val tile: Option[MappedProperties] = getSynchronizedTile(player.worldObj, position)
+
+            tile.foreach(parseProperties(_, input))
         }
         finally
         {
             input.close()
             byteStream.close()
+        }
+    }
+
+    def parseProperties(mappedProperties: MappedProperties, input: DataInputStream)
+    {
+        while (input.available() > 0)
+        {
+            for (property <- mappedProperties.getPropertyById(input.readByte()))
+            {
+                property := readValue(input).asInstanceOf[property.Value]
+            }
         }
     }
 
