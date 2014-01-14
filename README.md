@@ -23,3 +23,17 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+## Current Ideas for the Future
+Block Ideas:
+* Redstone Lock & Key
+* Filter (only allows redstone above or below a threshold to pass through)
+* Variable repeater (Repeater with adjustable output strength)
+* Adder (adds two signals together)
+* Subtractor (subtracts two signals from each other)
+* Sine wave generator (generates a falling/rising redstone wave following a sine wave, with adjustable period)
+* Square wave generator (generates a falling/rising redstone wave following a square wave, with adjustable period)
+* Capacitor (Discharges a redstone charge over time, losing strength)
+* Losless redstone
+* Resistor (Uses some type of Ohm's law to reduce signal?)
+* Diode (one-directional gate with no tick-delay)
