@@ -45,16 +45,11 @@ class VariableSwitchTileEntity extends TileEntity with SynchronizedTile
         else
             value
 
-    def lowerPower() =
-        synchronized(powerOutput)
-        {
-            powerOutput := clamp(~powerOutput-1, 0, 15).toByte
-        }
 
     def raisePower() =
         synchronized(powerOutput)
         {
-            powerOutput := clamp(~powerOutput + 1, 0, 15).toByte
+            powerOutput := ((~powerOutput + 1) % 16).toByte
         }
 
     override def writeToNBT(tag: NBTTagCompound)

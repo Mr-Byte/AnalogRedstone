@@ -116,7 +116,6 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
         {
             val metadata = world.getBlockMetadata(x, y, z)
             val tileEntity = world.getBlockTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity]
-            val sneaking = player.isSneaking
 
             for(part <- getActivatedPart(hitX, hitY, hitZ, metadata))
             {
@@ -126,7 +125,7 @@ object VariableSwitchBlock extends BlockContainer(VARIABLE_SWITCH_ID, Material.c
                         tileEntity.toggleActive()
                         world.playSoundEffect(x.asInstanceOf[Double] + 0.5D, y.asInstanceOf[Double] + 0.5D, z.asInstanceOf[Double] + 0.5D, "random.click", 0.3F, 0.5F)
 
-                    case PowerAdjuster => if(sneaking) tileEntity.lowerPower() else tileEntity.raisePower()
+                    case PowerAdjuster => tileEntity.raisePower()
                 }
             }
 
