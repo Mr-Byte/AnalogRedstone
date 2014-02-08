@@ -17,7 +17,7 @@
 
 package com.theenginerd.analogredstone.client.renderer.item
 
-import main.scala.com.theenginerd.analogredstone.client.model.VariableSwitchModel
+import com.theenginerd.analogredstone.client.model.VariableSwitchModel
 import net.minecraftforge.client.IItemRenderer
 import net.minecraft.item.ItemStack
 import net.minecraftforge.client.IItemRenderer.{ItemRendererHelper, ItemRenderType}
@@ -55,12 +55,12 @@ object VariableSwitchItemRenderer extends IItemRenderer
         GL11.glPushMatrix()
         GL11.glDisable(GL11.GL_LIGHTING)
 
-        GL11.glScalef(scale, scale, scale);
-        GL11.glTranslatef(x, y, z);
+        GL11.glScalef(scale, scale, scale)
+        GL11.glTranslatef(x, y, z)
 
-        VariableSwitchModel.render(false, 0)
+        VariableSwitchModel.render(isActive = false, 0)
 
-        GL11.glEnable(GL11.GL_LIGHTING);
-        GL11.glPopMatrix();
+        GL11.glEnable(GL11.GL_LIGHTING)
+        GL11.glPopMatrix()
     }
 }

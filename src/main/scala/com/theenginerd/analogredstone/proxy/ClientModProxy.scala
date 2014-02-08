@@ -22,9 +22,10 @@ import cpw.mods.fml.client.registry.{ClientRegistry, RenderingRegistry}
 import com.theenginerd.analogredstone.tileentity.VariableSwitchTileEntity
 import com.theenginerd.analogredstone.client.renderer.tileentity.VariableSwitchTileEntityRenderer
 import com.theenginerd.analogredstone.client.renderer.item.VariableSwitchItemRenderer
-import com.theenginerd.analogredstone.block.VARIABLE_SWITCH_ID
+import com.theenginerd.analogredstone.block.{VariableSwitchBlock, VARIABLE_SWITCH_ID}
 
 import net.minecraftforge.client.MinecraftForgeClient
+import net.minecraft.item.Item
 
 class ClientModProxy extends ModProxy
 {
@@ -32,7 +33,7 @@ class ClientModProxy extends ModProxy
     {
         RenderIds.variableSwitch = RenderingRegistry.getNextAvailableRenderId
 
-        MinecraftForgeClient.registerItemRenderer(VARIABLE_SWITCH_ID, VariableSwitchItemRenderer)
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(VariableSwitchBlock), VariableSwitchItemRenderer)
     }
 
     override def registerTileEntities() =

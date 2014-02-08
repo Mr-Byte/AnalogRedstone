@@ -22,5 +22,5 @@ import net.minecraft.world.World
 package object synchronization
 {
     def getSynchronizedTile(world : World, position : (Int, Int, Int)) : Option[SynchronizedTile] =
-        Option(world.getBlockTileEntity(position._1, position._2, position._3).asInstanceOf[SynchronizedTile])
+        Option(world.getTileEntity(position._1, position._2, position._3).asInstanceOf[SynchronizedTile])
 }

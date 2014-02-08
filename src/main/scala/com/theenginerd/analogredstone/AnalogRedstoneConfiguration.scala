@@ -17,11 +17,8 @@
 
 package com.theenginerd.analogredstone
 
-import net.minecraftforge.common.Configuration
+import net.minecraftforge.common.config.Configuration
 import java.io.File
 
-/**
- * Created by Byte on 12/16/13.
- */
 class AnalogRedstoneConfiguration(file: File) extends Configuration(file)
 {}

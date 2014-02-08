@@ -29,7 +29,7 @@ class VariableSwitchTileEntity extends TileEntity with SynchronizedTile
     val powerOutput: BytePropertyCell = BytePropertyCell(value = 0)
     var isActive: BooleanPropertyCell = BooleanPropertyCell(value = false)
 
-    override def getDescriptionPacket = buildSynchronizationPacket(Array(powerOutput, isActive))
+ //   override def getDescriptionPacket = buildSynchronizationPacket(Array(powerOutput, isActive))
 
     def toggleActive() =
         synchronized(isActive)

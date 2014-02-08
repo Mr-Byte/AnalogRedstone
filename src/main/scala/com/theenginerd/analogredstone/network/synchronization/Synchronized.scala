@@ -18,12 +18,12 @@
 package com.theenginerd.analogredstone.network.synchronization
 
 import com.theenginerd.analogredstone.network.data.MappedProperties
-import net.minecraft.network.packet.Packet250CustomPayload
+import net.minecraft.network.Packet
 
 trait Synchronized extends MappedProperties
 {
-    protected def buildSynchronizationPacket(properties: Seq[MappedPropertyCell]): Packet250CustomPayload
-    protected def sendSynchronizationPacket(packet: => Packet250CustomPayload)
+    protected def buildSynchronizationPacket(properties: Seq[MappedPropertyCell]): Packet
+    protected def sendSynchronizationPacket(packet: => Packet)
 
     def synchronized(properties: MappedPropertyCell*)(handler: => Unit = {}): Unit =
     {

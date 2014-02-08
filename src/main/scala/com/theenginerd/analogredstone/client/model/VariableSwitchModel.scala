@@ -15,7 +15,7 @@
  * ========================================================================
  */
 
-package main.scala.com.theenginerd.analogredstone.client.model
+package com.theenginerd.analogredstone.client.model
 
 import cpw.mods.fml.relauncher.SideOnly
 import cpw.mods.fml.relauncher.Side
@@ -28,8 +28,8 @@ import com.theenginerd.analogredstone
 @SideOnly(Side.CLIENT)
 object VariableSwitchModel
 {
-    private lazy val resource = new ResourceLocation("/assets/analogredstone/models/VariableSwitch.obj")
-    private lazy val model = AdvancedModelLoader.loadModel(resource.getResourcePath)
+    private lazy val resource = new ResourceLocation("analogredstone:models/VariableSwitch.obj")
+    private lazy val model = AdvancedModelLoader.loadModel(resource)
 
     private final val SWITCH_TEXTURE = new ResourceLocation(analogredstone.MOD_ID, "textures/blocks/variableswitch.png")
     private final val WOOD_TEXTURE = new ResourceLocation("minecraft:textures/blocks/planks_oak.png")

@@ -17,46 +17,46 @@
 
 package com.theenginerd.analogredstone.network.synchronization
 
-import net.minecraft.network.packet.Packet250CustomPayload
 import net.minecraft.entity.player.EntityPlayer
 import cpw.mods.fml.common.FMLLog
 import java.io.{DataInputStream, ByteArrayInputStream}
 import com.theenginerd.analogredstone.network.data.{MappedProperties, PropertyTypeIds}
+import com.jcraft.jogg.Packet
 
 object SynchronizationHandler
 {
-    def handlePacket(packet: Packet250CustomPayload, player: EntityPlayer) =
+    def handlePacket(packet: Packet, player: EntityPlayer) =
     {
-        packet.data match
-        {
-            case Array(SynchronizationIds.TILE_SYNCHRONIZATION_ID, _*) =>
-                handleTileSynchronizationPacket(packet, player)
-
-            case Array(id, _*) =>
-                FMLLog warning s"Received synchronization packet with unexpected id of $id."
-
-            case Array() =>
-                FMLLog warning "Received empty synchronization packet."
-        }
+//        packet.data match
+//        {
+//            case Array(SynchronizationIds.TILE_SYNCHRONIZATION_ID, _*) =>
+//                handleTileSynchronizationPacket(packet, player)
+//
+//            case Array(id, _*) =>
+//                FMLLog warning s"Received synchronization packet with unexpected id of $id."
+//
+//            case Array() =>
+//                FMLLog warning "Received empty synchronization packet."
+//        }
     }
 
-    private def handleTileSynchronizationPacket(packet: Packet250CustomPayload, player: EntityPlayer) =
+    private def handleTileSynchronizationPacket(packet: Packet, player: EntityPlayer) =
     {
-        val byteStream = new ByteArrayInputStream(packet.data, 1, packet.data.length)
-        val input = new DataInputStream(byteStream)
-        
-        try
-        {
-            val position = (input.readInt(), input.readInt(), input.readInt())
-            val tile: Option[MappedProperties] = getSynchronizedTile(player.worldObj, position)
-
-            tile.foreach(parseProperties(_, input))
-        }
-        finally
-        {
-            input.close()
-            byteStream.close()
-        }
+//        val byteStream = new ByteArrayInputStream(packet.data, 1, packet.data.length)
+//        val input = new DataInputStream(byteStream)
+//
+//        try
+//        {
+//            val position = (input.readInt(), input.readInt(), input.readInt())
+//            val tile: Option[MappedProperties] = getSynchronizedTile(player.worldObj, position)
+//
+//            tile.foreach(parseProperties(_, input))
+//        }
+//        finally
+//        {
+//            input.close()
+//            byteStream.close()
+//        }
     }
 
     def parseProperties(mappedProperties: MappedProperties, input: DataInputStream)

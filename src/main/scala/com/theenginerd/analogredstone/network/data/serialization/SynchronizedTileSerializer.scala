@@ -17,35 +17,35 @@
 
 package com.theenginerd.analogredstone.network.data.serialization
 
-import net.minecraft.network.packet.Packet250CustomPayload
 import com.theenginerd.analogredstone.network.data.PropertyCell
 import cpw.mods.fml.common.FMLLog
 import com.google.common.io.{ByteArrayDataOutput, ByteStreams}
 import com.theenginerd.analogredstone.network.synchronization.SynchronizationIds
-import com.theenginerd.analogredstone.network.PacketHandler
+import net.minecraft.network.Packet
 
 trait SynchronizedTileSerializer
 {
-    def serializeToPacket(xCoord: Int, yCoord: Int, zCoord: Int, properties: Seq[PropertyCell]): Packet250CustomPayload
+    def serializeToPacket(xCoord: Int, yCoord: Int, zCoord: Int, properties: Seq[PropertyCell]): Packet
 }
 
 class DataStreamSynchronizedTileSerializer extends SynchronizedTileSerializer
 {
 
-    def serializeToPacket(xCoord: Int, yCoord: Int, zCoord: Int, properties: Seq[PropertyCell]): Packet250CustomPayload =
+    def serializeToPacket(xCoord: Int, yCoord: Int, zCoord: Int, properties: Seq[PropertyCell]): Packet =
     {
         val data = serializeToByteArray(xCoord, yCoord, zCoord, properties)
         buildPacket(data)
     }
 
-    def buildPacket(data: Array[Byte]): Packet250CustomPayload =
+    def buildPacket(data: Array[Byte]): Packet =
     {
-        val packet250 = new Packet250CustomPayload()
-        packet250.channel = PacketHandler.CHANNEL_SYNCHRONIZATION
-        packet250.data = data
-        packet250.length = data.length
-        packet250.isChunkDataPacket = true
-        packet250
+        null
+//        val packet250 = new Packet()
+//        packet250.channel = PacketHandler.CHANNEL_SYNCHRONIZATION
+//        packet250.data = data
+//        packet250.length = data.length
+//        packet250.isChunkDataPacket = true
+//        packet250
     }
 
     private def serializeToByteArray(xCoord: Int, yCoord: Int, zCoord: Int, properties: Seq[PropertyCell]): Array[Byte] =

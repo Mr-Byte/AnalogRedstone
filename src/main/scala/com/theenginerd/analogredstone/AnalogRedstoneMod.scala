@@ -20,14 +20,13 @@ package com.theenginerd.analogredstone
 import cpw.mods.fml.common.{SidedProxy, FMLLog, Mod}
 import cpw.mods.fml.common.Mod.EventHandler
 import cpw.mods.fml.common.event.{FMLPostInitializationEvent, FMLPreInitializationEvent, FMLInitializationEvent}
-import cpw.mods.fml.common.network.NetworkMod
 import java.io.File
 
 import com.theenginerd.analogredstone.proxy.{ModProxy, ClientModProxy, ServerModProxy}
 import com.theenginerd.analogredstone.network.PacketHandler
 
 @Mod(name = MOD_NAME, modid = MOD_ID, version = "1.0", modLanguage = "scala")
-@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = Array(PacketHandler.CHANNEL_SYNCHRONIZATION), packetHandler = classOf[PacketHandler])
+//@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = Array(PacketHandler.CHANNEL_SYNCHRONIZATION), packetHandler = classOf[PacketHandler])
 object AnalogRedstoneMod
 {
     @SidedProxy(clientSide = ClientModProxy.NAME, serverSide = ServerModProxy.NAME)
@@ -52,7 +51,6 @@ object AnalogRedstoneMod
         try
         {
             configuration.load()
-            block.configureBlockIds(configuration)
         }
         catch
         {

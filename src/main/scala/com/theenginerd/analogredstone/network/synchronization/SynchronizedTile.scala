@@ -18,9 +18,8 @@
 package com.theenginerd.analogredstone.network.synchronization
 
 import net.minecraft.tileentity.TileEntity
-import cpw.mods.fml.common.network.PacketDispatcher
-import net.minecraft.network.packet.Packet250CustomPayload
 import com.theenginerd.analogredstone.network.data.serialization.{SynchronizedTileSerializer, DataStreamSynchronizedTileSerializer}
+import net.minecraft.network.Packet
 
 trait SynchronizedTile extends Synchronized
 {
@@ -28,14 +27,14 @@ trait SynchronizedTile extends Synchronized
 
     final private val serializer: SynchronizedTileSerializer = new DataStreamSynchronizedTileSerializer
 
-    protected def sendSynchronizationPacket(packet: => Packet250CustomPayload) =
+    protected def sendSynchronizationPacket(packet: => Packet) =
     {
-        if(!worldObj.isRemote)
-        {
-            PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 64, worldObj.provider.dimensionId, packet)
-        }
+    //    if(!worldObj.isRemote)
+    //    {
+    //        PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 64, worldObj.provider.dimensionId, packet)
+    //    }
     }
 
-    protected def buildSynchronizationPacket(properties: Seq[MappedPropertyCell]): Packet250CustomPayload =
+    protected def buildSynchronizationPacket(properties: Seq[MappedPropertyCell]): Packet =
         serializer.serializeToPacket(xCoord, yCoord, zCoord, properties)
 }

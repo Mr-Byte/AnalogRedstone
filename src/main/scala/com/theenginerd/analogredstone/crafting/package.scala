@@ -21,6 +21,7 @@ import cpw.mods.fml.common.registry.GameRegistry
 import net.minecraft.item.{Item, ItemStack}
 import com.theenginerd.analogredstone.block.VariableSwitchBlock
 import net.minecraft.block.Block
+import net.minecraft.init.{Blocks, Items}
 
 package object crafting
 {
@@ -29,9 +30,9 @@ package object crafting
         GameRegistry.addRecipe(new ItemStack(VariableSwitchBlock, 1),
                               "SRB",
                               "CCC",
-                              'S': Character, new ItemStack(Item.stick),
-                              'R': Character, new ItemStack(Item.redstone),
-                              'B': Character, new ItemStack(Block.woodenButton),
-                              'C': Character, new ItemStack(Block.cobblestone))
+                              'S': Character, new ItemStack(Items.stick),
+                              'R': Character, new ItemStack(Items.redstone),
+                              'B': Character, new ItemStack(Blocks.wooden_button),
+                              'C': Character, new ItemStack(Blocks.cobblestone))
     }
 }

@@ -22,9 +22,9 @@ import net.minecraft.tileentity.TileEntity
 import com.theenginerd.analogredstone.tileentity.VariableSwitchTileEntity
 import org.lwjgl.opengl.GL11
 import com.theenginerd.analogredstone.block.VariableSwitchBlock
-import net.minecraftforge.common.ForgeDirection.{DOWN, UP, NORTH, SOUTH, WEST, EAST}
-import net.minecraftforge.common.ForgeDirection
-import main.scala.com.theenginerd.analogredstone.client.model.VariableSwitchModel
+import net.minecraftforge.common.util.ForgeDirection.{DOWN, UP, NORTH, SOUTH, WEST, EAST}
+import net.minecraftforge.common.util.ForgeDirection
+import com.theenginerd.analogredstone.client.model.VariableSwitchModel
 
 object VariableSwitchTileEntityRenderer extends TileEntitySpecialRenderer
 {

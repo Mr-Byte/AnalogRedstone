@@ -17,7 +17,7 @@
 
 package com.theenginerd.analogredstone
 
-import cpw.mods.fml.common.registry.{LanguageRegistry, GameRegistry}
+import cpw.mods.fml.common.registry.GameRegistry
 
 package object block
 {
@@ -28,20 +28,8 @@ package object block
 
     final lazy val VARIABLE_SWITCH_ID = blockIds.variableSwitchId
 
-    def configureBlockIds(configuration: AnalogRedstoneConfiguration)
-    {
-        def loadBlockId(propertyName: String, defaultValue: Int) =
-        {
-            val property = configuration.getBlock(propertyName, defaultValue)
-            property.getInt
-        }
-
-        blockIds.variableSwitchId = loadBlockId("variableSwitch.id", blockIds.variableSwitchId)
-    }
-
     def registerBlocks()
     {
         GameRegistry.registerBlock(VariableSwitchBlock, "variableSwitch")
-        LanguageRegistry.addName(VariableSwitchBlock, "Variable Switch")
     }
 }
