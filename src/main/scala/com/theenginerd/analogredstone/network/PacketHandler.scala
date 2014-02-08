@@ -17,31 +17,13 @@
 
 package com.theenginerd.analogredstone.network
 
-//import cpw.mods.fml.common.network.{Player, IPacketHandler}
-//import net.minecraft.network.INetworkManager
-//import net.minecraft.network.packet.Packet250CustomPayload
-//import net.minecraft.entity.player.EntityPlayer
 import com.theenginerd.analogredstone.MOD_ID
-//import cpw.mods.fml.common.FMLLog
-//import com.theenginerd.analogredstone.network.synchronization.SynchronizationHandler
-//
-//
-//class PacketHandler extends IPacketHandler
-//{
-//    def onPacketData(manager: INetworkManager, packet: Packet250CustomPayload, player: Player): Unit =
-//    {
-//        packet.channel match
-//        {
-//            case PacketHandler.CHANNEL_SYNCHRONIZATION =>
-//                SynchronizationHandler.handlePacket(packet, player.asInstanceOf[EntityPlayer])
-//
-//            case channel =>
-//                FMLLog warning s"Unexpectedly received a packet on channel $channel."
-//        }
-//    }
-//}
+import cpw.mods.fml.common.network.NetworkRegistry
 
 object PacketHandler
 {
-    final val CHANNEL_SYNCHRONIZATION = MOD_ID + "|s"
+    final val CHANNEL_SYNCHRONIZATION = s"$MOD_ID|s"
+
+    val synchronizationChannel = NetworkRegistry.INSTANCE.newChannel(CHANNEL_SYNCHRONIZATION, new SynchronizationCodec())
+
 }

@@ -21,15 +21,8 @@ import cpw.mods.fml.common.registry.GameRegistry
 
 package object block
 {
-    private object blockIds
-    {
-        var variableSwitchId = 3400
-    }
-
-    final lazy val VARIABLE_SWITCH_ID = blockIds.variableSwitchId
-
     def registerBlocks()
     {
-        GameRegistry.registerBlock(VariableSwitchBlock, "variableSwitch")
+        GameRegistry.registerBlock(VariableSwitchBlock.setBlockName("variableSwitch"), "variableSwitch")
     }
 }

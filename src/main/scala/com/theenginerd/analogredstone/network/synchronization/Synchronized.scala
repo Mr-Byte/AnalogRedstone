@@ -18,16 +18,27 @@
 package com.theenginerd.analogredstone.network.synchronization
 
 import com.theenginerd.analogredstone.network.data.MappedProperties
-import net.minecraft.network.Packet
+import com.theenginerd.analogredstone.network.data.synchronization.SynchronizedMessage
 
 trait Synchronized extends MappedProperties
 {
-    protected def buildSynchronizationPacket(properties: Seq[MappedPropertyCell]): Packet
-    protected def sendSynchronizationPacket(packet: => Packet)
+    protected def buildSynchronizationMessage(properties: Seq[MappedPropertyCell]): SynchronizedMessage
+    protected def sendSynchronizationMessage(packet: => SynchronizedMessage)
+
+    def handleSynchronizationMessage(message: SynchronizedMessage)
+    {
+        for(messageProperty <- message.properties)
+        {
+            for(property <- getPropertyById(messageProperty.id))
+            {
+                property := messageProperty.value.asInstanceOf[property.Value]
+            }
+        }
+    }
 
     def synchronized(properties: MappedPropertyCell*)(handler: => Unit = {}): Unit =
     {
         handler
-        sendSynchronizationPacket(buildSynchronizationPacket(properties))
+        sendSynchronizationMessage(buildSynchronizationMessage(properties))
     }
 }

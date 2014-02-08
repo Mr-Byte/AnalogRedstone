@@ -18,23 +18,14 @@
 package com.theenginerd.analogredstone.network.synchronization
 
 import net.minecraft.tileentity.TileEntity
-import com.theenginerd.analogredstone.network.data.serialization.{SynchronizedTileSerializer, DataStreamSynchronizedTileSerializer}
 import net.minecraft.network.Packet
 
 trait SynchronizedTile extends Synchronized
 {
     self: TileEntity =>
 
-    final private val serializer: SynchronizedTileSerializer = new DataStreamSynchronizedTileSerializer
-
     protected def sendSynchronizationPacket(packet: => Packet) =
     {
-    //    if(!worldObj.isRemote)
-    //    {
-    //        PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 64, worldObj.provider.dimensionId, packet)
-    //    }
+        //TODO: Send synchronization packet.
     }
-
-    protected def buildSynchronizationPacket(properties: Seq[MappedPropertyCell]): Packet =
-        serializer.serializeToPacket(xCoord, yCoord, zCoord, properties)
 }
