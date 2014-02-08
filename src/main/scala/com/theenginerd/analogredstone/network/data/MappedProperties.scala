@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Joshua R. Rodgers
+ * Copyright 2014 Joshua R. Rodgers
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,15 +26,27 @@ abstract class PropertyCell
 
     def unary_~ = value
     def :=(other: Value): Unit = value = other
+
+    def getTypeId: Byte =
+    {
+        value match
+        {
+            case _: Boolean => PropertyTypeIds.BOOLEAN_ID
+            case _: Byte => PropertyTypeIds.BYTE_ID
+            case _: Short => PropertyTypeIds.SHORT_ID
+            case _: Int => PropertyTypeIds.INT_ID
+            case _: Float => PropertyTypeIds.FLOAT_ID
+        }
+    }
 }
 
 object PropertyTypeIds
 {
-    final val BOOLEAN_ID = 0
-    final val BYTE_ID = 1
-    final val SHORT_ID = 2
-    final val INT_ID = 3
-    final val FLOAT_ID = 4
+    final val BOOLEAN_ID: Byte = 0
+    final val BYTE_ID: Byte = 1
+    final val SHORT_ID: Byte = 2
+    final val INT_ID: Byte = 3
+    final val FLOAT_ID: Byte = 4
 }
 
 trait MappedProperties

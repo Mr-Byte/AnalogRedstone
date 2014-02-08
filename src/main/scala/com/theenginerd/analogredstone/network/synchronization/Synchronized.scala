@@ -22,8 +22,8 @@ import com.theenginerd.analogredstone.network.data.synchronization.SynchronizedM
 
 trait Synchronized extends MappedProperties
 {
-    protected def buildSynchronizationMessage(properties: Seq[MappedPropertyCell]): SynchronizedMessage
-    protected def sendSynchronizationMessage(packet: => SynchronizedMessage)
+    protected def buildSynchronizedMessage(properties: Seq[MappedPropertyCell]): SynchronizedMessage
+    protected def sendSynchronizedMessage(packet: => SynchronizedMessage)
 
     def handleSynchronizationMessage(message: SynchronizedMessage)
     {
@@ -39,6 +39,6 @@ trait Synchronized extends MappedProperties
     def synchronized(properties: MappedPropertyCell*)(handler: => Unit = {}): Unit =
     {
         handler
-        sendSynchronizationMessage(buildSynchronizationMessage(properties))
+        sendSynchronizedMessage(buildSynchronizedMessage(properties))
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Joshua R. Rodgers
+ * Copyright 2014 Joshua R. Rodgers
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,6 @@ import net.minecraft.world.World
 
 package object synchronization
 {
-    def getSynchronizedTile(world : World, position : (Int, Int, Int)) : Option[SynchronizedTile] =
-        Option(world.getTileEntity(position._1, position._2, position._3).asInstanceOf[SynchronizedTile])
+    def getSynchronizedTile(world : World, x: Int, y: Int, z: Int) : Option[SynchronizedTile] =
+        Option(world.getTileEntity(x, y, z).asInstanceOf[SynchronizedTile])
 }

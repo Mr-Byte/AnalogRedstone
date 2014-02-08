@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Joshua R. Rodgers
+ * Copyright 2014 Joshua R. Rodgers
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,8 @@
 package com.theenginerd.analogredstone
 
 import cpw.mods.fml.common.registry.GameRegistry
-import net.minecraft.item.{Item, ItemStack}
+import net.minecraft.item.ItemStack
 import com.theenginerd.analogredstone.block.VariableSwitchBlock
-import net.minecraft.block.Block
 import net.minecraft.init.{Blocks, Items}
 
 package object crafting

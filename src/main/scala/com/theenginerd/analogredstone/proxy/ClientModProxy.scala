@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Joshua R. Rodgers
+ * Copyright 2014 Joshua R. Rodgers
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import cpw.mods.fml.client.registry.{ClientRegistry, RenderingRegistry}
 import com.theenginerd.analogredstone.tileentity.VariableSwitchTileEntity
 import com.theenginerd.analogredstone.client.renderer.tileentity.VariableSwitchTileEntityRenderer
 import com.theenginerd.analogredstone.client.renderer.item.VariableSwitchItemRenderer
-import com.theenginerd.analogredstone.block.{VariableSwitchBlock, VARIABLE_SWITCH_ID}
+import com.theenginerd.analogredstone.block.VariableSwitchBlock
 
 import net.minecraftforge.client.MinecraftForgeClient
 import net.minecraft.item.Item

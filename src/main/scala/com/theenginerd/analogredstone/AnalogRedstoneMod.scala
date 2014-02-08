@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Joshua R. Rodgers
+ * Copyright 2014 Joshua R. Rodgers
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import cpw.mods.fml.common.event.{FMLPostInitializationEvent, FMLPreInitializati
 import java.io.File
 
 import com.theenginerd.analogredstone.proxy.{ModProxy, ClientModProxy, ServerModProxy}
-import com.theenginerd.analogredstone.network.PacketHandler
 
 @Mod(name = MOD_NAME, modid = MOD_ID, version = "1.0", modLanguage = "scala")
 //@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = Array(PacketHandler.CHANNEL_SYNCHRONIZATION), packetHandler = classOf[PacketHandler])

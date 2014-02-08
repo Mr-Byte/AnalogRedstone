@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Joshua R. Rodgers
+ * Copyright 2014 Joshua R. Rodgers
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,11 @@
 
 package com.theenginerd.analogredstone.tileentity
 
-import net.minecraft.tileentity.TileEntity
 import net.minecraft.nbt.NBTTagCompound
 import com.theenginerd.analogredstone.network.synchronization._
+import com.theenginerd.analogredstone.network.PacketHandler
 
-class VariableSwitchTileEntity extends TileEntity with SynchronizedTile
+class VariableSwitchTileEntity extends SynchronizedTile
 {
     final val IS_ACTIVE_FIELD: String = "isActive"
     final val POWER_OUTPUT_FIELD: String = "powerOutput"
@@ -29,22 +29,14 @@ class VariableSwitchTileEntity extends TileEntity with SynchronizedTile
     val powerOutput: BytePropertyCell = BytePropertyCell(value = 0)
     var isActive: BooleanPropertyCell = BooleanPropertyCell(value = false)
 
- //   override def getDescriptionPacket = buildSynchronizationPacket(Array(powerOutput, isActive))
+    override def getDescriptionPacket =
+        PacketHandler.convertMessageToPacket(buildSynchronizedMessage(Array(powerOutput, isActive)))
 
     def toggleActive() =
         synchronized(isActive)
         {
             isActive := !(~isActive)
         }
-
-    @inline private def clamp(value: Int, min: Int, max: Int): Int =
-        if (value > max)
-            max
-        else if(value < min)
-            min
-        else
-            value
-
 
     def raisePower() =
         synchronized(powerOutput)
