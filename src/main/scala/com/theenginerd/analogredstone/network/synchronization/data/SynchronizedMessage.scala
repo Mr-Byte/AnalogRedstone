@@ -15,21 +15,21 @@
  * ========================================================================
  */
 
-package com.theenginerd.analogredstone.network.data.synchronization
+package com.theenginerd.analogredstone.network.synchronization.data
 
 import io.netty.buffer.ByteBuf
 import cpw.mods.fml.common.FMLLog
-import com.theenginerd.analogredstone.network.data.PropertyTypeIds
 
-class SynchronizedTileMessage(var x: Int, var y: Int, var z: Int, var properties: Seq[Property]) extends SynchronizedMessage
+abstract class SynchronizedMessage
 {
-    def this() = this(0, 0, 0, List())
+    var properties: Seq[Property]
+
+    protected def writeHeaderToBuffer(buffer: ByteBuf)
+    protected def readHeaderFromBuffer(buffer: ByteBuf)
 
     def writeToBuffer(buffer: ByteBuf) =
     {
-        buffer.writeInt(x)
-        buffer.writeInt(y)
-        buffer.writeInt(z)
+        writeHeaderToBuffer(buffer)
 
         for(property <- properties)
         {
@@ -39,36 +39,24 @@ class SynchronizedTileMessage(var x: Int, var y: Int, var z: Int, var properties
         }
     }
 
-    def writePropertyToBuffer(property: Property, buffer: ByteBuf): Any =
+    private def writePropertyToBuffer(property: Property, buffer: ByteBuf): Any =
     {
         property.value match
         {
-            case value: Boolean =>
-                buffer.writeBoolean(value)
-
-            case value: Byte =>
-                buffer.writeByte(value)
-
-            case value: Short =>
-                buffer.writeShort(value)
-
-            case value: Int =>
-                buffer.writeInt(value)
-
-            case value: Float =>
-                buffer.writeFloat(value)
-
+            case value: Boolean => buffer.writeBoolean(value)
+            case value: Byte => buffer.writeByte(value)
+            case value: Short => buffer.writeShort(value)
+            case value: Int => buffer.writeInt(value)
+            case value: Float => buffer.writeFloat(value)
             case unexpected =>
                 val typ = unexpected.getClass
-                FMLLog warning s"Unexpected serialization type found: $typ."
+                FMLLog severe s"Unexpected serialization type found: $typ."
         }
     }
 
     def readFromBuffer(buffer: ByteBuf) =
     {
-        x = buffer.readInt()
-        y = buffer.readInt()
-        z = buffer.readInt()
+        readHeaderFromBuffer(buffer)
 
         while(buffer.readableBytes() > 0)
         {
@@ -80,9 +68,9 @@ class SynchronizedTileMessage(var x: Int, var y: Int, var z: Int, var properties
         }
     }
 
-    def readPropertyFromBuffer(propertyType: Byte, buffer: ByteBuf): AnyVal =
+    private def readPropertyFromBuffer(propertyType: Byte, buffer: ByteBuf): AnyVal =
     {
-        import PropertyTypeIds._
+        import com.theenginerd.analogredstone.synchronization.PropertyTypeIds._
 
         propertyType match
         {
@@ -91,6 +79,8 @@ class SynchronizedTileMessage(var x: Int, var y: Int, var z: Int, var properties
             case SHORT_ID => buffer.readShort()
             case INT_ID => buffer.readInt()
             case FLOAT_ID => buffer.readFloat()
+            case unexpected =>
+                FMLLog severe s"Unexpected property type id of $unexpected encountered."
         }
     }
 }

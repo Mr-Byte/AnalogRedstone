@@ -15,9 +15,25 @@
  * ========================================================================
  */
 
-package com.theenginerd.analogredstone.network.data.synchronization
+package com.theenginerd.analogredstone.network.synchronization.data
 
-/**
- * Created by Byte on 2/8/14.
- */
-class Property(val id: Byte, val typeId: Byte, val value: Any)
+import io.netty.buffer.ByteBuf
+
+class SynchronizedTileMessage(var x: Int, var y: Int, var z: Int, var properties: Seq[Property]) extends SynchronizedMessage
+{
+    def this() = this(0, 0, 0, List())
+
+    protected override def writeHeaderToBuffer(buffer: ByteBuf) =
+    {
+        buffer.writeInt(x)
+        buffer.writeInt(y)
+        buffer.writeInt(z)
+    }
+
+    protected override def readHeaderFromBuffer(buffer: ByteBuf) =
+    {
+        x = buffer.readInt()
+        y = buffer.readInt()
+        z = buffer.readInt()
+    }
+}

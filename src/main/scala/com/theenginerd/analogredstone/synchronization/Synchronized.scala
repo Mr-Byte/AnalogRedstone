@@ -15,10 +15,9 @@
  * ========================================================================
  */
 
-package com.theenginerd.analogredstone.network.synchronization
+package com.theenginerd.analogredstone.synchronization
 
-import com.theenginerd.analogredstone.network.data.MappedProperties
-import com.theenginerd.analogredstone.network.data.synchronization.SynchronizedMessage
+import com.theenginerd.analogredstone.network.synchronization.data.SynchronizedMessage
 
 trait Synchronized extends MappedProperties
 {

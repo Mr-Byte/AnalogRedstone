@@ -15,12 +15,12 @@
  * ========================================================================
  */
 
-package com.theenginerd.analogredstone.network
+package com.theenginerd.analogredstone
 
 import net.minecraft.world.World
 
 package object synchronization
 {
-    def getSynchronizedTile(world : World, x: Int, y: Int, z: Int) : Option[SynchronizedTile] =
-        Option(world.getTileEntity(x, y, z).asInstanceOf[SynchronizedTile])
+    def getSynchronizedTileEntity(world : World, x: Int, y: Int, z: Int) : Option[SynchronizedTileEntity] =
+        Option(world.getTileEntity(x, y, z).asInstanceOf[SynchronizedTileEntity])
 }

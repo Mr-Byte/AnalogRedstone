@@ -18,9 +18,9 @@
 package com.theenginerd.analogredstone.network.synchronization
 
 import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec
-import com.theenginerd.analogredstone.network.data.synchronization.{SynchronizedTileMessage, SynchronizedMessage}
 import io.netty.channel.ChannelHandlerContext
 import io.netty.buffer.ByteBuf
+import com.theenginerd.analogredstone.network.synchronization.data.{SynchronizedTileMessage, SynchronizedMessage}
 
 class SynchronizationCodec extends FMLIndexedMessageToMessageCodec[SynchronizedMessage]
 {

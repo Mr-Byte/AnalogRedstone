@@ -19,9 +19,9 @@ package com.theenginerd.analogredstone.network.synchronization
 
 import cpw.mods.fml.common.FMLLog
 import io.netty.channel.{ChannelHandlerContext, SimpleChannelInboundHandler}
-import com.theenginerd.analogredstone.network.data.synchronization.{SynchronizedTileMessage, SynchronizedMessage}
 import cpw.mods.fml.client.FMLClientHandler
-import com.theenginerd.analogredstone.network.synchronization
+import com.theenginerd.analogredstone.synchronization
+import com.theenginerd.analogredstone.network.synchronization.data.{SynchronizedTileMessage, SynchronizedMessage}
 
 object SynchronizedHandler extends SimpleChannelInboundHandler[SynchronizedMessage]()
 {
@@ -32,13 +32,13 @@ object SynchronizedHandler extends SimpleChannelInboundHandler[SynchronizedMessa
         message match
         {
             case synchronizedTileMessage: SynchronizedTileMessage =>
-                for(tile <- synchronization.getSynchronizedTile(world, synchronizedTileMessage.x, synchronizedTileMessage.y, synchronizedTileMessage.z))
+                for(tile <- synchronization.getSynchronizedTileEntity(world, synchronizedTileMessage.x, synchronizedTileMessage.y, synchronizedTileMessage.z))
                 {
                     tile.handleSynchronizationMessage(message)
                 }
 
             case _ =>
-                FMLLog warning "Attempted to handle unknown SynchronizedMessage type."
+                FMLLog severe "Attempted to handle unknown SynchronizedMessage type."
         }
     }
 }

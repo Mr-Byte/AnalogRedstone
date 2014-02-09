@@ -15,7 +15,7 @@
  * ========================================================================
  */
 
-package com.theenginerd.analogredstone.network.data
+package com.theenginerd.analogredstone.synchronization
 
 abstract class PropertyCell
 {

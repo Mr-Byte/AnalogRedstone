@@ -15,14 +15,9 @@
  * ========================================================================
  */
 
-package com.theenginerd.analogredstone.network.data.synchronization
+package com.theenginerd.analogredstone.network.synchronization.data
 
-import io.netty.buffer.ByteBuf
-
-abstract class SynchronizedMessage
-{
-    var properties: Seq[Property]
-
-    def writeToBuffer(buffer: ByteBuf)
-    def readFromBuffer(buffer: ByteBuf)
-}
+/**
+ * Created by Byte on 2/8/14.
+ */
+class Property(val id: Byte, val typeId: Byte, val value: Any)

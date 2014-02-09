@@ -21,8 +21,8 @@ import com.theenginerd.analogredstone.MOD_ID
 import cpw.mods.fml.common.network.{FMLOutboundHandler, NetworkRegistry}
 import cpw.mods.fml.common.FMLCommonHandler
 import cpw.mods.fml.relauncher.{SideOnly, Side}
-import com.theenginerd.analogredstone.network.data.synchronization.SynchronizedMessage
 import com.theenginerd.analogredstone.network.synchronization.{SynchronizedHandler, SynchronizationCodec}
+import com.theenginerd.analogredstone.network.synchronization.data.SynchronizedMessage
 
 
 object PacketHandler

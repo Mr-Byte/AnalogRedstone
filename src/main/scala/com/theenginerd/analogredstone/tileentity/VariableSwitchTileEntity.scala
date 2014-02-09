@@ -18,10 +18,10 @@
 package com.theenginerd.analogredstone.tileentity
 
 import net.minecraft.nbt.NBTTagCompound
-import com.theenginerd.analogredstone.network.synchronization._
 import com.theenginerd.analogredstone.network.PacketHandler
+import com.theenginerd.analogredstone.synchronization.SynchronizedTileEntity
 
-class VariableSwitchTileEntity extends SynchronizedTile
+class VariableSwitchTileEntity extends SynchronizedTileEntity
 {
     final val IS_ACTIVE_FIELD: String = "isActive"
     final val POWER_OUTPUT_FIELD: String = "powerOutput"
