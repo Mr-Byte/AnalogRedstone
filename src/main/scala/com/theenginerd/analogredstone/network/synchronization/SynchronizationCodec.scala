@@ -15,7 +15,7 @@
  * ========================================================================
  */
 
-package com.theenginerd.analogredstone.network
+package com.theenginerd.analogredstone.network.synchronization
 
 import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec
 import com.theenginerd.analogredstone.network.data.synchronization.{SynchronizedTileMessage, SynchronizedMessage}

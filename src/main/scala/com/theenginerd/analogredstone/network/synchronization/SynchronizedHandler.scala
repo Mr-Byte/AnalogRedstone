@@ -15,12 +15,13 @@
  * ========================================================================
  */
 
-package com.theenginerd.analogredstone.network
+package com.theenginerd.analogredstone.network.synchronization
 
 import cpw.mods.fml.common.FMLLog
 import io.netty.channel.{ChannelHandlerContext, SimpleChannelInboundHandler}
 import com.theenginerd.analogredstone.network.data.synchronization.{SynchronizedTileMessage, SynchronizedMessage}
 import cpw.mods.fml.client.FMLClientHandler
+import com.theenginerd.analogredstone.network.synchronization
 
 object SynchronizedHandler extends SimpleChannelInboundHandler[SynchronizedMessage]()
 {

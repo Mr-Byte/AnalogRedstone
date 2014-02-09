@@ -36,7 +36,6 @@ import com.theenginerd.analogredstone.MOD_ID
 
 object VariableSwitchBlock extends BlockContainer(Material.circuits)
 {
- //   setUnlocalizedName(s"$MOD_ID.variableSwitch")
     setCreativeTab(CreativeTabs.tabRedstone)
 
     protected abstract class Part
