@@ -55,6 +55,7 @@ trait MappedProperties
     private var propertyMap: Map[Byte, PropertyCell] = Map()
 
     def getPropertyById(id: Byte): Option[PropertyCell] = propertyMap.get(id)
+    def getAllProperties: Iterable[PropertyCell] = propertyMap.values
 
     sealed abstract class MappedPropertyCell extends PropertyCell
     {

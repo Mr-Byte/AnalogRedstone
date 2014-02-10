@@ -19,7 +19,7 @@ package com.theenginerd.analogredstone.network.synchronization.data
 
 import io.netty.buffer.ByteBuf
 
-class SynchronizedTileMessage(var x: Int, var y: Int, var z: Int, var properties: Seq[Property]) extends SynchronizedMessage
+class SynchronizedTileMessage(var x: Int, var y: Int, var z: Int, var properties: Iterable[Property]) extends SynchronizedMessage
 {
     def this() = this(0, 0, 0, List())
 

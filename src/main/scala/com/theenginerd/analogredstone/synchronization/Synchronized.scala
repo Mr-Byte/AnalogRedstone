@@ -21,12 +21,12 @@ import com.theenginerd.analogredstone.network.synchronization.data.SynchronizedM
 
 trait Synchronized extends MappedProperties
 {
-    protected def buildSynchronizedMessage(properties: Seq[MappedPropertyCell]): SynchronizedMessage
+    protected def buildSynchronizedMessage(properties: Iterable[PropertyCell]): SynchronizedMessage
     protected def sendSynchronizedMessage(packet: => SynchronizedMessage)
 
     def handleSynchronizationMessage(message: SynchronizedMessage)
     {
-        for(messageProperty <- message.properties)
+        for(messageProperty <- message.getProperties)
         {
             for(property <- getPropertyById(messageProperty.id))
             {

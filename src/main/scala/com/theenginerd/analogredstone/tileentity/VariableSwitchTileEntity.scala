@@ -18,7 +18,6 @@
 package com.theenginerd.analogredstone.tileentity
 
 import net.minecraft.nbt.NBTTagCompound
-import com.theenginerd.analogredstone.network.PacketHandler
 import com.theenginerd.analogredstone.synchronization.SynchronizedTileEntity
 
 class VariableSwitchTileEntity extends SynchronizedTileEntity
@@ -28,9 +27,6 @@ class VariableSwitchTileEntity extends SynchronizedTileEntity
 
     val powerOutput: BytePropertyCell = BytePropertyCell(value = 0)
     var isActive: BooleanPropertyCell = BooleanPropertyCell(value = false)
-
-    override def getDescriptionPacket =
-        PacketHandler.convertMessageToPacket(buildSynchronizedMessage(Array(powerOutput, isActive)))
 
     def toggleActive() =
         synchronized(isActive)

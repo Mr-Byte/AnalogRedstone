@@ -23,12 +23,15 @@ import com.theenginerd.analogredstone.network.synchronization.data.{Synchronized
 
 class SynchronizedTileEntity extends TileEntity with Synchronized
 {
-    protected override def buildSynchronizedMessage(properties: Seq[MappedPropertyCell]): SynchronizedMessage =
+    override def getDescriptionPacket =
+        PacketHandler.convertMessageToPacket(buildSynchronizedMessage(getAllProperties))
+
+    protected override def buildSynchronizedMessage(properties: Iterable[PropertyCell]): SynchronizedMessage =
     {
         new SynchronizedTileMessage(xCoord, yCoord, zCoord, convertToMessageProperties(properties))
     }
 
-    private def convertToMessageProperties(propertyCells: Seq[MappedPropertyCell]) =
+    private def convertToMessageProperties(propertyCells: Iterable[PropertyCell]) =
     {
         for(propertyCell <- propertyCells)
             yield new Property(propertyCell.id, propertyCell.getTypeId, ~propertyCell)

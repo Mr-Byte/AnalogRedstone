@@ -24,8 +24,7 @@ import java.io.File
 
 import com.theenginerd.analogredstone.proxy.{ModProxy, ClientModProxy, ServerModProxy}
 
-@Mod(name = MOD_NAME, modid = MOD_ID, version = "1.0", modLanguage = "scala")
-//@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = Array(PacketHandler.CHANNEL_SYNCHRONIZATION), packetHandler = classOf[PacketHandler])
+@Mod(name = MOD_NAME, modid = MOD_ID, version = "1.1.0-1.7.2", modLanguage = "scala")
 object AnalogRedstoneMod
 {
     @SidedProxy(clientSide = ClientModProxy.NAME, serverSide = ServerModProxy.NAME)

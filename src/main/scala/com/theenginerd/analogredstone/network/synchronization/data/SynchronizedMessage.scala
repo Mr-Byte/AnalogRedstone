@@ -22,7 +22,9 @@ import cpw.mods.fml.common.FMLLog
 
 abstract class SynchronizedMessage
 {
-    var properties: Seq[Property]
+    protected var properties: Iterable[Property]
+
+    def getProperties = properties
 
     protected def writeHeaderToBuffer(buffer: ByteBuf)
     protected def readHeaderFromBuffer(buffer: ByteBuf)
@@ -58,14 +60,18 @@ abstract class SynchronizedMessage
     {
         readHeaderFromBuffer(buffer)
 
+        var parsedProperties: List[Property] = List()
+
         while(buffer.readableBytes() > 0)
         {
             val propertyId = buffer.readByte()
             val propertyType = buffer.readByte()
             val propertyValue = readPropertyFromBuffer(propertyType, buffer)
 
-            properties :+= new Property(propertyId, propertyType, propertyValue)
+            parsedProperties :+= new Property(propertyId, propertyType, propertyValue)
         }
+
+        properties = parsedProperties
     }
 
     private def readPropertyFromBuffer(propertyType: Byte, buffer: ByteBuf): AnyVal =
