@@ -1,8 +1,10 @@
 !.gitignore
 /*
 /*/
+!/gradle/
 !/src/
 !/assets/
 !README.md
 !LICENSE
 !build.gradle
+!gradlew*
