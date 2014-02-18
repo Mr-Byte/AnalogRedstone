@@ -17,12 +17,12 @@
 
 package com.theenginerd.analogredstone.client.renderer.item
 
-import com.theenginerd.analogredstone.client.model.VariableSwitchModel
 import net.minecraftforge.client.IItemRenderer
 import net.minecraft.item.ItemStack
 import net.minecraftforge.client.IItemRenderer.{ItemRendererHelper, ItemRenderType}
 import net.minecraftforge.client.IItemRenderer.ItemRenderType.{ENTITY, EQUIPPED, EQUIPPED_FIRST_PERSON, INVENTORY}
 import org.lwjgl.opengl.GL11
+import com.theenginerd.analogredstone.client.model.tileentity.VariableSwitchModel
 
 object VariableSwitchItemRenderer extends IItemRenderer
 {

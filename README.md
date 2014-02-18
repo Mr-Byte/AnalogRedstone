@@ -27,13 +27,22 @@ limitations under the License.
 ## Current Ideas for the Future
 Block Ideas:
 * Redstone Lock & Key
-* Filter (only allows redstone above or below a threshold to pass through)
-* Variable repeater (Repeater with adjustable output strength)
-* Adder (adds two signals together)
-* Subtractor (subtracts two signals from each other)
-* Sine wave generator (generates a falling/rising redstone wave following a sine wave, with adjustable period)
-* Square wave generator (generates a falling/rising redstone wave following a square wave, with adjustable period)
-* Capacitor (Discharges a redstone charge over time, losing strength)
-* Losless redstone
-* Resistor (Uses some type of Ohm's law to reduce signal?)
-* Diode (one-directional gate with no tick-delay)
+* Diode
+    - No-delay, directional redstone block
+* Signal Inverter
+    - O = 15 - I
+* Analog Counter
+    - Outputs a signal between 0 and 15, adjusted up or down by pulsing the I+ and I- sides
+* Capacitor
+    - Block the charges to some capacity while being fed a redstone signal and then discharges from 15 to 0 over time.
+    - The wave form of the discharge is selectable from linear, cubic, etc
+* Variable repeater
+    - Adjustable output strength with adjustable repeater delay
+* Adder
+    - O = MIN(I1 + I2, 15)
+* Wave generator
+    - Generates sine and square waves on an adjustable period and amplitude
+* High-pass Filter
+    - Filters out incoming signals below a threshold.
+* Low-pass Filter
+    - Filters out incoming signals above a threshold.

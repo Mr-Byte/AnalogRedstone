@@ -15,23 +15,15 @@
  * ========================================================================
  */
 
-package com.theenginerd.analogredstone
+package com.theenginerd.analogredstone.client.model
 
-import cpw.mods.fml.common.registry.GameRegistry
-import net.minecraft.block.Block
+import com.theenginerd.analogredstone.client.model.builder.FaceGroup
 
-package object block
+trait Part
 {
+    val name: String
+    val origin: (Float, Float, Float)
 
-    def registerBlock(block: Block) =
-    {
-        val name = block.getClass.getSimpleName.replace("Block", "").replace("$", "").toLowerCase
-        GameRegistry.registerBlock(block.setBlockName(s"$MOD_ID:$name"), s"Block$name")
-    }
-
-    def registerBlocks()
-    {
-        registerBlock(VariableSwitchBlock)
-        registerBlock(TestBlock)
-    }
+    def drawAllFaceGroups(faceGroupHandler: (FaceGroup) => Unit)
+    def drawFaceGroups(faceGroupNames: Option[String]*)(faceGroupHandler: (FaceGroup) => Unit)
 }

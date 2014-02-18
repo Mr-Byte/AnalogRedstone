@@ -33,6 +33,8 @@ import com.theenginerd.analogredstone.utility.HitBox
 import com.theenginerd.analogredstone.client.renderer.RenderIds
 import net.minecraft.client.renderer.texture.IIconRegister
 import com.theenginerd.analogredstone.MOD_ID
+import cpw.mods.fml.relauncher.{Side, SideOnly}
+import java.util.Random
 
 object VariableSwitchBlock extends BlockContainer(Material.circuits)
 {
@@ -54,7 +56,7 @@ object VariableSwitchBlock extends BlockContainer(Material.circuits)
 
     override def registerBlockIcons(register: IIconRegister)
     {
-        blockIcon = register.registerIcon(s"$MOD_ID:variableswitch")
+        blockIcon = register.registerIcon(s"$MOD_ID:variable_switch_on")
     }
 
     override def createNewTileEntity(world: World, index: Int): TileEntity = new VariableSwitchTileEntity
@@ -230,4 +232,50 @@ object VariableSwitchBlock extends BlockContainer(Material.circuits)
     override def renderAsNormalBlock = false
 
     override def getRenderType = RenderIds.variableSwitch
+
+    override def getLightValue(blockAccess: IBlockAccess, x: Int, y: Int, z: Int) =
+    {
+        val tileEntity = blockAccess.getTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity]
+
+        if(~tileEntity.isActive) 10 else 0
+    }
+
+    @SideOnly(Side.CLIENT)
+    override def randomDisplayTick(world: World, x: Int, y: Int, z: Int, random: Random)
+    {
+        val tileEntity = world.getTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity]
+        val metadata = world.getBlockMetadata(x, y, z)
+
+        if (~tileEntity.isActive)
+        {
+            val direction = getDirection(metadata)
+            val orientation = getOrientation(metadata)
+
+            val xPosition: Double = x + (random.nextDouble - 0.5D) * 0.2D
+            val yPosition: Double = y + (random.nextDouble - 0.5D) * 0.2D
+            val zPosition: Double = z + (random.nextDouble - 0.5D) * 0.2D
+
+            val (xOffset, yOffset, zOffset) = getTorchOffset(direction, orientation, ~tileEntity.powerOutput)
+
+            world.spawnParticle("reddust", xPosition + xOffset, yPosition + yOffset, zPosition + zOffset, 0.0D, 0.0D, 0.0D)
+        }
+    }
+
+    private def getTorchOffset(direction: ForgeDirection, orientation: Int, powerOutput: Byte) =
+    {
+        val scaledPower = 0.625D * (powerOutput / 15D)
+
+        direction match
+        {
+            case DOWN if orientation == 0 => (0.75D, 0.6D, 0.25D + scaledPower)
+            case DOWN if orientation == 1 => (0.25D + scaledPower, 0.6D, 0.25D)
+            case UP if orientation == 0 => (0.75D, 0.4D, 0.75D - scaledPower)
+            case UP if orientation == 1 => (0.75D - scaledPower, 0.4D, 0.25D)
+            case NORTH => (0.25D, 0.25D + scaledPower, 0.6D)
+            case SOUTH => (0.75D, 0.25D + scaledPower, 0.4D)
+            case WEST => (0.6D, 0.25D + scaledPower, 0.75D)
+            case EAST => (0.4D, 0.25D + scaledPower, 0.25D)
+            case _ => (0D, 0D, 0D)
+        }
+    }
 }

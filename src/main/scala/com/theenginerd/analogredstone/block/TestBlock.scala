@@ -15,23 +15,22 @@
  * ========================================================================
  */
 
-package com.theenginerd.analogredstone
+package com.theenginerd.analogredstone.block
 
-import cpw.mods.fml.common.registry.GameRegistry
 import net.minecraft.block.Block
+import net.minecraft.block.material.Material
+import net.minecraft.creativetab.CreativeTabs
+import net.minecraft.client.renderer.texture.IIconRegister
+import com.theenginerd.analogredstone.MOD_ID
 
-package object block
+object TestBlock extends Block(Material.wood)
 {
+    setCreativeTab(CreativeTabs.tabMisc)
 
-    def registerBlock(block: Block) =
+    override def registerBlockIcons(register: IIconRegister) =
     {
-        val name = block.getClass.getSimpleName.replace("Block", "").replace("$", "").toLowerCase
-        GameRegistry.registerBlock(block.setBlockName(s"$MOD_ID:$name"), s"Block$name")
+        blockIcon = register.registerIcon(s"$MOD_ID:uv_test")
     }
 
-    def registerBlocks()
-    {
-        registerBlock(VariableSwitchBlock)
-        registerBlock(TestBlock)
-    }
+    override def isOpaqueCube = false
 }

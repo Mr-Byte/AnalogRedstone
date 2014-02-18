@@ -17,8 +17,7 @@
 
 package com.theenginerd.analogredstone.proxy
 
-import com.theenginerd.analogredstone.client.renderer.RenderIds
-import cpw.mods.fml.client.registry.{ClientRegistry, RenderingRegistry}
+import cpw.mods.fml.client.registry.{RenderingRegistry, ClientRegistry}
 import com.theenginerd.analogredstone.tileentity.VariableSwitchTileEntity
 import com.theenginerd.analogredstone.client.renderer.tileentity.VariableSwitchTileEntityRenderer
 import com.theenginerd.analogredstone.client.renderer.item.VariableSwitchItemRenderer
@@ -31,8 +30,6 @@ class ClientModProxy extends ModProxy
 {
     override def setupRendering() =
     {
-        RenderIds.variableSwitch = RenderingRegistry.getNextAvailableRenderId
-
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(VariableSwitchBlock), VariableSwitchItemRenderer)
     }
 

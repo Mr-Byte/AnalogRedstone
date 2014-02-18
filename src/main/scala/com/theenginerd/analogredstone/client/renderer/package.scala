@@ -17,10 +17,12 @@
 
 package com.theenginerd.analogredstone.client
 
+import cpw.mods.fml.client.registry.RenderingRegistry
+
 package object renderer
 {
     object RenderIds
     {
-        var variableSwitch = 0
+        val variableSwitch = RenderingRegistry.getNextAvailableRenderId
     }
 }

@@ -15,23 +15,21 @@
  * ========================================================================
  */
 
-package com.theenginerd.analogredstone
+package com.theenginerd.analogredstone.client.model.builder.shapes
 
-import cpw.mods.fml.common.registry.GameRegistry
-import net.minecraft.block.Block
-
-package object block
+abstract sealed class TextureCoordinates
 {
-
-    def registerBlock(block: Block) =
+    def getOrElse(default: => (Int, Int, Int, Int)): (Int, Int, Int, Int) =
     {
-        val name = block.getClass.getSimpleName.replace("Block", "").replace("$", "").toLowerCase
-        GameRegistry.registerBlock(block.setBlockName(s"$MOD_ID:$name"), s"Block$name")
-    }
-
-    def registerBlocks()
-    {
-        registerBlock(VariableSwitchBlock)
-        registerBlock(TestBlock)
+        this match
+        {
+            case TextureRectangle(left, bottom, width, height) => (left, bottom, width, height)
+            case TextureDefault => default
+        }
     }
 }
+
+case class TextureRectangle(left: Int, bottom: Int, width: Int, height: Int) extends TextureCoordinates
+case object TextureDefault extends TextureCoordinates
+
+case class SideInfo(textureCoordinates: TextureCoordinates, faceGroupName: Option[String])

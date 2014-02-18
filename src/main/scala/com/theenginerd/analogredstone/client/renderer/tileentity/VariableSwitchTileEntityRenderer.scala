@@ -24,7 +24,10 @@ import org.lwjgl.opengl.GL11
 import com.theenginerd.analogredstone.block.VariableSwitchBlock
 import net.minecraftforge.common.util.ForgeDirection.{DOWN, UP, NORTH, SOUTH, WEST, EAST}
 import net.minecraftforge.common.util.ForgeDirection
-import com.theenginerd.analogredstone.client.model.VariableSwitchModel
+import com.theenginerd.analogredstone.client.model.tileentity.VariableSwitchModel
+import cpw.mods.fml.client.FMLClientHandler
+import net.minecraft.world.IBlockAccess
+import net.minecraft.client.renderer.{RenderHelper, Tessellator}
 
 object VariableSwitchTileEntityRenderer extends TileEntitySpecialRenderer
 {
@@ -35,51 +38,78 @@ object VariableSwitchTileEntityRenderer extends TileEntitySpecialRenderer
         val direction = VariableSwitchBlock.getDirection(metadata)
         val orientation = VariableSwitchBlock.getOrientation(metadata)
 
+        setBrightness(variableSwitch)
+
         GL11.glPushMatrix()
 
         transformOrientation(x, y, z, direction, orientation)
         VariableSwitchModel.render(~variableSwitch.isActive: Boolean, ~variableSwitch.powerOutput: Byte)
 
         GL11.glPopMatrix()
+
+        resetBrightness(variableSwitch)
     }
 
-    def transformOrientation(x: Double, y: Double, z: Double, direction: ForgeDirection, orientation: Int)
+    private def resetBrightness(variableSwitch: VariableSwitchTileEntity)
+    {
+        if (~variableSwitch.isActive)
+        {
+            RenderHelper.enableStandardItemLighting()
+        }
+    }
+
+    private def setBrightness(variableSwitch: VariableSwitchTileEntity)
+    {
+        val tessellator = Tessellator.instance
+        val blockAccess: IBlockAccess = FMLClientHandler.instance().getWorldClient
+        val brightness = variableSwitch.getBlockType.getMixedBrightnessForBlock(blockAccess, variableSwitch.xCoord, variableSwitch.yCoord, variableSwitch.zCoord)
+
+        if (~variableSwitch.isActive)
+        {
+            RenderHelper.disableStandardItemLighting()
+        }
+
+        tessellator.setBrightness(brightness)
+        tessellator.setColorOpaque_F(1F, 1F, 1F)
+    }
+
+    private def transformOrientation(x: Double, y: Double, z: Double, direction: ForgeDirection, orientation: Int)
     {
         direction match
         {
             case DOWN if orientation == 0 =>
-                GL11.glTranslatef(x.toFloat + 0.5f, y.toFloat + 1.0f, z.toFloat + 0.5f)
+                GL11.glTranslatef(x.toFloat, y.toFloat + 1.0f, z.toFloat + 1.0f)
                 GL11.glRotated(180, 1, 0, 0)
 
             case DOWN if orientation == 1 =>
-                GL11.glTranslatef(x.toFloat + 0.5f, y.toFloat + 1.0f, z.toFloat + 0.5f)
+                GL11.glTranslatef(x.toFloat + 1, y.toFloat + 1.0f, z.toFloat + 1)
                 GL11.glRotated(90, 0, 1, 0)
                 GL11.glRotated(180, 1, 0, 0)
 
             case UP if orientation == 0 =>
-                GL11.glTranslatef(x.toFloat + 0.5f, y.toFloat, z.toFloat + 0.5f)
+                GL11.glTranslatef(x.toFloat, y.toFloat, z.toFloat)
 
             case UP if orientation == 1 =>
-                GL11.glTranslatef(x.toFloat + 0.5f, y.toFloat, z.toFloat + 0.5f)
+                GL11.glTranslatef(x.toFloat, y.toFloat, z.toFloat + 1.0f)
                 GL11.glRotated(90, 0, 1, 0)
 
             case NORTH =>
-                GL11.glTranslatef(x.toFloat + 0.5f, y.toFloat + 0.5f, z.toFloat + 1.0f)
+                GL11.glTranslatef(x.toFloat + 1.0f, y.toFloat + 1.0f, z.toFloat + 1.0f)
                 GL11.glRotated(-90, 1, 0, 0)
                 GL11.glScalef(-1, 1, -1)
 
             case SOUTH =>
-                GL11.glTranslatef(x.toFloat + 0.5f, y.toFloat + 0.5f, z.toFloat)
+                GL11.glTranslatef(x.toFloat, y.toFloat + 1.0f, z.toFloat)
                 GL11.glRotated(90, 1, 0, 0)
 
             case WEST =>
-                GL11.glTranslatef(x.toFloat + 1.0f, y.toFloat + 0.5f, z.toFloat + 0.5f)
+                GL11.glTranslatef(x.toFloat + 1.0f, y.toFloat + 1.0f, z.toFloat)
                 GL11.glRotated(90, 0, 0, 1)
                 GL11.glRotated(90, 0, 1, 0)
                 GL11.glScalef(-1, 1, -1)
 
             case EAST =>
-                GL11.glTranslatef(x.toFloat, y.toFloat + 0.5f, z.toFloat + 0.5f)
+                GL11.glTranslatef(x.toFloat, y.toFloat + 1.0f, z.toFloat + 1.0f)
                 GL11.glRotated(-90, 0, 0, 1)
                 GL11.glRotated(90, 0, 1, 0)
 
