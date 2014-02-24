@@ -2,7 +2,7 @@
 A set of gates that enable working with analog redstone signals.
 
 ## Information
-Requires at least Forge 9.11.1.953 in order to work.
+Requires at least Forge 10.12.0.1029 in order to work.
 
 Currently only implements the Variable Switch, which is a switch with variable output (right-click the slider to turn up, shift+right-click to turn down).
 
@@ -34,7 +34,7 @@ Block Ideas:
 * Analog Counter
     - Outputs a signal between 0 and 15, adjusted up or down by pulsing the I+ and I- sides
 * Capacitor
-    - Block the charges to some capacity while being fed a redstone signal and then discharges from 15 to 0 over time.
+    - Block the charges to some capacity while being fed a redstone signal and then discharges from 15 to 0 over time
     - The wave form of the discharge is selectable from linear, cubic, etc
 * Variable repeater
     - Adjustable output strength with adjustable repeater delay
@@ -43,6 +43,14 @@ Block Ideas:
 * Wave generator
     - Generates sine and square waves on an adjustable period and amplitude
 * High-pass Filter
-    - Filters out incoming signals below a threshold.
+    - Filters out incoming signals below a threshold
 * Low-pass Filter
-    - Filters out incoming signals above a threshold.
+    - Filters out incoming signals above a threshold
+* Band-pass Filter
+    - Filters out signals outside a certain range of strengths
+* Edge Detectors
+    - Pulse on rising or falling edge.
+* Pulse Lengtheners
+    - Lengthen the input pulse by a set amount of time
+* Signal Strength Randomizer
+    - Output a random signal strength when pulsed
