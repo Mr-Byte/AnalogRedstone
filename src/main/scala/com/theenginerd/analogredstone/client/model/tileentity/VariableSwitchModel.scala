@@ -54,7 +54,7 @@ object VariableSwitchModel
                                 .setSideInfo(BoxTop)(TextureRectangle(7, 8, 2, 2))
                             }
                         }
-                        .addPart("torch", xOrigin = 4, yOrigin = 2, zOrigin = 5)(torchPart)
+                        .addPart("torch", xOrigin = 4, yOrigin = 2, zOrigin = 5)(torchPart(5))
                         .toModel
 
     def render(isActive: Boolean, powerOutput: Byte)

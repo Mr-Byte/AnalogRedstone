@@ -23,29 +23,32 @@ import com.theenginerd.analogredstone.client.model.builder.shapes.TextureRectang
 
 package object parts
 {
-    def torchPart: (PartBuilder) => Unit =
+    def torchPart(torchHeight: Int)(partBuilder: PartBuilder): Unit =
     {
-        _.addShape
+        val torchTopOffset = 2 * torchHeight
+        val torchSideOffset = 2 * torchHeight - 4
+
+        partBuilder.addShape
         {
-            Box(2, 5, 2)
-            .setSideInfo(BoxLeft, BoxRight, BoxFront, BoxBack)(TextureRectangle(7, 5, 2, 5))
+            Box(2, torchHeight, 2)
+            .setSideInfo(BoxLeft, BoxRight, BoxFront, BoxBack)(TextureRectangle(7, 10 - torchHeight, 2, torchHeight))
             .setSideInfo(BoxTop)(TextureRectangle(7, 8, 2, 2))
         }
         //Front
-        .addShape(Plane(PlaneFront)(XAxis, 2, 1, y = 10, z = 2, textureCoordinates = TextureRectangle(7, 10, 2, 1)))
-        .addShape(Plane(PlaneFront)(XAxis, 1, 2, y = 6, x = 3, z = 2, textureCoordinates = TextureRectangle(9, 8, 1, 2)))
-        .addShape(Plane(PlaneFront)(XAxis, 1, 2, y = 6, x = -3, z = 2, textureCoordinates = TextureRectangle(6, 8, 1, 2)))
+        .addShape(Plane(PlaneFront)(XAxis, 2, 1, y = torchTopOffset, z = 2, textureCoordinates = TextureRectangle(7, 10, 2, 1)))
+        .addShape(Plane(PlaneFront)(XAxis, 1, 2, y = torchSideOffset, x = 3, z = 2, textureCoordinates = TextureRectangle(9, 8, 1, 2)))
+        .addShape(Plane(PlaneFront)(XAxis, 1, 2, y = torchSideOffset, x = -3, z = 2, textureCoordinates = TextureRectangle(6, 8, 1, 2)))
         //Back
-        .addShape(Plane(PlaneBack)(XAxis, 2, 1, y = 10, z = -2, textureCoordinates = TextureRectangle(7, 10, 2, 1)))
-        .addShape(Plane(PlaneBack)(XAxis, 1, 2, y = 6, x = 3, z = -2, textureCoordinates = TextureRectangle(9, 8, 1, 2)))
-        .addShape(Plane(PlaneBack)(XAxis, 1, 2, y = 6, x = -3, z = -2, textureCoordinates = TextureRectangle(6, 8, 1, 2)))
+        .addShape(Plane(PlaneBack)(XAxis, 2, 1, y = torchTopOffset, z = -2, textureCoordinates = TextureRectangle(7, 10, 2, 1)))
+        .addShape(Plane(PlaneBack)(XAxis, 1, 2, y = torchSideOffset, x = 3, z = -2, textureCoordinates = TextureRectangle(9, 8, 1, 2)))
+        .addShape(Plane(PlaneBack)(XAxis, 1, 2, y = torchSideOffset, x = -3, z = -2, textureCoordinates = TextureRectangle(6, 8, 1, 2)))
         //Front
-        .addShape(Plane(PlaneFront)(ZAxis, 2, 1, y = 10, x = -2, textureCoordinates = TextureRectangle(7, 10, 2, 1)))
-        .addShape(Plane(PlaneFront)(ZAxis, 1, 2, y = 6, z = 3, x = -2, textureCoordinates = TextureRectangle(9, 8, 1, 2)))
-        .addShape(Plane(PlaneFront)(ZAxis, 1, 2, y = 6, z = -3, x = -2, textureCoordinates = TextureRectangle(6, 8, 1, 2)))
+        .addShape(Plane(PlaneFront)(ZAxis, 2, 1, y = torchTopOffset, x = -2, textureCoordinates = TextureRectangle(7, 10, 2, 1)))
+        .addShape(Plane(PlaneFront)(ZAxis, 1, 2, y = torchSideOffset, z = 3, x = -2, textureCoordinates = TextureRectangle(9, 8, 1, 2)))
+        .addShape(Plane(PlaneFront)(ZAxis, 1, 2, y = torchSideOffset, z = -3, x = -2, textureCoordinates = TextureRectangle(6, 8, 1, 2)))
         //Back
-        .addShape(Plane(PlaneBack)(ZAxis, 2, 1, y = 10, x = 2, textureCoordinates = TextureRectangle(7, 10, 2, 1)))
-        .addShape(Plane(PlaneBack)(ZAxis, 1, 2, y = 6, z = 3, x = 2, textureCoordinates = TextureRectangle(9, 8, 1, 2)))
-        .addShape(Plane(PlaneBack)(ZAxis, 1, 2, y = 6, z = -3, x = 2, textureCoordinates = TextureRectangle(6, 8, 1, 2)))
+        .addShape(Plane(PlaneBack)(ZAxis, 2, 1, y = torchTopOffset, x = 2, textureCoordinates = TextureRectangle(7, 10, 2, 1)))
+        .addShape(Plane(PlaneBack)(ZAxis, 1, 2, y = torchSideOffset, z = 3, x = 2, textureCoordinates = TextureRectangle(9, 8, 1, 2)))
+        .addShape(Plane(PlaneBack)(ZAxis, 1, 2, y = torchSideOffset, z = -3, x = 2, textureCoordinates = TextureRectangle(6, 8, 1, 2)))
     }
 }
