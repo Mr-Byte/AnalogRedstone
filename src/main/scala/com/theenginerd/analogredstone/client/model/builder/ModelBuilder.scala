@@ -48,14 +48,16 @@ class ModelBuilder
                 GL11.glPushMatrix()
                 GL11.glTranslatef(0.5f, 0, 0.5f)
 
-                partsToDraw.foreach
+                for(part <- partsToDraw)
                 {
-                    part =>
-                        GL11.glPushMatrix()
-                        val (x, y, z) = part.origin
-                        GL11.glTranslatef(x, y, z)
-                        partHandler(part)
-                        GL11.glPopMatrix()
+                    val (x, y, z) = part.origin
+
+                    GL11.glPushMatrix()
+                    GL11.glTranslatef(x, y, z)
+
+                    partHandler(part)
+
+                    GL11.glPopMatrix()
                 }
 
                 GL11.glPopMatrix()
