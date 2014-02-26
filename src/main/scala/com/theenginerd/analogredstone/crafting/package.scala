@@ -27,11 +27,11 @@ package object crafting
     def registerRecipes()
     {
         GameRegistry.addRecipe(new ItemStack(VariableSwitchBlock, 1),
-                              "SRB",
-                              "CCC",
-                              'S': Character, new ItemStack(Items.stick),
+                              "LRT",
+                              "SSS",
+                              'L': Character, new ItemStack(Blocks.lever),
                               'R': Character, new ItemStack(Items.redstone),
-                              'B': Character, new ItemStack(Blocks.wooden_button),
-                              'C': Character, new ItemStack(Blocks.cobblestone))
+                              'T': Character, new ItemStack(Blocks.redstone_torch),
+                              'S': Character, new ItemStack(Blocks.stone))
     }
 }

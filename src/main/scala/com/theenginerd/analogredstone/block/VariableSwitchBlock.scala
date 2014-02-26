@@ -91,6 +91,22 @@ object VariableSwitchBlock extends BlockContainer(Material.circuits)
         world.isSideSolid(x, y-1, z, UP) ||
         world.isSideSolid(x, y+1, z, DOWN)
 
+    override def canBlockStay(world: World, x: Int, y: Int, z: Int) =
+    {
+        val direction = getDirection(world.getBlockMetadata(x, y, z))
+
+        direction match
+        {
+            case EAST => world.isSideSolid(x-1, y, z, EAST)
+            case WEST => world.isSideSolid(x+1, y, z, WEST)
+            case SOUTH => world.isSideSolid(x, y, z-1, SOUTH)
+            case NORTH => world.isSideSolid(x, y, z+1, NORTH)
+            case UP => world.isSideSolid(x, y-1, z, UP)
+            case DOWN => world.isSideSolid(x, y+1, z, DOWN)
+        }
+    }
+
+
     override def onBlockPlaced(world: World, x: Int, y: Int, z: Int, side: Int, hitX: Float, hitY: Float, hitZ: Float, metadata: Int): Int =
         ForgeDirection.getOrientation(side).ordinal
 
@@ -167,6 +183,18 @@ object VariableSwitchBlock extends BlockContainer(Material.circuits)
             case (box, _) if box.isPointInside(hitX, hitY, hitZ) => Some(Switch)
             case (_, box) if box.isPointInside(hitX, hitY, hitZ) => Some(PowerAdjuster)
             case _ => None
+        }
+    }
+
+
+    override def onNeighborBlockChange(world: World, x: Int, y: Int, z: Int, block: Block) =
+    {
+        if(!canBlockStay(world, x, y, z))
+        {
+            val metadata = world.getBlockMetadata(x, y, z)
+            dropBlockAsItem(world, x, y, z, metadata, 0)
+            world.setBlockToAir(x, y, z)
+            notifyNeighbors(world, x, y, z, getDirection(metadata))
         }
     }
 
