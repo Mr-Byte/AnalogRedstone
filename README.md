@@ -1,5 +1,5 @@
-# Analog Redstone
-A set of gates that enable working with analog redstone signals.
+# Random Redstone
+A set of blocks and items that provide a variety of functionality related to redstone.
 
 ## Information
 Requires at least Forge 10.12.0.1029 in order to work.
