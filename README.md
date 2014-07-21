@@ -2,13 +2,11 @@
 A set of blocks and items that provide a variety of functionality related to redstone.
 
 ## Information
-Requires at least Forge 10.12.0.1029 in order to work.
 
-Currently only implements the Variable Switch, which is a switch with variable output (right-click the slider to turn up, shift+right-click to turn down).
-
+Currently only implements the Variable Switch, which is a switch with variable output.
 ## Copyright and license
 
-Copyright 2013 Joshua R. Rodgers
+Copyright 2014 Joshua R. Rodgers
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this work except in compliance with the License.
