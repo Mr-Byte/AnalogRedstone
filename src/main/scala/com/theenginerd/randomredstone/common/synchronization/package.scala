@@ -15,16 +15,12 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.proxy
+package com.theenginerd.randomredstone.common
 
-import com.theenginerd.randomredstone.common.tileentity
+import net.minecraft.world.World
 
-trait ModProxy
+package object synchronization
 {
-    def registerTileEntities() =
-    {
-        tileentity.registerTileEntities()
-    }
-
-    def setupRendering() = {}
+    def getSynchronizedTileEntity(world : World, x: Int, y: Int, z: Int) : Option[SynchronizedTileEntity] =
+        Option(world.getTileEntity(x, y, z).asInstanceOf[SynchronizedTileEntity])
 }

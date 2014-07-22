@@ -15,16 +15,10 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.proxy
+package com.theenginerd.randomredstone.client.utility.model
 
-import com.theenginerd.randomredstone.common.tileentity
-
-trait ModProxy
+trait Model
 {
-    def registerTileEntities() =
-    {
-        tileentity.registerTileEntities()
-    }
-
-    def setupRendering() = {}
+    def drawAllParts(partHandler: (Part) => Unit)
+    def drawParts(partNames: String*)(partHandler: (Part) => Unit)
 }

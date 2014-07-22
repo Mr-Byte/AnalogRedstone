@@ -15,16 +15,9 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.proxy
+package com.theenginerd.randomredstone.client.utility.model.builder.shapes
 
-import com.theenginerd.randomredstone.common.tileentity
-
-trait ModProxy
-{
-    def registerTileEntities() =
-    {
-        tileentity.registerTileEntities()
-    }
-
-    def setupRendering() = {}
-}
+sealed abstract class Axis
+case object XAxis extends Axis
+case object YAxis extends Axis
+case object ZAxis extends Axis

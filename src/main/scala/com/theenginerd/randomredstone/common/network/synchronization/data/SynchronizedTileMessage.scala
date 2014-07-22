@@ -15,16 +15,25 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.proxy
+package com.theenginerd.randomredstone.common.network.synchronization.data
 
-import com.theenginerd.randomredstone.common.tileentity
+import io.netty.buffer.ByteBuf
 
-trait ModProxy
+class SynchronizedTileMessage(var x: Int, var y: Int, var z: Int, var properties: Iterable[Property]) extends SynchronizedMessage
 {
-    def registerTileEntities() =
+    def this() = this(0, 0, 0, List())
+
+    protected override def writeHeaderToBuffer(buffer: ByteBuf) =
     {
-        tileentity.registerTileEntities()
+        buffer.writeInt(x)
+        buffer.writeInt(y)
+        buffer.writeInt(z)
     }
 
-    def setupRendering() = {}
+    protected override def readHeaderFromBuffer(buffer: ByteBuf) =
+    {
+        x = buffer.readInt()
+        y = buffer.readInt()
+        z = buffer.readInt()
+    }
 }

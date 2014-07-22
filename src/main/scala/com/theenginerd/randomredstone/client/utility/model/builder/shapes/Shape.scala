@@ -15,16 +15,11 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.proxy
+package com.theenginerd.randomredstone.client.utility.model.builder.shapes
 
-import com.theenginerd.randomredstone.common.tileentity
+import com.theenginerd.randomredstone.client.utility.model.builder.FaceGroup
 
-trait ModProxy
+abstract class Shape
 {
-    def registerTileEntities() =
-    {
-        tileentity.registerTileEntities()
-    }
-
-    def setupRendering() = {}
+    def toFaceGroups: Seq[FaceGroup]
 }

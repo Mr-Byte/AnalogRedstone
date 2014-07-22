@@ -15,16 +15,22 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.proxy
+package com.theenginerd.randomredstone.common.block
 
-import com.theenginerd.randomredstone.common.tileentity
+import net.minecraft.block.Block
+import net.minecraft.block.material.Material
+import net.minecraft.creativetab.CreativeTabs
+import net.minecraft.client.renderer.texture.IIconRegister
+import com.theenginerd.randomredstone.MOD_ID
 
-trait ModProxy
+object TestBlock extends Block(Material.wood)
 {
-    def registerTileEntities() =
+    setCreativeTab(CreativeTabs.tabMisc)
+
+    override def registerBlockIcons(register: IIconRegister) =
     {
-        tileentity.registerTileEntities()
+        blockIcon = register.registerIcon(s"$MOD_ID:uv_test")
     }
 
-    def setupRendering() = {}
+    override def isOpaqueCube = false
 }

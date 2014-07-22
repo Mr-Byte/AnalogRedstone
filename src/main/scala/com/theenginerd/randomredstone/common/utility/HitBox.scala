@@ -15,16 +15,19 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.proxy
+package com.theenginerd.randomredstone.common.utility
 
-import com.theenginerd.randomredstone.common.tileentity
-
-trait ModProxy
+class HitBox(minX: Double, minY: Double, minZ: Double, maxX: Double, maxY: Double, maxZ: Double)
 {
-    def registerTileEntities() =
+    def isPointInside(x: Double, y: Double, z: Double): Boolean =
     {
-        tileentity.registerTileEntities()
+        (x >= minX && x <= maxX) &&
+        (y >= minY && y <= maxY) &&
+        (z >= minZ && z <= maxZ)
     }
+}
 
-    def setupRendering() = {}
+object HitBox
+{
+    def apply(minX: Double, minY: Double, minZ: Double, maxX: Double, maxY: Double, maxZ: Double) = new HitBox(minX, minY, minZ, maxX, maxY, maxZ)
 }

@@ -15,16 +15,24 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.proxy
+package com.theenginerd.randomredstone.common
 
-import com.theenginerd.randomredstone.common.tileentity
+import cpw.mods.fml.common.registry.GameRegistry
+import net.minecraft.block.Block
+import com.theenginerd.randomredstone.MOD_ID
 
-trait ModProxy
+package object block
 {
-    def registerTileEntities() =
+
+    def registerBlock(block: Block) =
     {
-        tileentity.registerTileEntities()
+        val name = block.getClass.getSimpleName.replace("Block", "").replace("$", "").toLowerCase
+        GameRegistry.registerBlock(block.setBlockName(s"$MOD_ID:$name"), s"Block$name")
     }
 
-    def setupRendering() = {}
+    def registerBlocks()
+    {
+        registerBlock(VariableSwitchBlock)
+        registerBlock(TestBlock)
+    }
 }

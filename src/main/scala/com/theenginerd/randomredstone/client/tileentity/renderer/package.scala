@@ -15,16 +15,14 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.proxy
+package com.theenginerd.randomredstone.client.tileentity
 
-import com.theenginerd.randomredstone.common.tileentity
+import cpw.mods.fml.client.registry.RenderingRegistry
 
-trait ModProxy
+package object renderer
 {
-    def registerTileEntities() =
+    object RenderIds
     {
-        tileentity.registerTileEntities()
+        val variableSwitch = RenderingRegistry.getNextAvailableRenderId
     }
-
-    def setupRendering() = {}
 }

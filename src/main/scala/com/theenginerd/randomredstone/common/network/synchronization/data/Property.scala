@@ -15,16 +15,9 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.proxy
+package com.theenginerd.randomredstone.common.network.synchronization.data
 
-import com.theenginerd.randomredstone.common.tileentity
-
-trait ModProxy
-{
-    def registerTileEntities() =
-    {
-        tileentity.registerTileEntities()
-    }
-
-    def setupRendering() = {}
-}
+/**
+ * Created by Byte on 2/8/14.
+ */
+class Property(val id: Byte, val typeId: Byte, val value: Any)

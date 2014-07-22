@@ -15,16 +15,12 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.proxy
+package com.theenginerd.randomredstone.client.utility.model.builder.shapes
 
-import com.theenginerd.randomredstone.common.tileentity
-
-trait ModProxy
-{
-    def registerTileEntities() =
-    {
-        tileentity.registerTileEntities()
-    }
-
-    def setupRendering() = {}
-}
+sealed abstract class BoxSide
+case object BoxTop extends BoxSide
+case object BoxBottom extends BoxSide
+case object BoxFront extends BoxSide
+case object BoxBack extends BoxSide
+case object BoxLeft extends BoxSide
+case object BoxRight extends BoxSide

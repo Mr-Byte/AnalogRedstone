@@ -15,16 +15,14 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.proxy
+package com.theenginerd.randomredstone.common
 
-import com.theenginerd.randomredstone.common.tileentity
+import cpw.mods.fml.common.registry.GameRegistry
 
-trait ModProxy
+package object tileentity
 {
     def registerTileEntities() =
     {
-        tileentity.registerTileEntities()
+        GameRegistry.registerTileEntity(classOf[VariableSwitchTileEntity], "tileEntity.variableSwitch")
     }
-
-    def setupRendering() = {}
 }

@@ -15,16 +15,21 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.proxy
+package com.theenginerd.randomredstone.client.utility.model.builder.shapes
 
-import com.theenginerd.randomredstone.common.tileentity
-
-trait ModProxy
+abstract sealed class TextureCoordinates
 {
-    def registerTileEntities() =
+    def getOrElse(default: => (Int, Int, Int, Int)): (Int, Int, Int, Int) =
     {
-        tileentity.registerTileEntities()
+        this match
+        {
+            case TextureRectangle(left, bottom, width, height) => (left, bottom, width, height)
+            case TextureDefault => default
+        }
     }
-
-    def setupRendering() = {}
 }
+
+case class TextureRectangle(left: Int, bottom: Int, width: Int, height: Int) extends TextureCoordinates
+case object TextureDefault extends TextureCoordinates
+
+case class SideInfo(textureCoordinates: TextureCoordinates, faceGroupName: Option[String])

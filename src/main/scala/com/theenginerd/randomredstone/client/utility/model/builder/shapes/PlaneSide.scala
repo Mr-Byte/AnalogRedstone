@@ -15,16 +15,8 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.proxy
+package com.theenginerd.randomredstone.client.utility.model.builder.shapes
 
-import com.theenginerd.randomredstone.common.tileentity
-
-trait ModProxy
-{
-    def registerTileEntities() =
-    {
-        tileentity.registerTileEntities()
-    }
-
-    def setupRendering() = {}
-}
+sealed abstract class PlaneSide
+case object PlaneFront extends PlaneSide
+case object PlaneBack extends PlaneSide
