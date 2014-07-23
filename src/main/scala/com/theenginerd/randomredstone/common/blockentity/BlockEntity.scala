@@ -15,14 +15,17 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.common
+package com.theenginerd.randomredstone.common.blockentity
 
-import cpw.mods.fml.common.registry.GameRegistry
+import com.theenginerd.randomredstone.common.synchronization.Synchronized
+import net.minecraft.nbt.NBTTagCompound
 
-package object tileentity
+/**
+ * Trait that defines a BlockEntity. A BlockEntity is a layer to help insulate against changes in TileEntity, which are handled in BlockEntityAdapter.
+ * BlockEntity allows for synchronization across the network.
+ */
+trait BlockEntity extends Synchronized
 {
-    def registerTileEntities() =
-    {
-        GameRegistry.registerTileEntity(classOf[VariableSwitchTileEntity], "tileEntity.variableSwitch")
-    }
+    def load(data: NBTTagCompound)
+    def unload(data: NBTTagCompound)
 }

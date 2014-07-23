@@ -68,7 +68,6 @@ object RandomRedstoneMod
         FMLLog info s"Loading $MOD_NAME"
 
         proxy.registerTileEntities()
-        proxy.setupRendering()
     }
 
     @EventHandler

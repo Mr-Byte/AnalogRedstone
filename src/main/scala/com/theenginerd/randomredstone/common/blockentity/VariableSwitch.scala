@@ -15,12 +15,11 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.common.tileentity
+package com.theenginerd.randomredstone.common.blockentity
 
 import net.minecraft.nbt.NBTTagCompound
-import com.theenginerd.randomredstone.common.synchronization.SynchronizedTileEntity
 
-class VariableSwitchTileEntity extends SynchronizedTileEntity
+trait VariableSwitch extends BlockEntity
 {
     final val IS_ACTIVE_FIELD: String = "isActive"
     final val POWER_OUTPUT_FIELD: String = "powerOutput"
@@ -40,18 +39,14 @@ class VariableSwitchTileEntity extends SynchronizedTileEntity
             powerOutput := ((~powerOutput + 1) % 16).toByte
         }
 
-    override def writeToNBT(tag: NBTTagCompound)
+    override def unload(tag: NBTTagCompound)
     {
-        super.writeToNBT(tag)
-
         tag.setByte(POWER_OUTPUT_FIELD, ~powerOutput)
         tag.setBoolean(IS_ACTIVE_FIELD, ~isActive)
     }
-    
-    override def readFromNBT(tag: NBTTagCompound)
-    {
-        super.readFromNBT(tag)
 
+    override def load(tag: NBTTagCompound)
+    {
         powerOutput := tag.getByte(POWER_OUTPUT_FIELD)
         isActive := tag.getBoolean(IS_ACTIVE_FIELD)
     }

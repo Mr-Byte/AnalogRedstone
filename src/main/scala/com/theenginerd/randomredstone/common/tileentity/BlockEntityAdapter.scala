@@ -15,13 +15,20 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.common.synchronization
+package com.theenginerd.randomredstone.common.tileentity
 
-import net.minecraft.tileentity.TileEntity
+import net.minecraft.nbt.NBTTagCompound
+import com.theenginerd.randomredstone.common.blockentity.BlockEntity
+import com.theenginerd.randomredstone.common.network.synchronization.data.{Property, SynchronizedTileMessage, SynchronizedMessage}
+import com.theenginerd.randomredstone.common.synchronization.PropertyCell
 import com.theenginerd.randomredstone.common.network.PacketHandler
-import com.theenginerd.randomredstone.common.network.synchronization.data.{SynchronizedTileMessage, SynchronizedMessage, Property}
+import net.minecraft.tileentity.TileEntity
 
-class SynchronizedTileEntity extends TileEntity with Synchronized
+/**
+ * Base adapter class that adapts the implementation of TileEntity to the BlockEntity trait.
+ * This also includes the ability to synchronize the TileEntity over the network.
+ */
+abstract class BlockEntityAdapter extends TileEntity with BlockEntity
 {
     override def getDescriptionPacket =
         PacketHandler.convertMessageToPacket(buildSynchronizedMessage(getAllProperties))
@@ -33,15 +40,27 @@ class SynchronizedTileEntity extends TileEntity with Synchronized
 
     private def convertToMessageProperties(propertyCells: Iterable[PropertyCell]) =
     {
-        for(propertyCell <- propertyCells)
-            yield new Property(propertyCell.id, propertyCell.getTypeId, ~propertyCell)
+        for (propertyCell <- propertyCells)
+        yield new Property(propertyCell.id, propertyCell.getTypeId, ~propertyCell)
     }
 
     protected override def sendSynchronizedMessage(message: => SynchronizedMessage) =
     {
-        if(!worldObj.isRemote)
+        if (!worldObj.isRemote)
         {
             PacketHandler.sendToAllAround(message, worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 64.0D)
         }
+    }
+
+    override def writeToNBT(tag: NBTTagCompound) =
+    {
+        super.writeToNBT(tag)
+        unload(tag)
+    }
+
+    override def readFromNBT(tag: NBTTagCompound) =
+    {
+        super.readFromNBT(tag)
+        load(tag)
     }
 }

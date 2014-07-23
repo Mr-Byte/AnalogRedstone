@@ -19,7 +19,6 @@ package com.theenginerd.randomredstone.client.tileentity.renderer
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
 import net.minecraft.tileentity.TileEntity
-import com.theenginerd.randomredstone.common.tileentity.VariableSwitchTileEntity
 import org.lwjgl.opengl.GL11
 import com.theenginerd.randomredstone.common.block.VariableSwitchBlock
 import net.minecraftforge.common.util.ForgeDirection.{DOWN, UP, NORTH, SOUTH, WEST, EAST}
@@ -28,12 +27,13 @@ import cpw.mods.fml.client.FMLClientHandler
 import net.minecraft.world.IBlockAccess
 import net.minecraft.client.renderer.{RenderHelper, Tessellator}
 import com.theenginerd.randomredstone.client.model.VariableSwitchModel
+import com.theenginerd.randomredstone.common.blockentity.VariableSwitchBlockEntity
 
 object VariableSwitchTileEntityRenderer extends TileEntitySpecialRenderer
 {
     def renderTileEntityAt(tileentity: TileEntity, x: Double, y: Double, z: Double, tick: Float): Unit =
     {
-        val variableSwitch = tileentity.asInstanceOf[VariableSwitchTileEntity]
+        val variableSwitch = tileentity.asInstanceOf[VariableSwitchBlockEntity]
         val metadata = variableSwitch.getBlockMetadata
         val direction = VariableSwitchBlock.getDirection(metadata)
         val orientation = VariableSwitchBlock.getOrientation(metadata)
@@ -50,7 +50,7 @@ object VariableSwitchTileEntityRenderer extends TileEntitySpecialRenderer
         resetBrightness(variableSwitch)
     }
 
-    private def resetBrightness(variableSwitch: VariableSwitchTileEntity)
+    private def resetBrightness(variableSwitch: VariableSwitchBlockEntity)
     {
         if (~variableSwitch.isActive)
         {
@@ -58,7 +58,7 @@ object VariableSwitchTileEntityRenderer extends TileEntitySpecialRenderer
         }
     }
 
-    private def setBrightness(variableSwitch: VariableSwitchTileEntity)
+    private def setBrightness(variableSwitch: VariableSwitchBlockEntity)
     {
         val tessellator = Tessellator.instance
         val blockAccess: IBlockAccess = FMLClientHandler.instance().getWorldClient

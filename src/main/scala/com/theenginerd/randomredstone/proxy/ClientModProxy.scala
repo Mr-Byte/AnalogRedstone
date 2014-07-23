@@ -17,19 +17,20 @@
 
 package com.theenginerd.randomredstone.proxy
 
-import cpw.mods.fml.client.registry.{RenderingRegistry, ClientRegistry}
-import com.theenginerd.randomredstone.common.tileentity.VariableSwitchTileEntity
+import cpw.mods.fml.client.registry.ClientRegistry
 import com.theenginerd.randomredstone.common.block.VariableSwitchBlock
 
 import net.minecraftforge.client.MinecraftForgeClient
 import net.minecraft.item.Item
 import com.theenginerd.randomredstone.client.tileentity.renderer.VariableSwitchTileEntityRenderer
 import com.theenginerd.randomredstone.client.item.renderer.VariableSwitchItemRenderer
+import com.theenginerd.randomredstone.common.blockentity.VariableSwitchBlockEntity
 
 class ClientModProxy extends ModProxy
 {
-    override def setupRendering() =
+    def setupRendering() =
     {
+        ClientRegistry.bindTileEntitySpecialRenderer(classOf[VariableSwitchBlockEntity], VariableSwitchTileEntityRenderer)
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(VariableSwitchBlock), VariableSwitchItemRenderer)
     }
 
@@ -37,7 +38,7 @@ class ClientModProxy extends ModProxy
     {
         super.registerTileEntities()
 
-        ClientRegistry.bindTileEntitySpecialRenderer(classOf[VariableSwitchTileEntity], VariableSwitchTileEntityRenderer)
+        setupRendering()
     }
 }
 

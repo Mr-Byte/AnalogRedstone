@@ -17,11 +17,12 @@
 
 package com.theenginerd.randomredstone.common
 
-import net.minecraft.world.World
 import com.theenginerd.randomredstone.common.tileentity.BlockEntityAdapter
 
-package object synchronization
+/**
+ * Define the concrete block entity types here.
+ */
+package object blockentity
 {
-    def getBlockEntityAdapter(world : World, x: Int, y: Int, z: Int) : Option[BlockEntityAdapter] =
-        Option(world.getTileEntity(x, y, z).asInstanceOf[BlockEntityAdapter])
+    class VariableSwitchBlockEntity extends BlockEntityAdapter with VariableSwitch
 }

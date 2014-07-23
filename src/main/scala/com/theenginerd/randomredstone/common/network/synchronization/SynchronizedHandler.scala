@@ -32,7 +32,7 @@ object SynchronizedHandler extends SimpleChannelInboundHandler[SynchronizedMessa
         message match
         {
             case synchronizedTileMessage: SynchronizedTileMessage =>
-                for(tile <- synchronization.getSynchronizedTileEntity(world, synchronizedTileMessage.x, synchronizedTileMessage.y, synchronizedTileMessage.z))
+                for(tile <- synchronization.getBlockEntityAdapter(world, synchronizedTileMessage.x, synchronizedTileMessage.y, synchronizedTileMessage.z))
                 {
                     tile.handleSynchronizationMessage(message)
                 }
