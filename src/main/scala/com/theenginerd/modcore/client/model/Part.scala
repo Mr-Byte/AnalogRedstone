@@ -15,14 +15,15 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.common
+package com.theenginerd.modcore.client.model
 
-import com.theenginerd.modcore.common.blockEntity.BlockEntityAdapter
+import com.theenginerd.modcore.client.model.builder.FaceGroup
 
-/**
- * Define the concrete block entity types here.
- */
-package object blockEntity
+trait Part
 {
-    class VariableSwitchBlockEntity extends BlockEntityAdapter with VariableSwitch
+    val name: String
+    val origin: (Float, Float, Float)
+
+    def drawAllFaceGroups(faceGroupHandler: (FaceGroup) => Unit)
+    def drawFaceGroups(faceGroupNames: Option[String]*)(faceGroupHandler: (FaceGroup) => Unit)
 }

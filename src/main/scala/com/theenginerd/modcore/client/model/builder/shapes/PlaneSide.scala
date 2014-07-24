@@ -15,14 +15,8 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.common
+package com.theenginerd.modcore.client.model.builder.shapes
 
-import com.theenginerd.modcore.common.blockEntity.BlockEntityAdapter
-
-/**
- * Define the concrete block entity types here.
- */
-package object blockEntity
-{
-    class VariableSwitchBlockEntity extends BlockEntityAdapter with VariableSwitch
-}
+sealed abstract class PlaneSide
+case object PlaneFront extends PlaneSide
+case object PlaneBack extends PlaneSide

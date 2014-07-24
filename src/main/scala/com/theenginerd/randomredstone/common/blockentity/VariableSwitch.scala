@@ -15,9 +15,10 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.common.blockentity
+package com.theenginerd.randomredstone.common.blockEntity
 
 import net.minecraft.nbt.NBTTagCompound
+import com.theenginerd.modcore.common.blockEntity.BlockEntity
 
 trait VariableSwitch extends BlockEntity
 {

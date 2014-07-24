@@ -24,10 +24,14 @@ import java.io.File
 
 import com.theenginerd.randomredstone.proxy.{ModProxy, ClientModProxy, ServerModProxy}
 import com.theenginerd.randomredstone.common.block
+import com.theenginerd.modcore.common.network.PacketHandler
 
-@Mod(name = MOD_NAME, modid = MOD_ID, version = "1.2.0-1.7.10", modLanguage = "scala")
+@Mod(name = RandomRedstoneMod.MOD_NAME, modid = RandomRedstoneMod.MOD_ID, version = "1.2.0-1.7.10", modLanguage = "scala")
 object RandomRedstoneMod
 {
+    final val MOD_NAME = "Random Redstone"
+    final val MOD_ID = "randomredstone"
+
     @SidedProxy(clientSide = ClientModProxy.NAME, serverSide = ServerModProxy.NAME)
     var proxy: ModProxy = null
 
@@ -39,6 +43,7 @@ object RandomRedstoneMod
 
         loadConfiguration(event)
 
+        PacketHandler.initialize(MOD_ID)
         block.registerBlocks()
         crafting.registerRecipes()
     }

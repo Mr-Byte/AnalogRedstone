@@ -30,11 +30,11 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.{MathHelper, AxisAlignedBB}
 import com.theenginerd.randomredstone.common.utility.HitBox
 import net.minecraft.client.renderer.texture.IIconRegister
-import com.theenginerd.randomredstone.MOD_ID
+import com.theenginerd.randomredstone.RandomRedstoneMod.MOD_ID
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import java.util.Random
 import com.theenginerd.randomredstone.client.tileentity.renderer.RenderIds
-import com.theenginerd.randomredstone.common.blockentity.VariableSwitchBlockEntity
+import com.theenginerd.randomredstone.common.blockEntity.VariableSwitchBlockEntity
 
 object VariableSwitchBlock extends BlockContainer(Material.circuits)
 {
@@ -59,7 +59,10 @@ object VariableSwitchBlock extends BlockContainer(Material.circuits)
         blockIcon = register.registerIcon(s"$MOD_ID:variable_switch_on")
     }
 
-    override def createNewTileEntity(world: World, index: Int): TileEntity = new VariableSwitchBlockEntity
+    override def createNewTileEntity(world: World, index: Int): TileEntity =
+    {
+        new VariableSwitchBlockEntity
+    }
 
     override def isOpaqueCube = false
 

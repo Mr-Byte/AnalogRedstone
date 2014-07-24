@@ -24,7 +24,7 @@ import net.minecraftforge.client.MinecraftForgeClient
 import net.minecraft.item.Item
 import com.theenginerd.randomredstone.client.tileentity.renderer.VariableSwitchTileEntityRenderer
 import com.theenginerd.randomredstone.client.item.renderer.VariableSwitchItemRenderer
-import com.theenginerd.randomredstone.common.blockentity.VariableSwitchBlockEntity
+import com.theenginerd.randomredstone.common.blockEntity.VariableSwitchBlockEntity
 
 class ClientModProxy extends ModProxy
 {

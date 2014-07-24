@@ -15,14 +15,25 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.common
+package com.theenginerd.modcore.common.network.synchronization.data
 
-import com.theenginerd.modcore.common.blockEntity.BlockEntityAdapter
+import io.netty.buffer.ByteBuf
 
-/**
- * Define the concrete block entity types here.
- */
-package object blockEntity
+class SynchronizedTileMessage(var x: Int, var y: Int, var z: Int, var properties: Iterable[Property]) extends SynchronizedMessage
 {
-    class VariableSwitchBlockEntity extends BlockEntityAdapter with VariableSwitch
+    def this() = this(0, 0, 0, List())
+
+    protected override def writeHeaderToBuffer(buffer: ByteBuf) =
+    {
+        buffer.writeInt(x)
+        buffer.writeInt(y)
+        buffer.writeInt(z)
+    }
+
+    protected override def readHeaderFromBuffer(buffer: ByteBuf) =
+    {
+        x = buffer.readInt()
+        y = buffer.readInt()
+        z = buffer.readInt()
+    }
 }

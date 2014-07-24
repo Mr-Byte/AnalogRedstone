@@ -19,7 +19,7 @@ package com.theenginerd.randomredstone.common
 
 import cpw.mods.fml.common.registry.GameRegistry
 import net.minecraft.block.Block
-import com.theenginerd.randomredstone.MOD_ID
+import com.theenginerd.randomredstone.RandomRedstoneMod.MOD_ID
 
 package object block
 {

@@ -27,7 +27,7 @@ import cpw.mods.fml.client.FMLClientHandler
 import net.minecraft.world.IBlockAccess
 import net.minecraft.client.renderer.{RenderHelper, Tessellator}
 import com.theenginerd.randomredstone.client.model.VariableSwitchModel
-import com.theenginerd.randomredstone.common.blockentity.VariableSwitchBlockEntity
+import com.theenginerd.randomredstone.common.blockEntity.VariableSwitchBlockEntity
 
 object VariableSwitchTileEntityRenderer extends TileEntitySpecialRenderer
 {

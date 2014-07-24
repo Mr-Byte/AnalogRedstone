@@ -15,14 +15,21 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.common
+package com.theenginerd.modcore.client.model.builder.shapes
 
-import com.theenginerd.modcore.common.blockEntity.BlockEntityAdapter
-
-/**
- * Define the concrete block entity types here.
- */
-package object blockEntity
+abstract sealed class TextureCoordinates
 {
-    class VariableSwitchBlockEntity extends BlockEntityAdapter with VariableSwitch
+    def getOrElse(default: => (Int, Int, Int, Int)): (Int, Int, Int, Int) =
+    {
+        this match
+        {
+            case TextureRectangle(left, bottom, width, height) => (left, bottom, width, height)
+            case TextureDefault => default
+        }
+    }
 }
+
+case class TextureRectangle(left: Int, bottom: Int, width: Int, height: Int) extends TextureCoordinates
+case object TextureDefault extends TextureCoordinates
+
+case class SideInfo(textureCoordinates: TextureCoordinates, faceGroupName: Option[String])

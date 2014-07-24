@@ -21,7 +21,7 @@ import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.client.renderer.texture.IIconRegister
-import com.theenginerd.randomredstone.MOD_ID
+import com.theenginerd.randomredstone.RandomRedstoneMod.MOD_ID
 
 object TestBlock extends Block(Material.wood)
 {

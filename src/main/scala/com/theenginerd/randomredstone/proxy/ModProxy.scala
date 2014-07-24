@@ -18,7 +18,7 @@
 package com.theenginerd.randomredstone.proxy
 
 import cpw.mods.fml.common.registry.GameRegistry
-import com.theenginerd.randomredstone.common.blockentity.VariableSwitchBlockEntity
+import com.theenginerd.randomredstone.common.blockEntity.VariableSwitchBlockEntity
 
 trait ModProxy
 {

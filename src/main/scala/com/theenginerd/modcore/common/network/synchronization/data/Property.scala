@@ -15,14 +15,9 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.common
-
-import com.theenginerd.modcore.common.blockEntity.BlockEntityAdapter
+package com.theenginerd.modcore.common.network.synchronization.data
 
 /**
- * Define the concrete block entity types here.
+ * Created by Byte on 2/8/14.
  */
-package object blockEntity
-{
-    class VariableSwitchBlockEntity extends BlockEntityAdapter with VariableSwitch
-}
+class Property(val id: Byte, val typeId: Byte, val value: Any)

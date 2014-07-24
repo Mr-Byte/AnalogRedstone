@@ -15,14 +15,17 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.common
+package com.theenginerd.modcore.common.blockEntity
 
-import com.theenginerd.modcore.common.blockEntity.BlockEntityAdapter
+import com.theenginerd.modcore.common.synchronization.Synchronized
+import net.minecraft.nbt.NBTTagCompound
 
 /**
- * Define the concrete block entity types here.
+ * Trait that defines a BlockEntity. A BlockEntity is a layer to help insulate against changes in TileEntity, which are handled in BlockEntityAdapter.
+ * BlockEntity allows for synchronization across the network.
  */
-package object blockEntity
+trait BlockEntity extends Synchronized
 {
-    class VariableSwitchBlockEntity extends BlockEntityAdapter with VariableSwitch
+    def load(data: NBTTagCompound)
+    def unload(data: NBTTagCompound)
 }

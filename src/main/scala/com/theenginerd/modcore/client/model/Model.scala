@@ -15,14 +15,10 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.common
+package com.theenginerd.modcore.client.model
 
-import com.theenginerd.modcore.common.blockEntity.BlockEntityAdapter
-
-/**
- * Define the concrete block entity types here.
- */
-package object blockEntity
+trait Model
 {
-    class VariableSwitchBlockEntity extends BlockEntityAdapter with VariableSwitch
+    def drawAllParts(partHandler: (Part) => Unit)
+    def drawParts(partNames: String*)(partHandler: (Part) => Unit)
 }

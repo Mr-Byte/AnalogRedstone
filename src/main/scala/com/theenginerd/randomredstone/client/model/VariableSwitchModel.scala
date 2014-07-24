@@ -22,10 +22,10 @@ import cpw.mods.fml.relauncher.Side
 import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11
 import cpw.mods.fml.client.FMLClientHandler
-import com.theenginerd.randomredstone.client.utility.model.builder._
-import com.theenginerd.randomredstone.client.utility.model.builder.shapes._
-import com.theenginerd.randomredstone.client.utility.model.builder.shapes.Box
-import com.theenginerd.randomredstone.client.utility.model.builder.parts.torchPart
+import com.theenginerd.modcore.client.model.builder._
+import com.theenginerd.modcore.client.model.builder.shapes._
+import com.theenginerd.modcore.client.model.builder.shapes.Box
+import com.theenginerd.modcore.client.model.builder.parts.torchPart
 
 @SideOnly(Side.CLIENT)
 object VariableSwitchModel
