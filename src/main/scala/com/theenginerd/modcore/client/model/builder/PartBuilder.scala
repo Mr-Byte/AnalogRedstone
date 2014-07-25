@@ -38,8 +38,7 @@ class PartBuilder(private val partName: String, private val xOrigin: Int, privat
     }
 
     def toPart: Part =
-        new Part
-        {
+        new Part {
             val origin = (2*xOrigin/32F, yOrigin/16F, 2*zOrigin/32F)
 
             val faceGroups = mutableFaceGroups
