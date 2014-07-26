@@ -18,7 +18,6 @@
 package com.theenginerd.modcore.client.model.builder
 
 import com.theenginerd.modcore.client.model.builder.shapes.Shape
-import com.theenginerd.modcore.client.model.Part
 
 class PartBuilder(private val partName: String, private val xOrigin: Int, private val yOrigin: Int, private val zOrigin: Int)
 {
@@ -37,18 +36,18 @@ class PartBuilder(private val partName: String, private val xOrigin: Int, privat
         this
     }
 
-    def toPart: Part =
-        new Part {
-            val origin = (2*xOrigin/32F, yOrigin/16F, 2*zOrigin/32F)
-
-            val faceGroups = mutableFaceGroups
-
-            val name = partName
-
-            def drawFaceGroups(textureGroupNames: Option[String]*)(textureGroupHandler: (FaceGroup) => Unit) =
-                textureGroupNames.foreach(faceGroups.get(_).map(textureGroupHandler))
-
-            def drawAllFaceGroups(textureGroupHandler: (FaceGroup) => Unit) =
-                faceGroups.foreach { case (_, group) => textureGroupHandler(group) }
-        }
+//    def toPart: Part =
+//        new Part {
+//            val origin = (2*xOrigin/32F, yOrigin/16F, 2*zOrigin/32F)
+//
+//            val faceGroups = mutableFaceGroups
+//
+//            val name = partName
+//
+//            def drawFaceGroups(textureGroupNames: Option[String]*)(textureGroupHandler: (FaceGroup) => Unit) =
+//                textureGroupNames.foreach(faceGroups.get(_).map(textureGroupHandler))
+//
+//            def drawAllFaceGroups(textureGroupHandler: (FaceGroup) => Unit) =
+//                faceGroups.foreach { case (_, group) => textureGroupHandler(group) }
+//        }
 }

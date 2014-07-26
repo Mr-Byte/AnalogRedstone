@@ -17,8 +17,71 @@
 
 package com.theenginerd.modcore.client.model
 
+import org.lwjgl.opengl.GL11
+
+trait ShapeGroup
+{
+
+}
+
 trait Model
 {
-    def drawAllParts(partHandler: (Part) => Unit)
-    def drawParts(partNames: String*)(partHandler: (Part) => Unit)
+    private var parts: Map[Option[String], Part] = Map()
+
+    protected trait Part
+    {
+        var name: Option[String] = None
+        var origin: (Float, Float, Float) = (0, 0, 0)
+        var shapes: Option[ShapeGroup] = None
+
+        def atOrigin(origin: (Float, Float, Float)): Part =
+        {
+            val (x, y, z) = origin
+            this.origin = (2*x/32F, y/16F, 2*z/32F)
+            this
+        }
+
+        def withShapes(shapeGroup: ShapeGroup) =
+        {
+            this.shapes = Some(shapeGroup)
+            parts += (name -> this)
+        }
+    }
+
+    protected def addPart = new Part {
+        def withName(name: String): Part =
+        {
+            this.name = Some(name)
+            this
+        }
+    }
+
+    def drawAllParts(partHandler: (Part) => Unit): Unit =
+    {
+        drawParts(parts.values, partHandler)
+    }
+
+    def drawParts(partNames: String*)(partHandler: (Part) => Unit): Unit =
+    {
+        drawParts(for (key <- partNames; part <- parts.get(Some(key))) yield part, partHandler)
+    }
+
+    private def drawParts(partsToDraw: Iterable[Part], partHandler: (Part) => Unit): Unit =
+    {
+        GL11.glPushMatrix()
+        GL11.glTranslatef(0.5f, 0, 0.5f)
+
+        for(part <- partsToDraw)
+        {
+            val (x, y, z) = part.origin
+
+            GL11.glPushMatrix()
+            GL11.glTranslatef(x, y, z)
+            partHandler(part)
+
+            GL11.glPopMatrix()
+        }
+
+        GL11.glPopMatrix()
+    }
 }

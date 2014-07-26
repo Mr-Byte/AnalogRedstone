@@ -37,67 +37,67 @@ object VariableSwitchModel
     private final val VARIABLE_SWITCH_OFF_TEXTURE = new ResourceLocation("randomredstone", "textures/blocks/variable_switch_off.png")
     private final val VARIABLE_SWITCH_ON_TEXTURE = new ResourceLocation("randomredstone", "textures/blocks/variable_switch_on.png")
 
-    private val model = new ModelBuilder()
-                        .addPart("base")
-                        {
-                            _.addShape(Box(16, 2, 16))
-                        }
-                        .addPart("leverBox")
-                        {
-                            _.addShape(Box(4, 2, 8, x = -8, y = 4))
-                        }
-                        .addPart("lever", xOrigin = -4, yOrigin = 2)
-                        {
-                            _.addShape
-                            {
-                                Box(2, 10, 2)
-                                .setSideInfo(BoxTop)(TextureRectangle(7, 8, 2, 2))
-                            }
-                        }
-                        .addPart("torch", xOrigin = 4, yOrigin = 2, zOrigin = 5)(torchPart(5))
-                        .toModel
+//    private val model = new ModelBuilder()
+//                        .addPart("base")
+//                        {
+//                            _.addShape(Box(16, 2, 16))
+//                        }
+//                        .addPart("leverBox")
+//                        {
+//                            _.addShape(Box(4, 2, 8, x = -8, y = 4))
+//                        }
+//                        .addPart("lever", xOrigin = -4, yOrigin = 2)
+//                        {
+//                            _.addShape
+//                            {
+//                                Box(2, 10, 2)
+//                                .setSideInfo(BoxTop)(TextureRectangle(7, 8, 2, 2))
+//                            }
+//                        }
+//                        .addPart("torch", xOrigin = 4, yOrigin = 2, zOrigin = 5)(torchPart(5))
+//                        .toModel
 
     def render(isActive: Boolean, powerOutput: Byte)
     {
-        model.drawParts("base")
-        {
-            part =>
-                FMLClientHandler.instance().getClient.renderEngine.bindTexture(if (isActive) VARIABLE_SWITCH_ON_TEXTURE else VARIABLE_SWITCH_OFF_TEXTURE)
-                part.drawAllFaceGroups(_.render())
-        }
-
-        model.drawParts("leverBox")
-        {
-            part =>
-                FMLClientHandler.instance().getClient.renderEngine.bindTexture(COBBLE_TEXTURE)
-                part.drawAllFaceGroups(_.render())
-        }
-
-        model.drawParts("lever")
-        {
-            part =>
-                GL11.glPushMatrix()
-                if (isActive)
-                    GL11.glRotated(40, 1, 0, 0)
-                else
-                    GL11.glRotated(-40, 1, 0, 0)
-
-                FMLClientHandler.instance().getClient.renderEngine.bindTexture(LEVER_TEXTURE)
-                part.drawAllFaceGroups(_.render())
-
-                GL11.glPopMatrix()
-        }
-
-        model.drawParts("torch")
-        {
-            part =>
-                GL11.glPushMatrix()
-                GL11.glTranslatef(0, 0, -0.625f * (powerOutput.toFloat / 15))
-
-                FMLClientHandler.instance().getClient.renderEngine.bindTexture(if (isActive) REDSTONE_TORCH_ON_TEXTURE else REDSTONE_TORCH_OFF_TEXTURE)
-                part.drawAllFaceGroups(_.render())
-
-                GL11.glPopMatrix()
-        }
+//        model.drawParts("base")
+//        {
+//            part =>
+//                FMLClientHandler.instance().getClient.renderEngine.bindTexture(if (isActive) VARIABLE_SWITCH_ON_TEXTURE else VARIABLE_SWITCH_OFF_TEXTURE)
+//                part.drawAllFaceGroups(_.render())
+//        }
+//
+//        model.drawParts("leverBox")
+//        {
+//            part =>
+//                FMLClientHandler.instance().getClient.renderEngine.bindTexture(COBBLE_TEXTURE)
+//                part.drawAllFaceGroups(_.render())
+//        }
+//
+//        model.drawParts("lever")
+//        {
+//            part =>
+//                GL11.glPushMatrix()
+//                if (isActive)
+//                    GL11.glRotated(40, 1, 0, 0)
+//                else
+//                    GL11.glRotated(-40, 1, 0, 0)
+//
+//                FMLClientHandler.instance().getClient.renderEngine.bindTexture(LEVER_TEXTURE)
+//                part.drawAllFaceGroups(_.render())
+//
+//                GL11.glPopMatrix()
+//        }
+//
+//        model.drawParts("torch")
+//        {
+//            part =>
+//                GL11.glPushMatrix()
+//                GL11.glTranslatef(0, 0, -0.625f * (powerOutput.toFloat / 15))
+//
+//                FMLClientHandler.instance().getClient.renderEngine.bindTexture(if (isActive) REDSTONE_TORCH_ON_TEXTURE else REDSTONE_TORCH_OFF_TEXTURE)
+//                part.drawAllFaceGroups(_.render())
+//
+//                GL11.glPopMatrix()
+//        }
     }
 }
