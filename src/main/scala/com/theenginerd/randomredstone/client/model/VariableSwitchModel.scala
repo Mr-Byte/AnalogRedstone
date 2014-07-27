@@ -20,15 +20,15 @@ package com.theenginerd.randomredstone.client.model
 import cpw.mods.fml.relauncher.SideOnly
 import cpw.mods.fml.relauncher.Side
 import net.minecraft.util.ResourceLocation
-import org.lwjgl.opengl.GL11
-import cpw.mods.fml.client.FMLClientHandler
-import com.theenginerd.modcore.client.model.builder._
 import com.theenginerd.modcore.client.model.builder.shapes._
 import com.theenginerd.modcore.client.model.builder.shapes.Box
-import com.theenginerd.modcore.client.model.builder.parts.torchPart
+import com.theenginerd.modcore.client.model.builder.parts.TorchPart
+import com.theenginerd.modcore.client.model.{Part, Model}
+import cpw.mods.fml.client.FMLClientHandler
+import org.lwjgl.opengl.GL11
 
 @SideOnly(Side.CLIENT)
-object VariableSwitchModel
+object VariableSwitchModel extends Model
 {
     private final val COBBLE_TEXTURE = new ResourceLocation("minecraft", "textures/blocks/cobblestone.png")
     private final val LEVER_TEXTURE = new ResourceLocation("minecraft", "textures/blocks/lever.png")
@@ -37,67 +37,65 @@ object VariableSwitchModel
     private final val VARIABLE_SWITCH_OFF_TEXTURE = new ResourceLocation("randomredstone", "textures/blocks/variable_switch_off.png")
     private final val VARIABLE_SWITCH_ON_TEXTURE = new ResourceLocation("randomredstone", "textures/blocks/variable_switch_on.png")
 
-//    private val model = new ModelBuilder()
-//                        .addPart("base")
-//                        {
-//                            _.addShape(Box(16, 2, 16))
-//                        }
-//                        .addPart("leverBox")
-//                        {
-//                            _.addShape(Box(4, 2, 8, x = -8, y = 4))
-//                        }
-//                        .addPart("lever", xOrigin = -4, yOrigin = 2)
-//                        {
-//                            _.addShape
-//                            {
-//                                Box(2, 10, 2)
-//                                .setSideInfo(BoxTop)(TextureRectangle(7, 8, 2, 2))
-//                            }
-//                        }
-//                        .addPart("torch", xOrigin = 4, yOrigin = 2, zOrigin = 5)(torchPart(5))
-//                        .toModel
+    addPart withName "base" withShapes new Part {
+        addShape { Box(width = 15, height = 2, depth = 16) }
+    }
+
+    addPart withName "leverBox" withShapes new Part {
+        addShape { Box(4, 2, 8, x = -8, y = 4) }
+    }
+
+    addPart withName "lever" atOrigin (-4.0f, 2.0f, 0.0f) withShapes new Part {
+        addShape
+        {
+            Box(2, 10, 2)
+                .setSideInfo(BoxTop)(TextureRectangle(7, 8, 2, 2))
+        }
+    }
+
+    addPart withName "torch" atOrigin(4.0f, 2.0f, 5.0f) withShapes new TorchPart(5)
 
     def render(isActive: Boolean, powerOutput: Byte)
     {
-//        model.drawParts("base")
-//        {
-//            part =>
-//                FMLClientHandler.instance().getClient.renderEngine.bindTexture(if (isActive) VARIABLE_SWITCH_ON_TEXTURE else VARIABLE_SWITCH_OFF_TEXTURE)
-//                part.drawAllFaceGroups(_.render())
-//        }
-//
-//        model.drawParts("leverBox")
-//        {
-//            part =>
-//                FMLClientHandler.instance().getClient.renderEngine.bindTexture(COBBLE_TEXTURE)
-//                part.drawAllFaceGroups(_.render())
-//        }
-//
-//        model.drawParts("lever")
-//        {
-//            part =>
-//                GL11.glPushMatrix()
-//                if (isActive)
-//                    GL11.glRotated(40, 1, 0, 0)
-//                else
-//                    GL11.glRotated(-40, 1, 0, 0)
-//
-//                FMLClientHandler.instance().getClient.renderEngine.bindTexture(LEVER_TEXTURE)
-//                part.drawAllFaceGroups(_.render())
-//
-//                GL11.glPopMatrix()
-//        }
-//
-//        model.drawParts("torch")
-//        {
-//            part =>
-//                GL11.glPushMatrix()
-//                GL11.glTranslatef(0, 0, -0.625f * (powerOutput.toFloat / 15))
-//
-//                FMLClientHandler.instance().getClient.renderEngine.bindTexture(if (isActive) REDSTONE_TORCH_ON_TEXTURE else REDSTONE_TORCH_OFF_TEXTURE)
-//                part.drawAllFaceGroups(_.render())
-//
-//                GL11.glPopMatrix()
-//        }
+        drawParts("base")
+        {
+            part =>
+                FMLClientHandler.instance().getClient.renderEngine.bindTexture(if (isActive) VARIABLE_SWITCH_ON_TEXTURE else VARIABLE_SWITCH_OFF_TEXTURE)
+                part.drawAllFaceGroups(_.render())
+        }
+
+        drawParts("leverBox")
+        {
+            part =>
+                FMLClientHandler.instance().getClient.renderEngine.bindTexture(COBBLE_TEXTURE)
+                part.drawAllFaceGroups(_.render())
+        }
+
+        drawParts("lever")
+        {
+            part =>
+                GL11.glPushMatrix()
+                if (isActive)
+                    GL11.glRotated(40, 1, 0, 0)
+                else
+                    GL11.glRotated(-40, 1, 0, 0)
+
+                FMLClientHandler.instance().getClient.renderEngine.bindTexture(LEVER_TEXTURE)
+                part.drawAllFaceGroups(_.render())
+
+                GL11.glPopMatrix()
+        }
+
+        drawParts("torch")
+        {
+            part =>
+                GL11.glPushMatrix()
+                GL11.glTranslatef(0, 0, -0.625f * (powerOutput.toFloat / 15))
+
+                FMLClientHandler.instance().getClient.renderEngine.bindTexture(if (isActive) REDSTONE_TORCH_ON_TEXTURE else REDSTONE_TORCH_OFF_TEXTURE)
+                part.drawAllFaceGroups(_.render())
+
+                GL11.glPopMatrix()
+        }
     }
 }

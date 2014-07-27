@@ -18,38 +18,57 @@
 package com.theenginerd.modcore.client.model
 
 import org.lwjgl.opengl.GL11
+import com.theenginerd.modcore.client.model.builder.shapes.Shape
+import com.theenginerd.modcore.client.model.builder.FaceGroup
 
-trait ShapeGroup
+case class Part(origin: (Float, Float, Float) = (0, 0, 0))
 {
+    private var faceGroups: Map[Option[String], FaceGroup] = Map()
 
+    protected def addShape(shape: Shape) =
+    {
+        val shapeFaceGroups = shape.toFaceGroups
+
+        for(faceGroup <- shapeFaceGroups)
+        {
+            val faceGroupName = faceGroup.name
+            faceGroups += (faceGroupName -> faceGroups.get(faceGroupName)
+                                                      .flatMap(_ combine faceGroup)
+                                                      .getOrElse(faceGroup))
+        }
+    }
+
+    def drawFaceGroups(textureGroupNames: Option[String]*)(textureGroupHandler: (FaceGroup) => Unit) =
+        textureGroupNames.foreach(faceGroups.get(_).map(textureGroupHandler))
+    
+    def drawAllFaceGroups(textureGroupHandler: (FaceGroup) => Unit) =
+        faceGroups.foreach { case (_, group) => textureGroupHandler(group) }
 }
 
 trait Model
 {
     private var parts: Map[Option[String], Part] = Map()
 
-    protected trait Part
+    protected trait PartBuilder
     {
         var name: Option[String] = None
         var origin: (Float, Float, Float) = (0, 0, 0)
-        var shapes: Option[ShapeGroup] = None
 
-        def atOrigin(origin: (Float, Float, Float)): Part =
+        def atOrigin(origin: (Float, Float, Float)): PartBuilder =
         {
             val (x, y, z) = origin
             this.origin = (2*x/32F, y/16F, 2*z/32F)
             this
         }
 
-        def withShapes(shapeGroup: ShapeGroup) =
+        def withShapes(part: Part) =
         {
-            this.shapes = Some(shapeGroup)
-            parts += (name -> this)
+            parts += (name -> part.copy(origin))
         }
     }
 
-    protected def addPart = new Part {
-        def withName(name: String): Part =
+    protected def addPart = new PartBuilder {
+        def withName(name: String): PartBuilder =
         {
             this.name = Some(name)
             this
