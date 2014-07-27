@@ -53,7 +53,7 @@ object VariableSwitchModel extends Model
         }
     }
 
-    addPart withName "torch" atOrigin(4.0f, 2.0f, 5.0f) withShapes new TorchPart(5)
+    addPart withName "torch" atOrigin(3.5f, 2.0f, 5.0f) withShapes new TorchPart(5)
 
     def render(isActive: Boolean, powerOutput: Byte)
     {

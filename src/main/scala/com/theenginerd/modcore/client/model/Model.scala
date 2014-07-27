@@ -18,32 +18,6 @@
 package com.theenginerd.modcore.client.model
 
 import org.lwjgl.opengl.GL11
-import com.theenginerd.modcore.client.model.builder.shapes.Shape
-import com.theenginerd.modcore.client.model.builder.FaceGroup
-
-case class Part(origin: (Float, Float, Float) = (0, 0, 0))
-{
-    private var faceGroups: Map[Option[String], FaceGroup] = Map()
-
-    protected def addShape(shape: Shape) =
-    {
-        val shapeFaceGroups = shape.toFaceGroups
-
-        for(faceGroup <- shapeFaceGroups)
-        {
-            val faceGroupName = faceGroup.name
-            faceGroups += (faceGroupName -> faceGroups.get(faceGroupName)
-                                                      .flatMap(_ combine faceGroup)
-                                                      .getOrElse(faceGroup))
-        }
-    }
-
-    def drawFaceGroups(textureGroupNames: Option[String]*)(textureGroupHandler: (FaceGroup) => Unit) =
-        textureGroupNames.foreach(faceGroups.get(_).map(textureGroupHandler))
-    
-    def drawAllFaceGroups(textureGroupHandler: (FaceGroup) => Unit) =
-        faceGroups.foreach { case (_, group) => textureGroupHandler(group) }
-}
 
 trait Model
 {
