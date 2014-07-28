@@ -34,7 +34,7 @@ import com.theenginerd.randomredstone.RandomRedstoneMod.MOD_ID
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import java.util.Random
 import com.theenginerd.randomredstone.client.tileentity.renderer.RenderIds
-import com.theenginerd.randomredstone.common.blockEntity.VariableSwitchBlockEntity
+import com.theenginerd.randomredstone.common.blockEntity.VariableSwitchTileEntity
 
 object VariableSwitchBlock extends BlockContainer(Material.circuits)
 {
@@ -50,7 +50,7 @@ object VariableSwitchBlock extends BlockContainer(Material.circuits)
     def getDirection(metadata: Int): ForgeDirection =
         ForgeDirection.getOrientation(metadata & DIRECTION_MASK)
 
-     def getOrientation(metadata: Int): Int =
+    def getOrientation(metadata: Int): Int =
         (metadata & ORIENTATION_MASK) >> 3
 
 
@@ -61,7 +61,7 @@ object VariableSwitchBlock extends BlockContainer(Material.circuits)
 
     override def createNewTileEntity(world: World, index: Int): TileEntity =
     {
-        new VariableSwitchBlockEntity
+        new VariableSwitchTileEntity
     }
 
     override def isOpaqueCube = false
@@ -136,7 +136,7 @@ object VariableSwitchBlock extends BlockContainer(Material.circuits)
         {
             val metadata = world.getBlockMetadata(x, y, z)
 
-            val tileEntity = world.getTileEntity(x, y, z).asInstanceOf[VariableSwitchBlockEntity]
+            val tileEntity = world.getTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity]
 
             for(part <- getActivatedPart(hitX, hitY, hitZ, metadata))
             {
@@ -238,7 +238,7 @@ object VariableSwitchBlock extends BlockContainer(Material.circuits)
      */
     override def isProvidingWeakPower(blockAccess: IBlockAccess, x: Int, y: Int, z: Int, side: Int): Int =
     {
-        val tileEntity = blockAccess.getTileEntity(x, y, z).asInstanceOf[VariableSwitchBlockEntity]
+        val tileEntity = blockAccess.getTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity]
 
         if (~tileEntity.isActive) ~tileEntity.powerOutput else 0
     }
@@ -248,7 +248,7 @@ object VariableSwitchBlock extends BlockContainer(Material.circuits)
      */
     override def isProvidingStrongPower(blockAccess: IBlockAccess, x: Int, y: Int, z: Int, side: Int): Int =
     {
-        val tileEntity = blockAccess.getTileEntity(x, y, z).asInstanceOf[VariableSwitchBlockEntity]
+        val tileEntity = blockAccess.getTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity]
 
         getDirection(blockAccess.getBlockMetadata(x, y, z)) match
         {
@@ -266,7 +266,7 @@ object VariableSwitchBlock extends BlockContainer(Material.circuits)
 
     override def getLightValue(blockAccess: IBlockAccess, x: Int, y: Int, z: Int) =
     {
-        val tileEntity = blockAccess.getTileEntity(x, y, z).asInstanceOf[VariableSwitchBlockEntity]
+        val tileEntity = blockAccess.getTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity]
 
         if(~tileEntity.isActive) 10 else 0
     }
@@ -274,7 +274,7 @@ object VariableSwitchBlock extends BlockContainer(Material.circuits)
     @SideOnly(Side.CLIENT)
     override def randomDisplayTick(world: World, x: Int, y: Int, z: Int, random: Random)
     {
-        val tileEntity = world.getTileEntity(x, y, z).asInstanceOf[VariableSwitchBlockEntity]
+        val tileEntity = world.getTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity]
         val metadata = world.getBlockMetadata(x, y, z)
 
         if (~tileEntity.isActive)

@@ -27,13 +27,13 @@ import cpw.mods.fml.client.FMLClientHandler
 import net.minecraft.world.IBlockAccess
 import net.minecraft.client.renderer.{RenderHelper, Tessellator}
 import com.theenginerd.randomredstone.client.model.VariableSwitchModel
-import com.theenginerd.randomredstone.common.blockEntity.VariableSwitchBlockEntity
+import com.theenginerd.randomredstone.common.blockEntity.VariableSwitchTileEntity
 
 object VariableSwitchTileEntityRenderer extends TileEntitySpecialRenderer
 {
     def renderTileEntityAt(tileentity: TileEntity, x: Double, y: Double, z: Double, tick: Float): Unit =
     {
-        val variableSwitch = tileentity.asInstanceOf[VariableSwitchBlockEntity]
+        val variableSwitch = tileentity.asInstanceOf[VariableSwitchTileEntity]
         val metadata = variableSwitch.getBlockMetadata
         val direction = VariableSwitchBlock.getDirection(metadata)
         val orientation = VariableSwitchBlock.getOrientation(metadata)
@@ -50,7 +50,7 @@ object VariableSwitchTileEntityRenderer extends TileEntitySpecialRenderer
         resetBrightness(variableSwitch)
     }
 
-    private def resetBrightness(variableSwitch: VariableSwitchBlockEntity)
+    private def resetBrightness(variableSwitch: VariableSwitchTileEntity)
     {
         if (~variableSwitch.isActive)
         {
@@ -58,7 +58,7 @@ object VariableSwitchTileEntityRenderer extends TileEntitySpecialRenderer
         }
     }
 
-    private def setBrightness(variableSwitch: VariableSwitchBlockEntity)
+    private def setBrightness(variableSwitch: VariableSwitchTileEntity)
     {
         val tessellator = Tessellator.instance
         val blockAccess: IBlockAccess = FMLClientHandler.instance().getWorldClient

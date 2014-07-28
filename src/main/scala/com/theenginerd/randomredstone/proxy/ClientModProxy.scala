@@ -24,13 +24,13 @@ import net.minecraftforge.client.MinecraftForgeClient
 import net.minecraft.item.Item
 import com.theenginerd.randomredstone.client.tileentity.renderer.VariableSwitchTileEntityRenderer
 import com.theenginerd.randomredstone.client.item.renderer.VariableSwitchItemRenderer
-import com.theenginerd.randomredstone.common.blockEntity.VariableSwitchBlockEntity
+import com.theenginerd.randomredstone.common.blockEntity.VariableSwitchTileEntity
 
 class ClientModProxy extends ModProxy
 {
     def setupRendering() =
     {
-        ClientRegistry.bindTileEntitySpecialRenderer(classOf[VariableSwitchBlockEntity], VariableSwitchTileEntityRenderer)
+        ClientRegistry.bindTileEntitySpecialRenderer(classOf[VariableSwitchTileEntity], VariableSwitchTileEntityRenderer)
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(VariableSwitchBlock), VariableSwitchItemRenderer)
     }
 

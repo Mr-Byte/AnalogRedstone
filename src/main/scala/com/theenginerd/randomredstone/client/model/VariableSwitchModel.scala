@@ -37,20 +37,19 @@ object VariableSwitchModel extends Model
     private final val VARIABLE_SWITCH_OFF_TEXTURE = new ResourceLocation("randomredstone", "textures/blocks/variable_switch_off.png")
     private final val VARIABLE_SWITCH_ON_TEXTURE = new ResourceLocation("randomredstone", "textures/blocks/variable_switch_on.png")
 
-    addPart withName "base" withShapes new Part {
+    addPart withName "base" withShapes new Part
+    {
         addShape { Box(width = 15, height = 2, depth = 16) }
     }
 
-    addPart withName "leverBox" withShapes new Part {
+    addPart withName "leverBox" withShapes new Part
+    {
         addShape { Box(4, 2, 8, x = -8, y = 4) }
     }
 
-    addPart withName "lever" atOrigin (-4.0f, 2.0f, 0.0f) withShapes new Part {
-        addShape
-        {
-            Box(2, 10, 2)
-                .setSideInfo(BoxTop)(TextureRectangle(7, 8, 2, 2))
-        }
+    addPart withName "lever" atOrigin (-4.0f, 2.0f, 0.0f) withShapes new Part
+    {
+        addShape { Box(2, 10, 2).setSideInfo(BoxTop)(TextureRectangle(7, 8, 2, 2)) }
     }
 
     addPart withName "torch" atOrigin(3.5f, 2.0f, 5.0f) withShapes new TorchPart(5)

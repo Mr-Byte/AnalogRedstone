@@ -18,12 +18,12 @@
 package com.theenginerd.randomredstone.proxy
 
 import cpw.mods.fml.common.registry.GameRegistry
-import com.theenginerd.randomredstone.common.blockEntity.VariableSwitchBlockEntity
+import com.theenginerd.randomredstone.common.blockEntity.VariableSwitchTileEntity
 
 trait ModProxy
 {
     def registerTileEntities() =
     {
-        GameRegistry.registerTileEntity(classOf[VariableSwitchBlockEntity], "tileEntity.variableSwitch")
+        GameRegistry.registerTileEntity(classOf[VariableSwitchTileEntity], "tileEntity.variableSwitch")
     }
 }
