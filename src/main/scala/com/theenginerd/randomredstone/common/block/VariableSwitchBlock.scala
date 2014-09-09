@@ -17,26 +17,44 @@
 
 package com.theenginerd.randomredstone.common.block
 
-import net.minecraft.block.{Block, BlockContainer}
-import net.minecraft.block.material.Material
-import net.minecraft.world.{IBlockAccess, World}
-import net.minecraftforge.common.util.ForgeDirection
-import net.minecraftforge.common.util.ForgeDirection.{DOWN, UP, NORTH, SOUTH, WEST, EAST, UNKNOWN}
-import net.minecraft.creativetab.CreativeTabs
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.item.ItemStack
-import net.minecraft.tileentity.TileEntity
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.util.{MathHelper, AxisAlignedBB}
-import com.theenginerd.randomredstone.common.utility.HitBox
-import net.minecraft.client.renderer.texture.IIconRegister
-import com.theenginerd.randomredstone.RandomRedstoneMod.MOD_ID
-import cpw.mods.fml.relauncher.{Side, SideOnly}
 import java.util.Random
+
+import com.theenginerd.modcore.common.block.{ModBlock, BlockContainerAdapter}
+import com.theenginerd.randomredstone.RandomRedstoneMod.MOD_ID
 import com.theenginerd.randomredstone.client.tileentity.renderer.RenderIds
 import com.theenginerd.randomredstone.common.blockEntity.VariableSwitchTileEntity
+import com.theenginerd.randomredstone.common.utility.HitBox
+import cpw.mods.fml.relauncher.{Side, SideOnly}
+import net.minecraft.block.Block
+import net.minecraft.block.material.Material
+import net.minecraft.client.renderer.texture.IIconRegister
+import net.minecraft.creativetab.CreativeTabs
+import net.minecraft.entity.EntityLivingBase
+import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.item.ItemStack
+import net.minecraft.util.{AxisAlignedBB, MathHelper}
+import net.minecraft.world.{IBlockAccess, World}
+import net.minecraftforge.common.util.ForgeDirection
+import net.minecraftforge.common.util.ForgeDirection.{DOWN, EAST, NORTH, SOUTH, UNKNOWN, UP, WEST}
 
-object VariableSwitchBlock extends BlockContainer(Material.circuits)
+trait VariableSwitchBlock extends ModBlock
+{
+    override def canBlockBePlacedOnSide(world: World, x: Int, y: Int, z: Int, metadata: Int) =
+    {
+        ForgeDirection.getOrientation(metadata) match
+        {
+            case DOWN => world.isSideSolid(x, y+1, z, DOWN)
+            case UP => world.isSideSolid(x, y-1, z, UP)
+            case NORTH => world.isSideSolid(x, y, z+1, NORTH)
+            case SOUTH => world.isSideSolid(x, y, z-1, SOUTH)
+            case WEST => world.isSideSolid(x+1, y, z, WEST)
+            case EAST => world.isSideSolid(x-1, y, z, EAST)
+            case UNKNOWN => false
+        }
+    }
+}
+
+object VariableSwitchBlock extends BlockContainerAdapter[VariableSwitchTileEntity](Material.circuits) with VariableSwitchBlock
 {
     setCreativeTab(CreativeTabs.tabRedstone)
 
@@ -59,29 +77,9 @@ object VariableSwitchBlock extends BlockContainer(Material.circuits)
         blockIcon = register.registerIcon(s"$MOD_ID:variable_switch_on")
     }
 
-    override def createNewTileEntity(world: World, index: Int): TileEntity =
-    {
-        new VariableSwitchTileEntity
-    }
-
     override def isOpaqueCube = false
 
     override def getCollisionBoundingBoxFromPool(world: World, x: Int, y: Int, z: Int): AxisAlignedBB = null
-
-    /*
-     * Checks to see if this block can be placed on the side of a block.
-     */
-    override def canPlaceBlockOnSide(world: World, x: Int, y: Int, z: Int, orientation: Int): Boolean =
-        ForgeDirection.getOrientation(orientation) match
-        {
-            case DOWN => world.isSideSolid(x, y+1, z, DOWN)
-            case UP => world.isSideSolid(x, y-1, z, UP)
-            case NORTH => world.isSideSolid(x, y, z+1, NORTH)
-            case SOUTH => world.isSideSolid(x, y, z-1, SOUTH)
-            case WEST => world.isSideSolid(x+1, y, z, WEST)
-            case EAST => world.isSideSolid(x-1, y, z, EAST)
-            case UNKNOWN => false
-        }
 
     /*
      * Checks to see if the block can be placed at the given coordinates.

@@ -18,9 +18,9 @@ buildscript {
 apply plugin: 'scala'
 apply plugin: 'forge'
 
-minecraft { 
-	version = "1.7.10-10.13.0.1180"
-	assetDir = "eclipse/assets"
+minecraft {
+    version = "1.7.10-10.13.0.1180"
+    assetDir = "eclipse/assets"
 }
 	
 version = "1.2.0-1.7.10"

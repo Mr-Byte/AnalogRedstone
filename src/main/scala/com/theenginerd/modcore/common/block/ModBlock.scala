@@ -18,16 +18,14 @@
 package com.theenginerd.modcore.common.block
 
 import net.minecraft.block.Block
-import net.minecraft.block.material.Material
 import net.minecraft.world.World
 
-abstract class BlockAdapter(material: Material) extends Block(material) with ModBlock
+trait ModBlock
 {
-    protected override val block = this
+    protected val block: Block
 
-    override def canPlaceBlockOnSide(world: World, x: Int, y: Int, z: Int, metadata: Int): Boolean =
+    def canBlockBePlacedOnSide(world: World, x: Int, y: Int, z: Int, metadata: Int) =
     {
-        canBlockBePlacedOnSide(world, x, y, z, metadata)
+        block.canPlaceBlockOnSide(world, x, y, z, metadata)
     }
 }
-
