@@ -52,7 +52,7 @@ object VariableSwitchModel extends Model
         addShape { Box(2, 10, 2).setSideInfo(BoxTop)(TextureRectangle(7, 8, 2, 2)) }
     }
 
-    addPart withName "torch" atOrigin(3.5f, 2.0f, 5.0f) withShapes new TorchPart(5)
+    addPart withName "torch" atOrigin(4f, 2.0f, 5.0f) withShapes new TorchPart(5)
 
     def render(isActive: Boolean, powerOutput: Byte)
     {
