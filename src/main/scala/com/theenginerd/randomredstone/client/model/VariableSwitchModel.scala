@@ -39,7 +39,7 @@ object VariableSwitchModel extends Model
 
     addPart withName "base" withShapes new Part
     {
-        addShape { Box(width = 15, height = 2, depth = 16) }
+        addShape { Box(width = 16, height = 2, depth = 16) }
     }
 
     addPart withName "leverBox" withShapes new Part
