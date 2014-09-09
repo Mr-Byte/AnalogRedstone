@@ -17,15 +17,9 @@
 
 package com.theenginerd.modcore.common.block
 
-import net.minecraft.block.Block
 import net.minecraft.world.World
 
 trait ModBlock
 {
-    protected val block: Block
-
-    def canBlockBePlacedOnSide(world: World, x: Int, y: Int, z: Int, metadata: Int) =
-    {
-        block.canPlaceBlockOnSide(world, x, y, z, metadata)
-    }
+    def canBlockBePlacedOnSide(world: World, x: Int, y: Int, z: Int, metadata: Int): Boolean
 }

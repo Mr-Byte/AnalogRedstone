@@ -23,11 +23,22 @@ import net.minecraft.world.World
 
 abstract class BlockAdapter(material: Material) extends Block(material) with ModBlock
 {
-    protected override val block = this
-
+    /*
+     * This section replaces all relevant methods from Block with calls to the ModBlock trait.
+     * If the ModBlock method is not defined in a further derived trait, then the default implementation is used;
+     * otherwise the implementation from the further derived trait is used.
+     */
     override def canPlaceBlockOnSide(world: World, x: Int, y: Int, z: Int, metadata: Int): Boolean =
     {
         canBlockBePlacedOnSide(world, x, y, z, metadata)
+    }
+
+    /*
+     * This section creates default implementations of the methods defined in ModBlock.  It defers the implementation to the super-class (Block).
+     */
+    def canBlockBePlacedOnSide(world: World, x: Int, y: Int, z: Int, metadata: Int) =
+    {
+        super.canPlaceBlockOnSide(world, x, y, z, metadata)
     }
 }
 
