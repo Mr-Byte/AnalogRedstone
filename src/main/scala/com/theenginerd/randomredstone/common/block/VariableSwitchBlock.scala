@@ -39,25 +39,6 @@ import net.minecraftforge.common.util.ForgeDirection.{DOWN, EAST, NORTH, SOUTH, 
 
 trait VariableSwitchBlock extends ModBlock
 {
-    override def canBlockBePlacedOnSide(world: World, x: Int, y: Int, z: Int, metadata: Int) =
-    {
-        ForgeDirection.getOrientation(metadata) match
-        {
-            case DOWN => world.isSideSolid(x, y+1, z, DOWN)
-            case UP => world.isSideSolid(x, y-1, z, UP)
-            case NORTH => world.isSideSolid(x, y, z+1, NORTH)
-            case SOUTH => world.isSideSolid(x, y, z-1, SOUTH)
-            case WEST => world.isSideSolid(x+1, y, z, WEST)
-            case EAST => world.isSideSolid(x-1, y, z, EAST)
-            case UNKNOWN => false
-        }
-    }
-}
-
-object VariableSwitchBlock extends BlockContainerAdapter[VariableSwitchTileEntity](Material.circuits) with VariableSwitchBlock
-{
-    setCreativeTab(CreativeTabs.tabRedstone)
-
     protected abstract class Part
     case class Switch() extends Part
     case class PowerAdjuster() extends Part
@@ -71,28 +52,56 @@ object VariableSwitchBlock extends BlockContainerAdapter[VariableSwitchTileEntit
     def getOrientation(metadata: Int): Int =
         (metadata & ORIENTATION_MASK) >> 3
 
-
-    override def registerBlockIcons(register: IIconRegister)
+    override def canBePlacedOnSide(world: World, x: Int, y: Int, z: Int, metadata: Int) =
     {
-        blockIcon = register.registerIcon(s"$MOD_ID:variable_switch_on")
+        ForgeDirection.getOrientation(metadata) match
+        {
+            case DOWN => world.isSideSolid(x, y+1, z, DOWN)
+            case UP => world.isSideSolid(x, y-1, z, UP)
+            case NORTH => world.isSideSolid(x, y, z+1, NORTH)
+            case SOUTH => world.isSideSolid(x, y, z-1, SOUTH)
+            case WEST => world.isSideSolid(x+1, y, z, WEST)
+            case EAST => world.isSideSolid(x-1, y, z, EAST)
+            case UNKNOWN => false
+        }
     }
 
-    override def isOpaqueCube = false
+    override def isOpaque = false
 
-    override def getCollisionBoundingBoxFromPool(world: World, x: Int, y: Int, z: Int): AxisAlignedBB = null
-
-    /*
-     * Checks to see if the block can be placed at the given coordinates.
-     */
-    override def canPlaceBlockAt(world: World, x: Int, y: Int, z: Int) =
+    override def canBePlacedAt(world: World, x: Int, y: Int, z: Int): Boolean =
+    {
         world.isSideSolid(x-1, y, z, EAST) ||
         world.isSideSolid(x+1, y, z, WEST) ||
         world.isSideSolid(x, y, z-1, SOUTH) ||
         world.isSideSolid(x, y, z+1, NORTH) ||
         world.isSideSolid(x, y-1, z, UP) ||
         world.isSideSolid(x, y+1, z, DOWN)
+    }
 
-    override def canBlockStay(world: World, x: Int, y: Int, z: Int) =
+
+    override def onPlaceInWorldByEntity(world: World, x: Int, y: Int, z: Int, entity: EntityLivingBase, itemStack: ItemStack): Unit =
+    {
+        var metadata = world.getBlockMetadata(x, y, z)
+        val groundOrientation = (MathHelper.floor_double((entity.rotationYaw * 4.0F / 360.0F).asInstanceOf[Double] + 0.5F) & 0x01) << 3
+
+        if(metadata <= 1)
+            metadata = metadata | groundOrientation
+
+        world.setBlockMetadataWithNotify(x, y, z, metadata, 2)
+    }
+
+    abstract override def onBreak(world: World, x: Int, y: Int, z: Int, block: Block, metadata: Int): Unit =
+    {
+        notifyNeighbors(world, x, y, z, block, getDirection(metadata))
+        super.onBreak(world, x, y, z, block, metadata)
+    }
+
+    override def onPlacedInWorld(world: World, x: Int, y: Int, z: Int, side: Int, hitX: Float, hitY: Float, hitZ: Float, metadata: Int): ForgeDirection =
+        ForgeDirection.getOrientation(side)
+
+
+
+    override def canStay(world: World, x: Int, y: Int, z: Int): Boolean =
     {
         val direction = getDirection(world.getBlockMetadata(x, y, z))
 
@@ -107,28 +116,18 @@ object VariableSwitchBlock extends BlockContainerAdapter[VariableSwitchTileEntit
         }
     }
 
-
-    override def onBlockPlaced(world: World, x: Int, y: Int, z: Int, side: Int, hitX: Float, hitY: Float, hitZ: Float, metadata: Int): Int =
-        ForgeDirection.getOrientation(side).ordinal
-
-    override def onBlockPlacedBy(world: World, x: Int, y: Int, z: Int, entity: EntityLivingBase, itemStack: ItemStack) =
+    override def onNeighborChanged(world: World, x: Int, y: Int, z: Int, neighbor: Block, self: Block): Unit =
     {
-        var metadata = world.getBlockMetadata(x, y, z)
-        val groundOrientation = (MathHelper.floor_double((entity.rotationYaw * 4.0F / 360.0F).asInstanceOf[Double] + 0.5F) & 0x01) << 3
-
-        if(metadata <= 1)
-            metadata = metadata | groundOrientation
-
-        world.setBlockMetadataWithNotify(x, y, z, metadata, 2)
+        if(!canStay(world, x, y, z))
+        {
+            val metadata = world.getBlockMetadata(x, y, z)
+            dropAsItem(world, x, y, z, metadata, 0)
+            world.setBlockToAir(x, y, z)
+            notifyNeighbors(world, x, y, z, self, getDirection(metadata))
+        }
     }
 
-    override def breakBlock(world: World, x: Int, y: Int, z: Int, block: Block, metadata: Int) =
-    {
-        notifyNeighbors(world, x, y, z, getDirection(metadata))
-        super.breakBlock(world, x, y, z, this, metadata)
-    }
-
-    override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, side: Int, hitX: Float, hitY: Float, hitZ: Float): Boolean =
+    override def onActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, side: Int, hitX: Float, hitY: Float, hitZ: Float, block: Block): Boolean =
     {
         if(!world.isRemote)
         {
@@ -149,7 +148,7 @@ object VariableSwitchBlock extends BlockContainerAdapter[VariableSwitchTileEntit
             }
 
             world.setBlockMetadataWithNotify(x, y, z, metadata, 3)
-            notifyNeighbors(world, x, y, z, getDirection(metadata))
+            notifyNeighbors(world, x, y, z, block, getDirection(metadata))
         }
 
         true
@@ -187,33 +186,55 @@ object VariableSwitchBlock extends BlockContainerAdapter[VariableSwitchTileEntit
         }
     }
 
-
-    override def onNeighborBlockChange(world: World, x: Int, y: Int, z: Int, block: Block) =
+    private def notifyNeighbors(world: World, x: Int, y: Int, z: Int, block: Block, direction: ForgeDirection)
     {
-        if(!canBlockStay(world, x, y, z))
-        {
-            val metadata = world.getBlockMetadata(x, y, z)
-            dropBlockAsItem(world, x, y, z, metadata, 0)
-            world.setBlockToAir(x, y, z)
-            notifyNeighbors(world, x, y, z, getDirection(metadata))
-        }
-    }
-
-    private def notifyNeighbors(world: World, x: Int, y: Int, z: Int, direction: ForgeDirection)
-    {
-        world.notifyBlocksOfNeighborChange(x, y, z, this)
+        world.notifyBlocksOfNeighborChange(x, y, z, block)
 
         direction match
         {
-            case DOWN => world.notifyBlocksOfNeighborChange(x, y + 1, z, this)
-            case UP => world.notifyBlocksOfNeighborChange(x, y - 1, z, this)
-            case WEST => world.notifyBlocksOfNeighborChange(x + 1, y, z, this)
-            case EAST => world.notifyBlocksOfNeighborChange(x - 1, y, z, this)
-            case SOUTH => world.notifyBlocksOfNeighborChange(x, y, z - 1, this)
-            case NORTH => world.notifyBlocksOfNeighborChange(x, y, z + 1, this)
+            case DOWN => world.notifyBlocksOfNeighborChange(x, y + 1, z, block)
+            case UP => world.notifyBlocksOfNeighborChange(x, y - 1, z, block)
+            case WEST => world.notifyBlocksOfNeighborChange(x + 1, y, z, block)
+            case EAST => world.notifyBlocksOfNeighborChange(x - 1, y, z, block)
+            case SOUTH => world.notifyBlocksOfNeighborChange(x, y, z - 1, block)
+            case NORTH => world.notifyBlocksOfNeighborChange(x, y, z + 1, block)
             case UNKNOWN => ()
         }
     }
+
+    override def canProvideRedstonePower: Boolean = true
+
+    override def getWeakRedstonePower(blockAccess: IBlockAccess, x: Int, y: Int, z: Int, side: Int): Int =
+    {
+        val tileEntity = blockAccess.getTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity]
+
+        if (~tileEntity.isActive) ~tileEntity.powerOutput else 0
+    }
+
+    override def getStrongRedstonePower(blockAccess: IBlockAccess, x: Int, y: Int, z: Int, side: Int): Int =
+    {
+        val tileEntity = blockAccess.getTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity]
+
+        getDirection(blockAccess.getBlockMetadata(x, y, z)) match
+        {
+            case direction @ (UP | DOWN) if direction != getDirection(side) => 0
+            case _ if ~tileEntity.isActive => ~tileEntity.powerOutput
+            case _ => 0
+        }
+    }
+}
+
+//TODO: Move some of this to ModBlock while decoupling some of the stuff related to rendering and collision detection.
+object VariableSwitchBlock extends BlockContainerAdapter[VariableSwitchTileEntity](Material.circuits) with VariableSwitchBlock
+{
+    setCreativeTab(CreativeTabs.tabRedstone)
+
+    override def registerBlockIcons(register: IIconRegister)
+    {
+        blockIcon = register.registerIcon(s"$MOD_ID:variable_switch_on")
+    }
+
+    override def getCollisionBoundingBoxFromPool(world: World, x: Int, y: Int, z: Int): AxisAlignedBB = null
 
     override def setBlockBoundsBasedOnState(blockAccess: IBlockAccess, x: Int, y: Int, z: Int) =
     {
@@ -231,37 +252,11 @@ object VariableSwitchBlock extends BlockContainerAdapter[VariableSwitchTileEntit
         }
     }
 
-    /*
-     * Always provide weak power, regardless of orientation if that switch is in the on position.
-     */
-    override def isProvidingWeakPower(blockAccess: IBlockAccess, x: Int, y: Int, z: Int, side: Int): Int =
-    {
-        val tileEntity = blockAccess.getTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity]
-
-        if (~tileEntity.isActive) ~tileEntity.powerOutput else 0
-    }
-
-    /*
-     * Only provide strong to the block that the switch is directly attached to.
-     */
-    override def isProvidingStrongPower(blockAccess: IBlockAccess, x: Int, y: Int, z: Int, side: Int): Int =
-    {
-        val tileEntity = blockAccess.getTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity]
-
-        getDirection(blockAccess.getBlockMetadata(x, y, z)) match
-        {
-            case direction @ (UP | DOWN) if direction != getDirection(side) => 0
-            case _ if ~tileEntity.isActive => ~tileEntity.powerOutput
-            case _ => 0
-        }
-    }
-
-    override def canProvidePower = true
-
     override def renderAsNormalBlock = false
 
     override def getRenderType = RenderIds.variableSwitch
 
+    //TODO: Move into ModBlock
     override def getLightValue(blockAccess: IBlockAccess, x: Int, y: Int, z: Int) =
     {
         val tileEntity = blockAccess.getTileEntity(x, y, z).asInstanceOf[VariableSwitchTileEntity]

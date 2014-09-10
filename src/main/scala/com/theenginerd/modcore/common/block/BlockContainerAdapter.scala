@@ -17,32 +17,36 @@
 
 package com.theenginerd.modcore.common.block
 
-import net.minecraft.block.{Block, ITileEntityProvider}
+import net.minecraft.block.ITileEntityProvider
 import net.minecraft.block.material.Material
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
+import net.minecraft.block.Block
 
+//TODO: Can this be a trait?  The Manifest seems to say no.
 class BlockContainerAdapter[T: Manifest](material: Material) extends BlockAdapter(material) with ITileEntityProvider
 {
     isBlockContainer = true
 
+    //TODO: Override ModBlock equivalent.
     override def onBlockAdded(world: World, x: Int, y: Int, z: Int)
     {
         super.onBlockAdded(world, x, y, z)
     }
 
-    override def breakBlock(world : World, x: Int, y: Int, z: Int, block: Block, metadata: Int)
-    {
-        super.breakBlock(world, x, y, z, block, metadata)
-        world.removeTileEntity(x, y, z)
-    }
-
+    //TODO: Override ModBlock equivalent
     override def onBlockEventReceived(world: World, x: Int, y: Int, z: Int, eventId: Int, eventArgument: Int): Boolean =
     {
         super.onBlockEventReceived(world, x, y, z, eventId, eventArgument)
         val tileEntity = world.getTileEntity(x, y, z)
 
         tileEntity != null && tileEntity.receiveClientEvent(eventId, eventArgument)
+    }
+
+    override def onBreak(world: World, x: Int, y: Int, z: Int, block: Block, metadata: Int) =
+    {
+        super.onBreak(world, x, y, z, block, metadata)
+        world.removeTileEntity(x, y, z)
     }
 
     def createNewTileEntity(world: World, metadata : Int): TileEntity =
