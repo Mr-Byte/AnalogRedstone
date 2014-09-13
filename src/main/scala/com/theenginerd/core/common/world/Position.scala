@@ -17,4 +17,6 @@
 
 package com.theenginerd.core.common.world
 
+import scala.language.experimental.macros
+
 case class Position[T <: AnyVal](x: T, y: T, z: T)

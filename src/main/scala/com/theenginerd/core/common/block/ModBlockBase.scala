@@ -17,14 +17,14 @@
 
 package com.theenginerd.core.common.block
 
-import com.theenginerd.core.common.world.{BlockSide, Position}
+import com.theenginerd.core.common.world.Position
 import net.minecraft.block.material.Material
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.world.{IBlockAccess, World}
 
-abstract class BlockBase(material: Material) extends net.minecraft.block.Block(material) with Block
+abstract class ModBlockBase(material: Material) extends net.minecraft.block.Block(material) with ModBlock
 {
     /*
      * This section replaces all relevant methods from Block with calls to the ModBlock trait.
@@ -42,7 +42,7 @@ abstract class BlockBase(material: Material) extends net.minecraft.block.Block(m
     {
         val position = Position(x, y, z)
 
-        onBreak(world, position, new BlockAdapter(block), metadata)
+        onBreak(world, position, new ModBlockAdapter(block), metadata)
     }
 
     override def canPlaceBlockOnSide(world: World, x: Int, y: Int, z: Int, metadata: Int) =
@@ -91,7 +91,7 @@ abstract class BlockBase(material: Material) extends net.minecraft.block.Block(m
     override def onNeighborBlockChange(world: World, x: Int, y: Int, z: Int, neighbor: net.minecraft.block.Block): Unit =
     {
         val position = Position(x, y, z)
-        onNeighborChanged(world, position, new BlockAdapter(neighbor))
+        onNeighborChanged(world, position, new ModBlockAdapter(neighbor))
     }
 
     override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, side: Int, hitX: Float, hitY: Float, hitZ: Float) =
@@ -111,7 +111,7 @@ abstract class BlockBase(material: Material) extends net.minecraft.block.Block(m
 
     override def canBePlacedAt(world: World, position: Position[Int]): Boolean = ???
 
-    override def onNeighborChanged(world: World, position: Position[Int], neighbor: Block): Unit = ???
+    override def onNeighborChanged(world: World, position: Position[Int], neighbor: ModBlock): Unit = ???
 
     override def canProvideRedstonePower: Boolean = ???
 
@@ -119,20 +119,14 @@ abstract class BlockBase(material: Material) extends net.minecraft.block.Block(m
 
     override def isOpaque: Boolean = ???
 
-    final def dropAsItem(world: World, position: Position[Int], metadata: Int, what: Int): Unit =
-    {
-        val Position(x, y, z) = position
-        super.dropBlockAsItem(world, x, y, z, metadata, what)
-    }
-
     override def onPlacedInWorld(world: World, position: Position[Int], hitPosition: Position[Float], side: BlockSide, metadata: Int): BlockSide = ???
 
     override def onPlaceInWorldByEntity(world: World, position: Position[Int], entity: EntityLivingBase, itemStack: ItemStack): Unit = ???
 
-    override def onBreak(world: World, position: Position[Int], block: Block, metadata: Int): Unit =
+    override def onBreak(world: World, position: Position[Int], block: ModBlock, metadata: Int): Unit =
     {
         val Position(x, y, z) = position
-        val Block(worldBlock) = block
+        val ModBlock(worldBlock) = block
 
         super.breakBlock(world, x, y, z, worldBlock, metadata)
     }

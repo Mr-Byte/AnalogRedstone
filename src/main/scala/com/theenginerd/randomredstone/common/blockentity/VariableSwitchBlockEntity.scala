@@ -18,9 +18,9 @@
 package com.theenginerd.randomredstone.common.blockEntity
 
 import net.minecraft.nbt.NBTTagCompound
-import com.theenginerd.core.common.blockEntity.{BlockEntityAdapter, BlockEntity}
+import com.theenginerd.core.common.tileEntity.{ModTileEntityAdapter, ModTileEntity}
 
-trait VariableSwitchBlockEntity extends BlockEntity
+trait VariableSwitchBlockEntity extends ModTileEntity
 {
     final val IS_ACTIVE_FIELD: String = "isActive"
     final val POWER_OUTPUT_FIELD: String = "powerOutput"
@@ -53,4 +53,4 @@ trait VariableSwitchBlockEntity extends BlockEntity
     }
 }
 
-class VariableSwitchTileEntity extends BlockEntityAdapter with VariableSwitchBlockEntity
+class VariableSwitchTileEntity extends ModTileEntityAdapter with VariableSwitchBlockEntity

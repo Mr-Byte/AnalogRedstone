@@ -23,7 +23,7 @@ import net.minecraft.block.material.Material
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 
-class BlockContainerBase[T: Manifest](material: Material) extends BlockBase(material) with ITileEntityProvider
+class ModBlockContainerBase[T: Manifest](material: Material) extends ModBlockBase(material) with ITileEntityProvider
 {
     isBlockContainer = true
 
@@ -41,7 +41,7 @@ class BlockContainerBase[T: Manifest](material: Material) extends BlockBase(mate
         tileEntity != null && tileEntity.receiveClientEvent(eventId, eventArgument)
     }
 
-    override def onBreak(world: World, position: Position[Int], block: Block, metadata: Int) =
+    override def onBreak(world: World, position: Position[Int], block: ModBlock, metadata: Int) =
     {
         val Position(x, y, z) = position
         super.onBreak(world, position, block, metadata)

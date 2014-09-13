@@ -15,7 +15,7 @@
  * ========================================================================
  */
 
-package com.theenginerd.core.common.blockEntity
+package com.theenginerd.core.common.tileEntity
 
 import com.theenginerd.core.common.synchronization.Synchronized
 import net.minecraft.nbt.NBTTagCompound
@@ -24,7 +24,7 @@ import net.minecraft.nbt.NBTTagCompound
  * Trait that defines a BlockEntity. A BlockEntity is a layer to help insulate against changes in TileEntity, which are handled in BlockEntityAdapter.
  * BlockEntity allows for synchronization across the network.
  */
-trait BlockEntity extends Synchronized
+trait ModTileEntity extends Synchronized
 {
     def load(data: NBTTagCompound)
     def unload(data: NBTTagCompound)

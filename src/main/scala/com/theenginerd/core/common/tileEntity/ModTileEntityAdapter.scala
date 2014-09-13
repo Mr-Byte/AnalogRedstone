@@ -15,7 +15,7 @@
  * ========================================================================
  */
 
-package com.theenginerd.core.common.blockEntity
+package com.theenginerd.core.common.tileEntity
 
 import net.minecraft.nbt.NBTTagCompound
 import com.theenginerd.core.common.network.synchronization.data.{Property, SynchronizedTileMessage, SynchronizedMessage}
@@ -28,7 +28,7 @@ import com.theenginerd.core.common.network.PacketHandler
  * Base adapter class that adapts the implementation of TileEntity to the BlockEntity trait.
  * This also includes the ability to synchronize the TileEntity over the network.
  */
-abstract class BlockEntityAdapter extends TileEntity with BlockEntity
+abstract class ModTileEntityAdapter extends TileEntity with ModTileEntity
 {
     override def getDescriptionPacket =
         PacketHandler.instance.convertMessageToPacket(buildSynchronizedMessage(getAllProperties))
@@ -65,8 +65,8 @@ abstract class BlockEntityAdapter extends TileEntity with BlockEntity
     }
 }
 
-object BlockEntityAdapter
+object ModTileEntityAdapter
 {
-    def find(world : World, x: Int, y: Int, z: Int) : Option[BlockEntityAdapter] =
-        Option(world.getTileEntity(x, y, z).asInstanceOf[BlockEntityAdapter])
+    def find(world : World, x: Int, y: Int, z: Int) : Option[ModTileEntityAdapter] =
+        Option(world.getTileEntity(x, y, z).asInstanceOf[ModTileEntityAdapter])
 }

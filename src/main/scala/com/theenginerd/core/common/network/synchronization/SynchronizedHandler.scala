@@ -21,7 +21,7 @@ import cpw.mods.fml.common.FMLLog
 import io.netty.channel.{ChannelHandlerContext, SimpleChannelInboundHandler}
 import cpw.mods.fml.client.FMLClientHandler
 import com.theenginerd.core.common.network.synchronization.data.{SynchronizedTileMessage, SynchronizedMessage}
-import com.theenginerd.core.common.blockEntity.BlockEntityAdapter
+import com.theenginerd.core.common.tileEntity.ModTileEntityAdapter
 
 object SynchronizedHandler extends SimpleChannelInboundHandler[SynchronizedMessage]()
 {
@@ -32,7 +32,7 @@ object SynchronizedHandler extends SimpleChannelInboundHandler[SynchronizedMessa
         message match
         {
             case synchronizedTileMessage: SynchronizedTileMessage =>
-                for(tile <- BlockEntityAdapter.find(world, synchronizedTileMessage.x, synchronizedTileMessage.y, synchronizedTileMessage.z))
+                for(tile <- ModTileEntityAdapter.find(world, synchronizedTileMessage.x, synchronizedTileMessage.y, synchronizedTileMessage.z))
                 {
                     tile.handleSynchronizationMessage(message)
                 }

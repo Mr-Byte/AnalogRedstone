@@ -15,7 +15,7 @@
  * ========================================================================
  */
 
-package com.theenginerd.core.common.world
+package com.theenginerd.core.common.block
 
 object BlockSide
 {

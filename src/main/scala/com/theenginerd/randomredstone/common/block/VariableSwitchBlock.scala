@@ -19,8 +19,8 @@ package com.theenginerd.randomredstone.common.block
 
 import java.util.Random
 
-import com.theenginerd.core.common.block.{Block, BlockContainerBase}
-import com.theenginerd.core.common.world.{BlockSide, Position}
+import com.theenginerd.core.common.block.{BlockSide, ModBlock, ModBlockContainerBase}
+import com.theenginerd.core.common.world.Position
 import com.theenginerd.randomredstone.RandomRedstoneMod.MOD_ID
 import com.theenginerd.randomredstone.client.tileentity.renderer.RenderIds
 import com.theenginerd.randomredstone.common.blockEntity.VariableSwitchTileEntity
@@ -37,7 +37,7 @@ import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.common.util.ForgeDirection.{DOWN, EAST, NORTH, SOUTH, UNKNOWN, UP, WEST}
 
-trait VariableSwitchBlock extends Block
+trait VariableSwitchBlock extends ModBlock
 {
     protected abstract class Part
     case class Switch() extends Part
@@ -95,7 +95,7 @@ trait VariableSwitchBlock extends Block
         world.setBlockMetadataWithNotify(x, y, z, metadata, 2)
     }
 
-    abstract override def onBreak(world: World, position: Position[Int], block: Block, metadata: Int): Unit =
+    abstract override def onBreak(world: World, position: Position[Int], block: ModBlock, metadata: Int): Unit =
     {
         val Position(x, y, z) = position
 
@@ -123,7 +123,7 @@ trait VariableSwitchBlock extends Block
         }
     }
 
-    override def onNeighborChanged(world: World, position: Position[Int], neighbor: Block): Unit =
+    override def onNeighborChanged(world: World, position: Position[Int], neighbor: ModBlock): Unit =
     {
         val Position(x, y, z) = position
 
@@ -198,9 +198,9 @@ trait VariableSwitchBlock extends Block
         }
     }
 
-    private def notifyNeighbors(world: World, x: Int, y: Int, z: Int, block: Block, direction: ForgeDirection)
+    private def notifyNeighbors(world: World, x: Int, y: Int, z: Int, block: ModBlock, direction: ForgeDirection)
     {
-        val Block(worldBlock) = block
+        val ModBlock(worldBlock) = block
 
         world.notifyBlocksOfNeighborChange(x, y, z, worldBlock)
 
@@ -241,7 +241,7 @@ trait VariableSwitchBlock extends Block
 }
 
 //TODO: Move some of this to ModBlock while decoupling some of the stuff related to rendering and collision detection.
-object VariableSwitchBlock extends BlockContainerBase[VariableSwitchTileEntity](Material.circuits) with VariableSwitchBlock
+object VariableSwitchBlock extends ModBlockContainerBase[VariableSwitchTileEntity](Material.circuits) with VariableSwitchBlock
 {
     setCreativeTab(CreativeTabs.tabRedstone)
 

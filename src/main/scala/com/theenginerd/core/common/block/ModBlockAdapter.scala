@@ -17,22 +17,32 @@
 
 package com.theenginerd.core.common.block
 
-import com.theenginerd.core.common.world.{BlockSide, Position}
+import com.theenginerd.core.common.world.Position
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.world.{IBlockAccess, World}
 
-class BlockAdapter(private val wrappedBlock: net.minecraft.block.Block) extends Block
+class ModBlockAdapter(private val wrappedBlock: net.minecraft.block.Block) extends ModBlock
 {
-    override def canBePlacedOnSide(world: World, position: Position[Int], metadata: Int): Boolean = ???
-
-    override def getStrongRedstonePower(blockAccess: IBlockAccess, position: Position[Int], side: BlockSide): Int = ???
-
-    override def onBreak(world: World, position: Position[Int], block: Block, metadata: Int): Unit =
+    override def canBePlacedOnSide(world: World, position: Position[Int], metadata: Int): Boolean =
     {
         val Position(x, y, z) = position
-        val Block(worldBlock) = block
+
+        wrappedBlock.canPlaceBlockOnSide(world, x, y, z, metadata)
+    }
+
+    override def getStrongRedstonePower(blockAccess: IBlockAccess, position: Position[Int], side: BlockSide): Int =
+    {
+        val Position(x, y, z) = position
+
+        wrappedBlock.isProvidingStrongPower(blockAccess, x, y, z, side.value)
+    }
+
+    override def onBreak(world: World, position: Position[Int], block: ModBlock, metadata: Int): Unit =
+    {
+        val Position(x, y, z) = position
+        val ModBlock(worldBlock) = block
 
         wrappedBlock.breakBlock(world, x, y, z, worldBlock, metadata)
     }
@@ -41,15 +51,16 @@ class BlockAdapter(private val wrappedBlock: net.minecraft.block.Block) extends 
 
     override def onPlacedInWorld(world: World, position: Position[Int], hitPosition: Position[Float], side: BlockSide, metadata: Int): BlockSide = ???
 
-    override def dropAsItem(world: World, position: Position[Int], metadata: Int, what: Int): Unit = ???
-
     override def canProvideRedstonePower: Boolean = ???
 
-    override def isOpaque: Boolean = ???
+    override def isOpaque: Boolean =
+    {
+        wrappedBlock.isOpaqueCube
+    }
 
     override def canStay(world: World, position: Position[Int]): Boolean = ???
 
-    override def onNeighborChanged(world: World, position: Position[Int], neighbor: Block): Unit = ???
+    override def onNeighborChanged(world: World, position: Position[Int], neighbor: ModBlock): Unit = ???
 
     override def canBePlacedAt(world: World, position: Position[Int]): Boolean = ???
 
@@ -57,5 +68,5 @@ class BlockAdapter(private val wrappedBlock: net.minecraft.block.Block) extends 
 
     override def getWeakRedstonePower(blockAccess: IBlockAccess, position: Position[Int], side: BlockSide): Int = ???
 
-    def getMinecraftBlock = wrappedBlock
+    def unwrap() = wrappedBlock
 }

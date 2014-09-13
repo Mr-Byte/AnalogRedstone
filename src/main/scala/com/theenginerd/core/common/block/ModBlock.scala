@@ -17,7 +17,7 @@
 
 package com.theenginerd.core.common.block
 
-import com.theenginerd.core.common.world.{BlockSide, Position}
+import com.theenginerd.core.common.world.Position
 import net.minecraft.block
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
@@ -27,7 +27,7 @@ import net.minecraft.world.{IBlockAccess, World}
 
 //TODO: Start cleaning up this interface.  Wrap up the World, IBlockAccess, EntityLivingBase, and EntityPlayer classes
 // behind traits that expose their functionality.
-trait Block extends Any
+trait ModBlock
 {
     def canBePlacedOnSide(world: World, position: Position[Int], metadata: Int): Boolean
     def isOpaque: Boolean
@@ -40,43 +40,52 @@ trait Block extends Any
 
     def onPlacedInWorld(world: World, position: Position[Int], hitPosition: Position[Float], side: BlockSide, metadata: Int): BlockSide
     def onPlaceInWorldByEntity(world: World, position: Position[Int], entity: EntityLivingBase, itemStack: ItemStack): Unit
-    def onBreak(world: World, position: Position[Int], block: Block, metadata: Int): Unit
+    def onBreak(world: World, position: Position[Int], block: ModBlock, metadata: Int): Unit
     def onActivated(world: World, position: Position[Int], hitPosition: Position[Float], player: EntityPlayer, side: BlockSide): Boolean
-    def onNeighborChanged(world: World, position: Position[Int], neighbor: Block): Unit
+    def onNeighborChanged(world: World, position: Position[Int], neighbor: ModBlock): Unit
 
-    def dropAsItem(world: World, position: Position[Int], metadata: Int, what: Int)
+    /* NOTE:  This can only be done for final methods in the Minecraft Block itself.
+     * Attempting to do this with non-final methods will cause infinite recursion!
+     */
+    final def dropAsItem(world: World, position: Position[Int], metadata: Int, what: Int) =
+    {
+        val ModBlock(worldBlock) = this
+        val Position(x, y, z) = position
+
+        worldBlock.dropBlockAsItem(world, x, y, z, metadata, what)
+    }
 }
 
-object Block
+object ModBlock
 {
-    var blockAdapterCache: Map[net.minecraft.block.Block, Block] = Map()
+    var blockAdapterCache: Map[net.minecraft.block.Block, ModBlock] = Map()
 
-    def unapply(block: Block): Option[net.minecraft.block.Block] =
+    def unapply(block: ModBlock): Option[net.minecraft.block.Block] =
     {
         block match
         {
-            case blockBase: BlockBase => Some(blockBase)
-            case blockAdapter: BlockAdapter => Some(blockAdapter.getMinecraftBlock)
+            case blockBase: ModBlockBase => Some(blockBase)
+            case blockAdapter: ModBlockAdapter => Some(blockAdapter.unwrap())
             case _ => None
         }
     }
 
-    def apply(minecraftBlock: net.minecraft.block.Block): Block =
+    def apply(minecraftBlock: net.minecraft.block.Block): ModBlock =
     {
         minecraftBlock match
         {
-            case block: Block => block
+            case block: ModBlock => block
             case _ => getAdapterForBlock(minecraftBlock)
         }
     }
 
-    private def getAdapterForBlock(minecraftBlock: block.Block): Block =
+    private def getAdapterForBlock(minecraftBlock: block.Block): ModBlock =
     {
         blockAdapterCache.get(minecraftBlock) match
         {
             case Some(block) => block
             case None =>
-                val adapter = new BlockAdapter(minecraftBlock)
+                val adapter = new ModBlockAdapter(minecraftBlock)
                 blockAdapterCache += (minecraftBlock -> adapter)
                 adapter
         }
