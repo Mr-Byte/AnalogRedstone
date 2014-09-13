@@ -24,7 +24,7 @@ import java.io.File
 
 import com.theenginerd.randomredstone.proxy.{ModProxy, ClientModProxy, ServerModProxy}
 import com.theenginerd.randomredstone.common.block
-import com.theenginerd.modcore.common.network.PacketHandler
+import com.theenginerd.core.common.network.PacketHandler
 
 @Mod(name = RandomRedstoneMod.MOD_NAME, modid = RandomRedstoneMod.MOD_ID, version = "1.2.0-1.7.10", modLanguage = "scala")
 object RandomRedstoneMod

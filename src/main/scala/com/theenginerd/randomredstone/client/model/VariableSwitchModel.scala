@@ -20,10 +20,10 @@ package com.theenginerd.randomredstone.client.model
 import cpw.mods.fml.relauncher.SideOnly
 import cpw.mods.fml.relauncher.Side
 import net.minecraft.util.ResourceLocation
-import com.theenginerd.modcore.client.model.builder.shapes._
-import com.theenginerd.modcore.client.model.builder.shapes.Box
-import com.theenginerd.modcore.client.model.builder.parts.TorchPart
-import com.theenginerd.modcore.client.model.{Part, Model}
+import com.theenginerd.core.client.model.builder.shapes._
+import com.theenginerd.core.client.model.builder.shapes.Box
+import com.theenginerd.core.client.model.builder.parts.TorchPart
+import com.theenginerd.core.client.model.{Part, Model}
 import cpw.mods.fml.client.FMLClientHandler
 import org.lwjgl.opengl.GL11
 

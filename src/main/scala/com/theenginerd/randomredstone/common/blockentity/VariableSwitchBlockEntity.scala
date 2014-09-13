@@ -18,7 +18,7 @@
 package com.theenginerd.randomredstone.common.blockEntity
 
 import net.minecraft.nbt.NBTTagCompound
-import com.theenginerd.modcore.common.blockEntity.{BlockEntityAdapter, BlockEntity}
+import com.theenginerd.core.common.blockEntity.{BlockEntityAdapter, BlockEntity}
 
 trait VariableSwitchBlockEntity extends BlockEntity
 {
