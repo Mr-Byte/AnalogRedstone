@@ -18,6 +18,7 @@
 package com.theenginerd.core.common.block
 
 import com.theenginerd.core.common.world.{BlockSide, Position}
+import net.minecraft.block
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
@@ -48,12 +49,36 @@ trait Block extends Any
 
 object Block
 {
-    implicit def convertToMinecraftBlock(block: Block): net.minecraft.block.Block =
+    var blockAdapterCache: Map[net.minecraft.block.Block, Block] = Map()
+
+    def unapply(block: Block): Option[net.minecraft.block.Block] =
     {
         block match
         {
-            case blockBase: BlockBase => blockBase
-            case blockAdapter: BlockAdapter => blockAdapter.getMinecraftBlock
+            case blockBase: BlockBase => Some(blockBase)
+            case blockAdapter: BlockAdapter => Some(blockAdapter.getMinecraftBlock)
+            case _ => None
+        }
+    }
+
+    def apply(minecraftBlock: net.minecraft.block.Block): Block =
+    {
+        minecraftBlock match
+        {
+            case block: Block => block
+            case _ => getAdapterForBlock(minecraftBlock)
+        }
+    }
+
+    private def getAdapterForBlock(minecraftBlock: block.Block): Block =
+    {
+        blockAdapterCache.get(minecraftBlock) match
+        {
+            case Some(block) => block
+            case None =>
+                val adapter = new BlockAdapter(minecraftBlock)
+                blockAdapterCache += (minecraftBlock -> adapter)
+                adapter
         }
     }
 }

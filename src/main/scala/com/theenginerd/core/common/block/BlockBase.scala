@@ -132,7 +132,9 @@ abstract class BlockBase(material: Material) extends net.minecraft.block.Block(m
     override def onBreak(world: World, position: Position[Int], block: Block, metadata: Int): Unit =
     {
         val Position(x, y, z) = position
-        super.breakBlock(world, x, y, z, block, metadata)
+        val Block(worldBlock) = block
+
+        super.breakBlock(world, x, y, z, worldBlock, metadata)
     }
 
     override def getStrongRedstonePower(blockAccess: IBlockAccess, position: Position[Int], side: BlockSide): Int = ???

@@ -23,7 +23,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.world.{IBlockAccess, World}
 
-class BlockAdapter(private val block: net.minecraft.block.Block) extends AnyVal with Block
+class BlockAdapter(private val wrappedBlock: net.minecraft.block.Block) extends Block
 {
     override def canBePlacedOnSide(world: World, position: Position[Int], metadata: Int): Boolean = ???
 
@@ -32,7 +32,9 @@ class BlockAdapter(private val block: net.minecraft.block.Block) extends AnyVal 
     override def onBreak(world: World, position: Position[Int], block: Block, metadata: Int): Unit =
     {
         val Position(x, y, z) = position
-        block.breakBlock(world, x, y, z, block, metadata)
+        val Block(worldBlock) = block
+
+        wrappedBlock.breakBlock(world, x, y, z, worldBlock, metadata)
     }
 
     override def onPlaceInWorldByEntity(world: World, position: Position[Int], entity: EntityLivingBase, itemStack: ItemStack): Unit = ???
@@ -55,5 +57,5 @@ class BlockAdapter(private val block: net.minecraft.block.Block) extends AnyVal 
 
     override def getWeakRedstonePower(blockAccess: IBlockAccess, position: Position[Int], side: BlockSide): Int = ???
 
-    def getMinecraftBlock = block
+    def getMinecraftBlock = wrappedBlock
 }

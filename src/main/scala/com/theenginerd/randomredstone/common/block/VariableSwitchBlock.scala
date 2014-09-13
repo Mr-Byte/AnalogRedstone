@@ -200,16 +200,18 @@ trait VariableSwitchBlock extends Block
 
     private def notifyNeighbors(world: World, x: Int, y: Int, z: Int, block: Block, direction: ForgeDirection)
     {
-        world.notifyBlocksOfNeighborChange(x, y, z, block)
+        val Block(worldBlock) = block
+
+        world.notifyBlocksOfNeighborChange(x, y, z, worldBlock)
 
         direction match
         {
-            case DOWN => world.notifyBlocksOfNeighborChange(x, y + 1, z, block)
-            case UP => world.notifyBlocksOfNeighborChange(x, y - 1, z, block)
-            case WEST => world.notifyBlocksOfNeighborChange(x + 1, y, z, block)
-            case EAST => world.notifyBlocksOfNeighborChange(x - 1, y, z, block)
-            case SOUTH => world.notifyBlocksOfNeighborChange(x, y, z - 1, block)
-            case NORTH => world.notifyBlocksOfNeighborChange(x, y, z + 1, block)
+            case DOWN => world.notifyBlocksOfNeighborChange(x, y + 1, z, worldBlock)
+            case UP => world.notifyBlocksOfNeighborChange(x, y - 1, z, worldBlock)
+            case WEST => world.notifyBlocksOfNeighborChange(x + 1, y, z, worldBlock)
+            case EAST => world.notifyBlocksOfNeighborChange(x - 1, y, z, worldBlock)
+            case SOUTH => world.notifyBlocksOfNeighborChange(x, y, z - 1, worldBlock)
+            case NORTH => world.notifyBlocksOfNeighborChange(x, y, z + 1, worldBlock)
             case UNKNOWN => ()
         }
     }
