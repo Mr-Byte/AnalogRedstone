@@ -10,12 +10,14 @@ buildscript {
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
     }
+
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
     }
 }
 
-apply plugin: 'scala'
+setupScala()
+
 apply plugin: 'forge'
 
 minecraft {
@@ -44,5 +46,27 @@ processResources
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+    }
+}
+
+def setupScala() {
+    apply plugin: 'scala'
+
+    repositories {
+        maven {
+            name = "scala-tools"
+            url = "https://oss.sonatype.org/content/repositories/scala-tools/"
+        }
+    }
+
+    configurations.create("scalaCompilerPlugins")
+    configurations.scalaCompilerPlugins.transitive = false
+
+    dependencies {
+        scalaCompilerPlugins 'org.scalamacros:paradise_2.11.1:2.1.0-M1'
+    }
+
+    compileScala {
+        scalaCompileOptions.additionalParameters = (["-feature"] + (configurations.scalaCompilerPlugins.files.collect { "\"-Xplugin:${it.path}\"" }))*.toString()
     }
 }

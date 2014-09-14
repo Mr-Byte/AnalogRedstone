@@ -15,15 +15,13 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.proxy
+package com.theenginerd.randomredstone.common.block
 
-import com.theenginerd.randomredstone.common.tileEntity.VariableSwitchTileEntity
-import cpw.mods.fml.common.registry.GameRegistry
+import net.minecraft.block.material.Material
+import scala.annotation.StaticAnnotation
+import scala.language.experimental.macros
 
-trait ModProxy
+class block(material: Material) extends StaticAnnotation
 {
-    def registerTileEntities() =
-    {
-        GameRegistry.registerTileEntity(classOf[VariableSwitchTileEntity], "tileEntity.variableSwitch")
-    }
+    def macroTransform(blocks: Any*): Any = macro BlockProvider.apply
 }

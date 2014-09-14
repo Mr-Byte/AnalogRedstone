@@ -15,7 +15,7 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.common.blockEntity
+package com.theenginerd.randomredstone.common.tileEntity
 
 import net.minecraft.nbt.NBTTagCompound
 import com.theenginerd.core.common.tileEntity.{ModTileEntityAdapter, ModTileEntity}

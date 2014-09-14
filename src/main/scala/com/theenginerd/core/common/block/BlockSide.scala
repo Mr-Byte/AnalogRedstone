@@ -17,6 +17,8 @@
 
 package com.theenginerd.core.common.block
 
+import scala.language.implicitConversions
+
 object BlockSide
 {
     implicit def Int2BlockSide(value: Int) =

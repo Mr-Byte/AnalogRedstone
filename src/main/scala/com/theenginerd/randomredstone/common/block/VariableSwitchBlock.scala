@@ -23,7 +23,7 @@ import com.theenginerd.core.common.block.{BlockSide, ModBlock, ModBlockContainer
 import com.theenginerd.core.common.world.Position
 import com.theenginerd.randomredstone.RandomRedstoneMod.MOD_ID
 import com.theenginerd.randomredstone.client.tileentity.renderer.RenderIds
-import com.theenginerd.randomredstone.common.blockEntity.VariableSwitchTileEntity
+import com.theenginerd.randomredstone.common.tileEntity.VariableSwitchTileEntity
 import com.theenginerd.randomredstone.common.utility.HitBox
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.block.material.Material
@@ -36,6 +36,11 @@ import net.minecraft.util.{AxisAlignedBB, MathHelper}
 import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.common.util.ForgeDirection.{DOWN, EAST, NORTH, SOUTH, UNKNOWN, UP, WEST}
+
+@block(material = Material.rock) abstract class Test extends ModBlock
+{
+
+}
 
 trait VariableSwitchBlock extends ModBlock
 {

@@ -15,19 +15,19 @@
  * ========================================================================
  */
 
-package com.theenginerd.randomredstone.client.tileentity.renderer
+package com.theenginerd.randomredstone.client.renderer
 
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
-import net.minecraft.tileentity.TileEntity
-import org.lwjgl.opengl.GL11
-import com.theenginerd.randomredstone.common.block.VariableSwitchBlock
-import net.minecraftforge.common.util.ForgeDirection.{DOWN, UP, NORTH, SOUTH, WEST, EAST}
-import net.minecraftforge.common.util.ForgeDirection
-import cpw.mods.fml.client.FMLClientHandler
-import net.minecraft.world.IBlockAccess
-import net.minecraft.client.renderer.{RenderHelper, Tessellator}
 import com.theenginerd.randomredstone.client.model.VariableSwitchModel
-import com.theenginerd.randomredstone.common.blockEntity.VariableSwitchTileEntity
+import com.theenginerd.randomredstone.common.block.VariableSwitchBlock
+import com.theenginerd.randomredstone.common.tileEntity.VariableSwitchTileEntity
+import cpw.mods.fml.client.FMLClientHandler
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
+import net.minecraft.client.renderer.{RenderHelper, Tessellator}
+import net.minecraft.tileentity.TileEntity
+import net.minecraft.world.IBlockAccess
+import net.minecraftforge.common.util.ForgeDirection
+import net.minecraftforge.common.util.ForgeDirection.{DOWN, EAST, NORTH, SOUTH, UP, WEST}
+import org.lwjgl.opengl.GL11
 
 object VariableSwitchTileEntityRenderer extends TileEntitySpecialRenderer
 {

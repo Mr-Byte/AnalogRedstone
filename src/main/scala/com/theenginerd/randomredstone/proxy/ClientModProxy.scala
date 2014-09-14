@@ -17,14 +17,13 @@
 
 package com.theenginerd.randomredstone.proxy
 
-import cpw.mods.fml.client.registry.ClientRegistry
-import com.theenginerd.randomredstone.common.block.VariableSwitchBlock
-
-import net.minecraftforge.client.MinecraftForgeClient
-import net.minecraft.item.Item
-import com.theenginerd.randomredstone.client.tileentity.renderer.VariableSwitchTileEntityRenderer
 import com.theenginerd.randomredstone.client.item.renderer.VariableSwitchItemRenderer
-import com.theenginerd.randomredstone.common.blockEntity.VariableSwitchTileEntity
+import com.theenginerd.randomredstone.client.renderer.VariableSwitchTileEntityRenderer
+import com.theenginerd.randomredstone.common.block.VariableSwitchBlock
+import com.theenginerd.randomredstone.common.tileEntity.VariableSwitchTileEntity
+import cpw.mods.fml.client.registry.ClientRegistry
+import net.minecraft.item.Item
+import net.minecraftforge.client.MinecraftForgeClient
 
 class ClientModProxy extends ModProxy
 {
