@@ -4,7 +4,12 @@
 !/gradle/
 !/src/
 !/assets/
+!/mod/
+!/core/
 !README.md
 !LICENSE
 !build.gradle
 !gradlew*
+
+*.iml
+*/.gradle/
