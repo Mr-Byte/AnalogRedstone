@@ -1,3 +1,8 @@
+Closure compilerPlugins = {
+    String macroParadise = configurations.compile.find { it.name.startsWith("paradise") }
+    scalaCompileOptions.additionalParameters = ["-feature", "-Xplugin:$macroParadise", "-Xplugin-require:macroparadise"]*.toString()
+}
+
 buildscript {
     repositories {
         mavenCentral()
@@ -16,57 +21,60 @@ buildscript {
     }
 }
 
-setupScala()
-
-apply plugin: 'forge'
-
-minecraft {
-    version = "1.7.10-10.13.0.1180"
-    assetDir = "eclipse/assets"
-}
-	
-version = "1.2.0-1.7.10"
-archivesBaseName = "randomredstone"
-group = "com.theenginerd.randomredstone"
-
-processResources
-{
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-        
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-}
-
-def setupScala() {
-    apply plugin: 'scala'
-
+allprojects {
     repositories {
-        maven {
-            name = "scala-tools"
-            url = "https://oss.sonatype.org/content/repositories/scala-tools/"
-        }
+        mavenCentral()
     }
 
-    configurations.create("scalaCompilerPlugins")
-    configurations.scalaCompilerPlugins.transitive = false
+    apply plugin: 'scala'
+    apply plugin: 'forge'
 
     dependencies {
-        scalaCompilerPlugins 'org.scalamacros:paradise_2.11.1:2.1.0-M1'
+        compile 'org.scalamacros:paradise_2.11.1:2.1.0-M1'
     }
 
-    compileScala {
-        scalaCompileOptions.additionalParameters = (["-feature"] + (configurations.scalaCompilerPlugins.files.collect { "\"-Xplugin:${it.path}\"" }))*.toString()
+    minecraft {
+        version = "1.7.10-10.13.0.1180"
     }
+
+    processResources {
+        // this will ensure that this task is redone when the versions change.
+        inputs.property "version", project.version
+        inputs.property "mcversion", project.minecraft.version
+
+        // replace stuff in mcmod.info, nothing else
+        from(sourceSets.main.resources.srcDirs) {
+            include 'mcmod.info'
+
+            // replace version and mcversion
+            expand 'version': project.version, 'mcversion': project.minecraft.version
+        }
+
+        // copy everything else, thats not the mcmod.info
+        from(sourceSets.main.resources.srcDirs) {
+            exclude 'mcmod.info'
+        }
+    }
+}
+
+subprojects {
+    minecraft {
+        assetDir = "../eclipse/assets"
+    }
+}
+
+minecraft {
+    assetDir = "eclipse/assets"
+}
+
+project(":core") {
+    compileScala compilerPlugins
+}
+
+project(":mod") {
+    dependencies {
+        compile project(":core")
+    }
+
+    compileScala compilerPlugins
 }
