@@ -17,18 +17,24 @@
 
 package com.theenginerd.core.common.block
 
+import com.theenginerd.core.common.tileEntity.ModTileEntity
 import net.minecraft.block.material.Material
 
 import scala.annotation.StaticAnnotation
 import scala.language.experimental.macros
 import scala.reflect.macros.whitebox
 
-class define_block(material: Material) extends StaticAnnotation
+class defineBlock(material: Material) extends StaticAnnotation
 {
-    def macroTransform(annottees: Any*): Any = macro define_block.macroImpl
+    def macroTransform(annottees: Any*): Any = macro defineBlock.macroImpl
 }
 
-object define_block
+class defineBlockWithTileEntity[T <: ModTileEntity](material: Material) extends StaticAnnotation
+{
+    def macroTransform(annottees: Any*): Any = macro defineBlock.macroImpl
+}
+
+object defineBlock
 {
     def macroImpl(c: whitebox.Context)(annottees: c.Expr[Any]*): c.Expr[Any] =
     {
@@ -42,10 +48,15 @@ object define_block
                     try
                     {
                         val q"${_} trait ${traitName: TypeName} extends ..${_} { ..${_} }" = blockTrait
-                        val q"new ${_}(material = $material).${_}(${_})" = c.macroApplication
 
-                        val blockName = TermName(traitName.toString)
-                        val companionObject = q"object $blockName extends com.theenginerd.core.common.block.ModBlockBase($material) with $traitName"
+                        val companionObject = c.macroApplication match
+                        {
+                            case q"new ${_}(material = $material).${_}(${_})" =>
+                                q"object ${traitName.toTermName} extends com.theenginerd.core.common.block.ModBlockBase($material) with $traitName"
+
+                            case q"new ${_}[$tpe](material = $material).${_}(${_})" =>
+                                q"object ${traitName.toTermName} extends com.theenginerd.core.common.block.ModBlockContainerBase[$tpe]($material) with $traitName"
+                        }
 
                         q"""
                            $blockTrait

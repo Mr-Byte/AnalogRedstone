@@ -17,10 +17,10 @@
 
 package com.theenginerd.randomredstone.common.block
 
-import com.theenginerd.core.common.block.{ModBlock, define_block}
+import com.theenginerd.core.common.block.{ModBlock, defineBlock}
 import net.minecraft.block.material.Material
 
-@define_block(material = Material.wood) trait TestBlock extends ModBlock
+@defineBlock(material = Material.wood) trait TestBlock extends ModBlock
 {
 
     override def isOpaque = false
