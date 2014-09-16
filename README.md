@@ -1,4 +1,4 @@
-# Random Redstone
+# Random Redstone [![Build Status](https://drone.io/github.com/Mr-Byte/AnalogRedstone/status.png)](https://drone.io/github.com/Mr-Byte/AnalogRedstone/latest)
 A set of blocks and items that provide a variety of functionality related to redstone.
 
 ## Information
