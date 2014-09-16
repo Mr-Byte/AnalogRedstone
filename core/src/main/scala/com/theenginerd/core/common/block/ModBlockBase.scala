@@ -103,25 +103,70 @@ abstract class ModBlockBase(material: Material) extends net.minecraft.block.Bloc
     }
 
     /* Delegate Block methods to super implementation */
-    override def canBePlacedOnSide(world: World, position: Position[Int], metadata: Int): Boolean = ???
+    override def canBePlacedOnSide(world: World, position: Position[Int], metadata: Int): Boolean =
+    {
+        val Position(x, y, z) = position
+        super.canPlaceBlockOnSide(world, x, y, z, metadata)
+    }
 
-    override def getWeakRedstonePower(blockAccess: IBlockAccess, position: Position[Int], side: BlockSide): Int = ???
+    override def getWeakRedstonePower(blockAccess: IBlockAccess, position: Position[Int], side: BlockSide): Int =
+    {
+        val Position(x, y, z) = position
 
-    override def onActivated(world: World, position: Position[Int], hitPosition: Position[Float], player: EntityPlayer, side: BlockSide): Boolean = ???
+        super.isProvidingWeakPower(blockAccess, x, y, z, side)
+    }
 
-    override def canBePlacedAt(world: World, position: Position[Int]): Boolean = ???
+    override def onActivated(world: World, position: Position[Int], hitPosition: Position[Float], player: EntityPlayer, side: BlockSide): Boolean =
+    {
+        val Position(x, y, z) = position
+        val Position(hitX, hitY, hitZ) = position
 
-    override def onNeighborChanged(world: World, position: Position[Int], neighbor: ModBlock): Unit = ???
+        super.onBlockActivated(world, x, y, z, player, side, hitX, hitY, hitZ)
+    }
 
-    override def canProvideRedstonePower: Boolean = ???
+    override def canBePlacedAt(world: World, position: Position[Int]): Boolean =
+    {
+        val Position(x, y, z) = position
+        super.canPlaceBlockAt(world, x, y, z)
+    }
 
-    override def canStay(world: World, position: Position[Int]): Boolean = ???
+    override def onNeighborChanged(world: World, position: Position[Int], neighbor: ModBlock): Unit =
+    {
+        val Position(x, y, z) = position
+        val ModBlock(block) = neighbor
 
-    override def isOpaque: Boolean = ???
+        super.onNeighborBlockChange(world, x, y, z, block)
+    }
 
-    override def onPlacedInWorld(world: World, position: Position[Int], hitPosition: Position[Float], side: BlockSide, metadata: Int): BlockSide = ???
+    override def canProvideRedstonePower: Boolean =
+    {
+        super.canProvidePower
+    }
 
-    override def onPlaceInWorldByEntity(world: World, position: Position[Int], entity: EntityLivingBase, itemStack: ItemStack): Unit = ???
+    override def canStay(world: World, position: Position[Int]): Boolean =
+    {
+        val Position(x, y, z) = position
+        super.canBlockStay(world, x, y, z)
+    }
+
+    override def isOpaque: Boolean =
+    {
+        super.isOpaqueCube
+    }
+
+    override def onPlacedInWorld(world: World, position: Position[Int], hitPosition: Position[Float], side: BlockSide, metadata: Int): BlockSide =
+    {
+        val Position(x, y, z) = position
+        val Position(hitX, hitY, hitZ) = hitPosition
+
+        super.onBlockPlaced(world, x, y, z, side, hitX, hitY, hitZ, metadata)
+    }
+
+    override def onPlaceInWorldByEntity(world: World, position: Position[Int], entity: EntityLivingBase, itemStack: ItemStack): Unit =
+    {
+        val Position(x, y, z) = position
+        super.onBlockPlacedBy(world, x, y, z, entity, itemStack)
+    }
 
     override def onBreak(world: World, position: Position[Int], block: ModBlock, metadata: Int): Unit =
     {
@@ -131,6 +176,10 @@ abstract class ModBlockBase(material: Material) extends net.minecraft.block.Bloc
         super.breakBlock(world, x, y, z, worldBlock, metadata)
     }
 
-    override def getStrongRedstonePower(blockAccess: IBlockAccess, position: Position[Int], side: BlockSide): Int = ???
+    override def getStrongRedstonePower(blockAccess: IBlockAccess, position: Position[Int], side: BlockSide): Int =
+    {
+        val Position(x, y, z) = position
+        super.isProvidingStrongPower(blockAccess, x, y, z, side)
+    }
 }
 

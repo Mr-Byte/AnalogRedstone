@@ -41,10 +41,11 @@ object define_block
                 case (blockTrait: ClassDef) :: Nil =>
                     try
                     {
-                        val q"$flags trait ${traitName: TypeName} extends ..$bases { ..$body }" = blockTrait
+                        val q"${_} trait ${traitName: TypeName} extends ..${_} { ..${_} }" = blockTrait
+                        val q"new ${_}(material = $material).${_}(${_})" = c.macroApplication
 
                         val blockName = TermName(traitName.toString)
-                        val companionObject = q"object $blockName extends com.theenginerd.core.common.block.ModBlockBase(Material.rock) with $traitName"
+                        val companionObject = q"object $blockName extends com.theenginerd.core.common.block.ModBlockBase($material) with $traitName"
 
                         q"""
                            $blockTrait

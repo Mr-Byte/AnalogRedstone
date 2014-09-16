@@ -25,15 +25,3 @@ import net.minecraft.block.material.Material
 
     override def isOpaque = false
 }
-
-//object TestBlock extends Block(Material.wood)
-//{
-//    setCreativeTab(CreativeTabs.tabMisc)
-//
-//    override def registerBlockIcons(register: IIconRegister) =
-//    {
-//        blockIcon = register.registerIcon(s"$MOD_ID:uv_test")
-//    }
-//
-//    override def isOpaqueCube = false
-//}
