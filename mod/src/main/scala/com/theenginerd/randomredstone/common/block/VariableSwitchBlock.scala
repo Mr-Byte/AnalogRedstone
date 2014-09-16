@@ -19,7 +19,7 @@ package com.theenginerd.randomredstone.common.block
 
 import java.util.Random
 
-import com.theenginerd.core.common.block.{block, BlockSide, ModBlock, ModBlockContainerBase}
+import com.theenginerd.core.common.block.{BlockSide, ModBlock, ModBlockContainerBase}
 import com.theenginerd.core.common.world.Position
 import com.theenginerd.randomredstone.RandomRedstoneMod.MOD_ID
 import com.theenginerd.randomredstone.client.tileentity.renderer.RenderIds

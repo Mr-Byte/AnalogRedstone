@@ -20,10 +20,10 @@ package com.theenginerd.randomredstone.common
 import cpw.mods.fml.common.registry.GameRegistry
 import net.minecraft.block.Block
 import com.theenginerd.randomredstone.RandomRedstoneMod.MOD_ID
+import net.minecraft.creativetab.CreativeTabs
 
 package object block
 {
-
     def registerBlock(block: Block) =
     {
         val name = block.getClass.getSimpleName.replace("Block", "").replace("$", "").toLowerCase
@@ -33,6 +33,7 @@ package object block
     def registerBlocks()
     {
         registerBlock(VariableSwitchBlock)
-//        registerBlock(TestBlock)
+        registerBlock(TestBlock)
+        TestBlock.setCreativeTab(CreativeTabs.tabMisc)
     }
 }

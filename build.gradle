@@ -1,6 +1,6 @@
 Closure compilerPlugins = {
     String macroParadise = configurations.compile.find { it.name.startsWith("paradise") }
-    scalaCompileOptions.additionalParameters = ["-feature", "-Xplugin:$macroParadise", "-Xplugin-require:macroparadise"]*.toString()
+    scalaCompileOptions.additionalParameters = ["-Xplugin:$macroParadise", "-Xplugin-require:macroparadise"]*.toString()
 }
 
 buildscript {

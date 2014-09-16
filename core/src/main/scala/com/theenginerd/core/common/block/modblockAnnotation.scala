@@ -17,16 +17,22 @@
 
 package com.theenginerd.core.common.block
 
+import net.minecraft.block.material.Material
+
+import scala.annotation.StaticAnnotation
 import scala.language.experimental.macros
 import scala.reflect.macros.whitebox
 
-object BlockProvider
+class define_block(material: Material) extends StaticAnnotation
 {
-    def apply(c: whitebox.Context)(annottees: c.Expr[Any]*): c.Expr[Any] =
+    def macroTransform(annottees: Any*): Any = macro define_block.macroImpl
+}
+
+object define_block
+{
+    def macroImpl(c: whitebox.Context)(annottees: c.Expr[Any]*): c.Expr[Any] =
     {
         import c.universe._
-
-        c.info(c.enclosingPosition, "Hello, world!", true)
 
         val result: Tree =
         {
@@ -35,15 +41,21 @@ object BlockProvider
                 case (blockTrait: ClassDef) :: Nil =>
                     try
                     {
-                        val q"$flags trait $blockName extends ..$bases { ..$body }" = blockTrait
+                        val q"$flags trait ${traitName: TypeName} extends ..$bases { ..$body }" = blockTrait
+
+                        val blockName = TermName(traitName.toString)
+                        val companionObject = q"object $blockName extends com.theenginerd.core.common.block.ModBlockBase(Material.rock) with $traitName"
+
+                        q"""
+                           $blockTrait
+                           $companionObject
+                         """
                     }
                     catch
-                    {
-                        case _: MatchError =>
-                            c.abort(c.enclosingPosition, "This annotation is only valid on trait types.")
-                    }
-
-                    q"$blockTrait"
+                        {
+                            case _: MatchError =>
+                                c.abort(c.enclosingPosition, "This annotation is only valid on trait types.")
+                        }
 
                 case _ =>
                     c.abort(c.enclosingPosition, "This type cannot be annotated as a block.")
