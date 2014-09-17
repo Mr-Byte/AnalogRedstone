@@ -3,7 +3,7 @@
   "modid": "randomredstone",
   "name": "Random Redstone",
   "description": "Adds various gates for Redstone.",
-  "version": "1.2.0-1.7.10",
+  "version": "1.3.0-1.7.10",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
