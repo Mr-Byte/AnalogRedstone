@@ -34,6 +34,8 @@ package object block
     {
         registerBlock(VariableSwitchBlock)
         registerBlock(TestBlock)
+
         TestBlock.setCreativeTab(CreativeTabs.tabMisc)
+        VariableSwitchBlock.setCreativeTab(CreativeTabs.tabRedstone)
     }
 }

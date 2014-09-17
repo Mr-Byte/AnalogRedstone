@@ -51,16 +51,22 @@ object defineBlock
 
                         val companionObject = c.macroApplication match
                         {
-                            case q"new ${_}(material = $material).${_}(${_})" =>
-                                q"object ${traitName.toTermName} extends com.theenginerd.core.common.block.ModBlockBase($material) with $traitName"
-
-                            case q"new ${_}[$tpe](material = $material).${_}(${_})" =>
+                            case q"new defineBlockWithTileEntity[$tpe](material = $material).${_}(${_})" =>
+                            {
+                                println(s"Generating $traitName")
                                 q"object ${traitName.toTermName} extends com.theenginerd.core.common.block.ModBlockContainerBase[$tpe]($material) with $traitName"
+                            }
+
+                            case q"new defineBlock(material = $material).${_}(${_})" =>
+                            {
+                                println(s"Generating $traitName")
+                                q"object ${traitName.toTermName} extends com.theenginerd.core.common.block.ModBlockBase($material) with $traitName"
+                            }
                         }
 
                         q"""
-                           $blockTrait
-                           $companionObject
+                            $blockTrait
+                            $companionObject
                          """
                     }
                     catch
